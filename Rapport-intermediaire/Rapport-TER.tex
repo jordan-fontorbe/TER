@@ -14,6 +14,33 @@
 \usepackage{geometry}
 \geometry{left=2.5cm,right=2.5cm,vmargin=2cm}
 
+%chapitre---------------------------------------------------------------------
+ 
+%%%% debut macro pour enlever le nom chapitre %%%%
+\makeatletter
+\def\@makechapterhead#1{%
+  \vspace*{50\p@}%
+  {\parindent \z@ \raggedright \normalfont
+    \interlinepenalty\@M
+    \ifnum \c@secnumdepth >\m@ne
+        \Huge\bfseries \thechapter\quad
+    \fi
+    \Huge \bfseries #1\par\nobreak
+    \vskip 40\p@
+  }}
+
+\def\@makeschapterhead#1{%
+  \vspace*{50\p@}%
+  {\parindent \z@ \raggedright
+    \normalfont
+    \interlinepenalty\@M
+    \Huge \bfseries  #1\par\nobreak
+    \vskip 40\p@
+  }}
+\makeatother
+%%%% fin macro %%%% 
+
+
 \begin{document}
 
 \begin{titlepage}
@@ -39,5 +66,17 @@
 \end{flushright}
 \end{figure}
 \end{titlepage}
+
+\tableofcontents
+\clearpage
+
+\include{resume}
+\include{intro}
+\include{analyse}
+\include{nfonc}
+\include{fonc}
+\include{tests}
+\include{repartition}
+\include{biblio}
 
 \end{document} 
