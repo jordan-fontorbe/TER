@@ -1,4 +1,0 @@
-TER
-===
-
-TER Liseuse Android
