@@ -1,0 +1,25 @@
+- Résumé du projet et Introduction au domaine --> Arthur
+
+- Analyse de l'existant
+  	  --> Mx50 --> Jordan
+	  --> Controller --> Jordan
+	  --> Sony PRS-T1
+	  	  --> noyau -> driver --> Tristan
+		  --> caractéristiques --> Jordan
+
+- Besoins non fonctionnels
+  	  --> Hack --> Tristan
+	  --> risque waveforme --> Tristan
+	  --> Test --> Tristan again
+
+
+- Besoin fonctionnel
+  	 --> qemu --> Joris
+	 --> interfaçage VNC --> Joris
+	 --> Emulation LCD --> Joris
+
+
+- Résultat de test --> Tristan
+  	  
+- Repartition des taches --> Arthur
+	 
