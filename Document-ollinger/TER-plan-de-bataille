@@ -1,0 +1,60 @@
+Android au pays des liseuses
+N. Ollinger
+21 janvier 2013
+
+Proposition de plan de bataille pour atteindre les objectifs fixés par
+le sujet du TER.
+
+
+= Jalon 0. RTFM =
+
+Lire documentation et sources pour se faire une idée précise de ce
+qu'est cette technologie du papier électronique et comment elle est mise
+en œuvre à travers les différentes couches matérielles et logicielles
+depuis l'écran physique jusqu'à l'application Android en traversant le
+contrôleur, le noyau et le middleware Android.
+
+Production d'un document de synthèse.
+
+
+= Jalon 1. Côté liseuse : client RFB+ =
+
+Tester l'image fournie sur la liseuse, s'approprier les outils. Mettre
+en œuvre l'environnement de développement ltib de Freescale pour
+i.MX508. Écrire un petit programme de test du framebuffer eink + ioctl
+de mise à jour. Ajouter le support du Gadget USB Ethernet au noyau,
+ajout du module à l'image de test et connexion via ssh. Ajout du support
+e-ink dans directFB. Compréhension et extension du protocole RFB pour
+supporter les mises à jour (ioctl). Mise en œuvre d'un client RFB pour
+la liseuse. Création d'un serveur avec gestion des mises à jour, tests
+intensifs.
+
+http://directfb.org/
+https://matt.ucc.asn.au/dropbear/dropbear.html
+http://www.busybox.net/
+http://en.wikipedia.org/wiki/RFB_protocol
+http://libvncserver.sourceforge.net/
+http://freecode.com/projects/directvnc
+http://emblemparade.net/projects/vncj/
+
+
+= Jalon 2. E-ink qemu via VNC =
+
+Comprendre la gestion du framebuffer par emulator/qemu. Ajouter la
+gestion des ioctl(). Comprendre l'option VNC de qemu, y ajouter
+l'extension RFB du client de la liseuse. Tests intensifs.
+
+
+= Jalon 3. Liseuse Android sous qemu =
+
+Comprendre les spécificités de la version e-ink d'Android chez Freescale
+et chez Sony. Mise en place de cette pile dans l'émulateur. Tests
+intensifs avec les applications Sony. Écriture d'application maison.
+
+
+= Jalon 4. Simulation d'écran e-ink =
+
+Écrire un simulateur raisonnable d'écran e-ink avec affichage optionnel
+des zones de mise à jour (pour debug). Ajout du simulateur à
+emulator/qemu, tests intensifs.
+

@@ -1,0 +1,527 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+        "http://www.w3.org/TR/html4/loose.dtd">
+        <html>
+        <head><title>Supporting electronic paper [LWN.net]</title>
+        <base href="http://lwn.net/Articles/259210/" target="_blank">
+        <meta HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=utf-8">
+	<META NAME="robots" CONTENT="noindex">
+        <link rel="icon" href="/images/favicon.png" type="image/png">
+        <link rel="alternate" type="application/rss+xml" title="LWN.net headlines" href="http://lwn.net/headlines/newrss">
+<link rel="alternate" type="application/rss+xml" title="Comments posted to this article" href="http://lwn.net/headlines/259210/">
+        <link rel="stylesheet" href="/CSS/lwn">
+<link rel="stylesheet" href="/CSS/nosub">
+
+        </head>
+        <body bgcolor="#ffffff" link="Blue" VLINK="Green" alink="Green">
+        <table class="Page">
+<tr>
+<td class="LeftColumn">
+
+        <center>
+        <a href="/"><img src="/images/lcorner.png" width="153"
+           height="120" border="0" alt="LWN.net Logo"></a>
+        </center>
+        <p>
+        </td><!-- LC -->
+
+<td><table><tr>
+<td class="MidColumn">
+           <table class="TopNavigation">
+
+<!-- First row - content links -->
+<tr>
+  <td class="NavLink"><a href="/current/">Weekly edition</a></td>
+  <td class="NavLink">
+	<a href="/Kernel/">Kernel</a></td>
+  <td class="NavLink"><a href="/Security/">Security</a></td>
+  <td class="NavLink">
+	<a href="http://lwn.net/Distributions/">Distributions</a></td>
+  <td class="NavLink"><a href="/op/FAQ.lwn#contact">Contact Us</a> </td>
+  <td class="NavLink"><a href="/Search/">Search</a> </td>
+</tr>
+<!-- Second row: navigation links -->
+<tr>
+  <td class="NavLink"><a href="/Archives/">Archives</a></td>
+  <td class="NavLink"><a href="/Calendar/">Calendar</a></td>
+  <td class="NavLink"><a href="/subscribe/Info">Subscribe</a></td>
+  <td class="NavLink"><a href="/op/AuthorGuide.lwn">Write for LWN</a></td>
+  <td class="NavLink"><a href="/op/FAQ.lwn">LWN.net FAQ</a></td>
+  <td class="NavLink"><a href="/op/Sponsors.lwn">Sponsors</a></td>
+</tr>
+
+</table>
+</td><td></td></tr>
+<tr><td colspan=2 class="MCTopBanner">
+<script type='text/javascript'><!--//<![CDATA[
+   var m3_u = (location.protocol=='https:'?'https://rotation.linuxnewmedia.com/www/delivery/ajs.php':'http://rotation.linuxnewmedia.com/www/delivery/ajs.php');
+   var m3_r = Math.floor(Math.random()*99999999999);
+   if (!document.MAX_used) document.MAX_used = ',';
+   document.write ("<scr"+"ipt type='text/javascript' src='"+m3_u);
+   document.write ("?zoneid=26&amp;target=_blank");
+   document.write ('&amp;cb=' + m3_r);
+   if (document.MAX_used != ',') document.write ("&amp;exclude=" + document.MAX_used);
+   document.write (document.charset ? '&amp;charset='+document.charset : (document.characterSet ? '&amp;charset='+document.characterSet : ''));
+   document.write ("&amp;loc=" + escape(window.location));
+   if (document.referrer) document.write ("&amp;referer=" + escape(document.referrer));
+   if (document.context) document.write ("&context=" + escape(document.context));
+   if (document.mmm_fo) document.write ("&amp;mmm_fo=1");
+   document.write ("'><\/scr"+"ipt>");
+//]]>--></script><noscript><a href='http://rotation.linuxnewmedia.com/www/delivery/ck.php?n=aa584766&amp;cb=6081871' target='_blank'><img src='http://rotation.linuxnewmedia.com/www/delivery/avw.php?zoneid=26&amp;n=aa584766' border='0' alt='' /></a></noscript>  </td></tr><tr><td class="MidColumn">
+<div class="PageHeadline">
+<h1>Supporting electronic paper</h1>
+</div>
+</tr></table></td>
+</tr></table><!-- endpage -->
+<table class="Page">
+<tr>
+<td><table><tr>
+<td class="MidColumn">
+           <div class="Printable">
+<div class="ArticleText">
+<div class="GAByline">
+           <p>November 19, 2007</p>
+           <p>This article was contributed by Jaya Kumar</p>
+           </div>
+           The familiar CRT monitors or backlit LCD screens on our desks continuously
+consume power in order to hold an image. Electronic paper (e-paper) is
+different: power is only needed to change the image. Just like paper,
+e-paper is able to hold the image permanently without consuming any power.
+Displays using CRT, backlit LCD, plasma and OLED technologies are all
+emissive, meaning that they have to produce the photons that reach the eye.
+This implies that they have to compete in brightness with ambient lighting,
+which can result in eye strain. E-paper is the opposite: it is reflective,
+which makes it possible to read the display using ambient light even in the
+brightness of a hot sunny day.
+<p>
+E-paper is referred to as a bistable or non-volatile technology because of
+its ability to hold a specific pixel state without power. There are several
+variations of e-paper; they differ in terms of which physical mechanism
+is used to achieve the non-volatility of the display. These mechanisms
+include <a
+href="http://en.wikipedia.org/wiki/Interferometric_Modulator">interferometric
+modulation</a>, <a href="http://www.zbd-retail-solutions.com/downloads/white-papers/40-1%20Jones%20SID%2007.pdf">bi-stable twisted nematic liquid
+crystal [PDF]</a>, <a
+href="http://plc.cwru.edu/tutorial/enhanced/files/pslc/psclc/psclc.htm">cholesteric
+liquid crystal</a>, and <a
+href="http://en.wikipedia.org/wiki/Electrophoretic_display">electrophoretic</a>
+phenomena. 
+<p>
+Interferometric modulation uses the same principle of light wave
+interference that results in the rainbow of colors seen with oil floating on
+water. Control of wave interference through bi-stable or multi-stable
+micro-electro-mechanical systems (MEMS) is what enables electronic control
+of the color of a pixel.
+<p>
+In standard twisted nematic liquid crystal displays (TNLCD), the liquid
+crystal is sandwiched between two rubbed polymer orthogonal alignment
+layers. Bi-stable twisted nematic implementations such as Zenithal liquid
+crystal replace the first or both alignment layers in favour of a sub-micron
+relief profile that weakens anchoring to the surface and makes it possible
+to latch various stable orientations of a liquid crystal pixel using
+electrical pulses.
+<p>
+Cholesteric liquid crystal provides the ability to selectively reflect
+various ranges of wavelengths of visible light based on the pitch of the
+liquid crystal. The pitch can then be electronically controlled to set
+various pixel states.
+<p>
+Electrophoresis describes the fact that particles within a fluid can be
+kinetically affected by an electrical field. Basically, applying a voltage
+pulse causes pigment particles within a solvent solution to move. This
+concept is what is used to control whether a pixel appears black, white or a
+shade of gray. This article will focus on electrophoretic displays
+since they are relatively easy to obtain.
+<p>
+<h3>Controllers</h3>
+<p>
+Traditional display controllers are interfaced to the host using a bus such
+as PCI Express or AGP. These controllers have local framebuffer memory or
+sufficient internal line buffering to utilize shared host memory; they
+expose their framebuffers through memory mappable regions.
+Display servers like Xorg or Xfbdev that utilize the kernel's fbdev
+interface expect to be able to <tt>mmap()</tt> the device framebuffer. The
+implication is that a driver that implemented only <tt>write()</tt>/<tt>seek()</tt> access to
+the framebuffer would have limited usage.
+<p>
+Electrophoretic displays require specialized controllers that are capable of
+driving suitable waveforms in order to control the display media. This is
+because of subtle issues around the behavior of pigment particles within a
+solvent. The controller must drive waveforms that result in fast,
+reproducible and optimal movement of pigment particles. These waveforms are
+a key factor in minimizing pixel update latency, achieving good contrast and
+reducing ghosting effects in the output image. Currently, electrophoretic
+display updates are significantly slower than CRT or LCD display updates.
+For example, a grayscale update of E-Ink's most recent Vizplex display
+material can take up to 740ms. This latency has an effect on how hardware is
+interfaced with electrophoretic display controllers and how software should
+then interact with the display.
+<p>
+One of the electrophoretic display controllers for which Linux support has
+been posted (<a
+href="http://support.eink.com/files/thinspace-1.00.tar.gz">tarball</a>) is
+a controller from E-Ink called Apollo. This controller is 
+interfaced to the host through 8-bit data and 6-bit control over General
+Purpose IO (GPIO) interfaces. The implication of the use of GPIO is that it
+is not a memory mappable interface. Each pixel of the framebuffer has to be
+wiggled to the controller by turning individual GPIO lines on and off. Display
+updates on the Apollo with an E-Ink 6" panel with a resolution of 800x600
+and 2&nbsp;bits of grayscale require between 500ms - 1200ms. Given this set of
+circumstances, it would have been an option to implement a userspace library
+or support code that performed the GPIO wiggling. However, such an
+implementation would forfeit support from Xfbdev and other common
+fbdev compatible applications.
+<p>
+An early driver implementation has also been posted for an E-Ink controller
+named <a
+href="http://www.e-ink.com/products/matrix/metronome.html">Metronome</a>.
+This controller interfaces to the host using the Active 
+Matrix LCD (AMLCD) bus. AMLCD is a 16-bit data bus used to interface LCDs
+with CPUs. Normally, the AMLCD bus is used to transfer video display
+data only, but, in the case of the Metronome controller, the host transfers a whole
+slew of things including waveform, command and image data. The Metronome
+becomes a secondary display controller feeding on the output of the primary
+display controller on the host. Since AMLCD is an output-only data path, two
+GPIO pins are used to retrieve status from the controller.
+<p>
+Many embedded processors provide a built-in LCD controller (LCDC) that is
+compatible with the AMLCD interface. For example, the Xscale pxa255 cpu has
+an LCDC that has DMA support and is able to pull data directly from host
+memory at specified intervals. This type of capability allows drivers to
+remap host memory to form an mmap-able framebuffer. However, the Metronome
+controller imposes an additional requirement beyond delivering image data
+for each display update. This is the need for a specific display update
+command that has to be formed and set each time the display is to be
+updated. This means that the framebuffer driver needs to know when the
+framebuffer has been updated. That is not a trivial task because the nature
+of a memory-mapped framebuffer is that the driver is not involved in
+changes to the buffer; it is
+therefore unaware of when the framebuffer has been written to by a userspace
+application. 
+<p>
+The three problems described so far can therefore be summarized as follows:
+<p>
+<ol>
+<li> How to memory map a "non memory mappable" IO interface like GPIO.
+<li> How to mitigate the latency associated with display updates.
+<li> How to cheaply detect when userspace has written to a memory mapped
+address. 
+</ol>
+<p>
+
+One early solution to problem 3 was to use a timer and perform framebuffer
+differencing to detect the changed pixels. The negative aspects of this
+solution are that it requires a large amount of redundant memory and
+significant cpu and memory bandwidth consumption every time that framebuffer
+differencing is done. Both of these resources are scarce on embedded systems
+and, therefore, that solution was not satisfactory.
+<p>
+<h3>Deferred IO</h3>
+<p>
+Deferred IO is an alternative method of solving these problems. The key concept
+behind deferred IO is that one can periodically mark an active page of host
+memory as read-only in order to catch writes to it. The way it works is quite
+straightforward: page table entries for framebuffer pages in host memory are
+initially marked as read-only. When the application first writes to any memory
+address that maps to any of those pages, a deferred IO specific page fault
+handler is reached. This handler schedules a delayed workqueue job. In the interval
+before this workqueue is executed, the application can continue to write to
+that page with no additional cost. 
+<p>
+When the workqueue task executes, it then marks
+the page table entry as read-only and then processes the framebuffer data
+stored in that page. At that point, the processed data can be delivered to the
+device through its native IO interface, which could be GPIO, AMLCD, USB, or
+anything else. Since the page was re-marked to read-only, the sequence would
+repeat if the application ever rewrote that page. This is somewhat similar
+to a writeback cache. Host memory is used as a cache for device memory or
+any output destined for the device. The page fault is then used as a
+trigger to determine when to actually "writeback" this memory to the device. 
+<p>
+This technique solves problem 1 because host memory is used and can therefore be
+memory mapped. The output from the application intended for the device is
+written to host memory and, unlike hardware supported memory mapped IO,
+this output is not transfered to the device for each memory write. It is
+only after the driver specified delay has expired that this collected data
+is transfered to the device. The fact that the transfer would be through
+GPIO or any other mechanism is transparent to the application and requires
+no intervention.
+<p>
+The delay between the page fault and the IO is what addresses problem 2. The
+application sees only a framebuffer which happens to be in host memory.
+Writes to the framebuffer are therefore as fast as writes to any other part
+of memory. The display update latency is therefore transparent to the
+application. The driver specified interval should be selected to be
+appropriate for the latency of the device. For example, if the device has a
+one-second display update latency, then a one-second delay would be reasonable.
+A longer delay would result in the display being less interactive than what
+it was really capable of. A shorter delay would result in host updates
+building up since the device would not be able to keep up. Applications that
+require display synchronization primitives could use <tt>fsync()</tt> or the
+<tt>FBIO_WAITFORVSYNC</tt> ioctl depending on their needs.
+<p>
+Problem 3 is solved because the address that is the cause of the page fault
+is known. Internally, deferred IO uses the memory management subsystem's
+<tt>page_mkwrite()</tt> callback and <tt>page_mkclean()</tt> to implement the core of its
+functionality. The current deferred IO implementation passes a list of
+<tt>page</tt> structures to the framebuffer driver's deferred IO callback. The driver
+can then use <tt>page-&gt;index</tt> to identify which part of the framebuffer was
+written to. This provides PAGE_SIZE granularity in identifying the updated
+pixels.
+<p>
+<h3>Status</h3>
+<p>
+This method works fine in common use cases. For example, if one were to run
+<tt>xpdf</tt> and use page-up to flip through pages, then <tt>xpdf</tt> would render to the
+framebuffer in host memory on each page-up. Then, at the end of each write
+induced interval, the driver would deliver the current image to the display.
+This would give the effect where one would be seeing the most recent page on
+the display rather than every single page that had been flipped through.
+This enables the system to be reasonably interactive. Applications like
+<tt>xclock</tt> (an analog clock ticking every second) as well as playback
+applications (displaying a slider showing playback position) behave in a
+similar fashion.
+<p>
+Deferred IO support was merged into the Linux kernel in 2.6.22;
+<tt>Documentation/fb/deferred_io.txt</tt> contains additional information. The driver
+for the Apollo controller was also merged in 2.6.22 and is in
+<tt>drivers/video/hecubafb.c</tt>. The driver for the Metronome controller
+is <a
+href="http://marc.info/?l=linux-fbdev-devel&m=119412505902140&w=2">posted</a> 
+but not yet complete; it also
+includes necessary bugfixes for deferred IO.
+<p>
+The current development focus is on the Metronome controller. It is being
+tested with a Gumstix Connex board which has an Xscale pxa255 CPU. The
+display media that is being used is an E-Ink Vizplex 6" 800x600 panel with 3
+bits of grayscale. The metronomefb driver for this controller uses deferred
+IO and is still a work-in-progress but it is capable of running Xfbdev. X
+clients such as xclock, xeyes, xlogo and xloadimage have been run without
+problems. It is not yet clear how to measure framebuffer performance on such
+a system; the reason for this is that most display benchmarks use the time
+for a drawing operation to complete as the basis for performance statistics.
+On this system, such a benchmark would be merely measuring time to render to
+host memory rather than time to deliver to the actual display. It may be
+necessary to develop an alternate method of measuring display system
+performance for e-paper displays.
+<p>
+All is not yet perfect.
+Applications that render images that affect only a small number of pixels
+but cross multiple pages because of the framebuffer layout (eg: a thin
+vertical image) result in reduced efficiency. This is because the ratio of
+changed pixels to the number of written pages is low.
+<p>
+The architectural weakness of deferred IO is that it depends on the system
+having an MMU. It may be possible to implement a similar approach using the
+lower level memory protection capabilities that are available on some no-MMU
+systems. For example, the Blackfin architecture has a Data Cacheability
+Protection Lookaside Buffer (DCPLB) that has notions of read/write
+permissions on its entries. This will be an interesting area for future
+exploration. 
+<p>
+The current implementation only works with framebuffers allocated from
+virtual memory. Support needs to be implemented to achieve the same functionality
+with memory obtained from <tt>kmalloc()</tt> or the DMA layer.
+<p>
+There have been suggestions that this technique may be useful in other
+areas. One scenario that has been mentioned is optimizing display bandwidth
+consumption by switching between DMA and plain memory copies based on the
+number of written pages. Another scenario is USB-to-VGA adapters. It may
+also be the case that any device connected via a relatively slow bus where
+the data flow is primarily output could benefit from a similar approach.
+<p>
+Acknowledgments:
+the author is grateful to E-Ink engineers for their extensive support and
+hardware help, Peter Zijlstra, Antonino Daplas, Paul Mundt, Geert Uytterhoeven,
+Hugh Dickins, James Simmons and others for mm, fbdev, and general help.<hr width="60%" align="left">
+           (<a href="https://lwn.net/login?target=/Articles/259210/">Log in</a> to post comments)
+           <p>
+           
+</div> <!-- ArticleText -->
+<p><a name="Comments"></a>
+
+<a name="CommAnchor259507"></a>
+<div class="CommentBox">
+  <p class="CommentTitle">Supporting electronic paper</p>
+  <div class="CommentBody">
+    <p class="CommentPoster">Posted Nov 21, 2007 17:28 UTC (Wed) by <b>nettings</b> (subscriber, #429)
+       [<a href="/Articles/259507/">Link</a>]
+    </p>
+    <div class="FormattedComment"><pre>
+very interesting article, thanks jaya! 
+</pre></div>
+
+  </div>
+  <p>
+  <div class="CommentReplyButton">
+    <form action="/Articles/259507/comment" method="post">
+      <input type="submit" value="Reply to this comment">
+    </form>
+  </div>
+  
+</div>
+<div class="Comment">
+
+<a name="CommAnchor259592"></a>
+<div class="CommentBox">
+  <p class="CommentTitle">Supporting electronic paper</p>
+  <div class="CommentBody">
+    <p class="CommentPoster">Posted Nov 22, 2007 7:47 UTC (Thu) by <b>oak</b> (guest, #2786)
+       [<a href="/Articles/259592/">Link</a>]
+    </p>
+    <div class="FormattedComment"><pre>
+GUADEC 2007 had a presentation of problems related to E-ink displays.  The 
+kernel display updating is not the only problem.  It taking ~1 sec has 
+also interesting implications for UI elements, for example scrollbars are 
+pretty useless, see:
+<a href="http://guadec.org/node/636">http://guadec.org/node/636</a>
+
+Robert Love recently reviewed Amazon's Kindle (E-book reader with E-ink 
+display), see:
+<a href="http://blog.rlove.org/2007_11_01_archive.html">http://blog.rlove.org/2007_11_01_archive.html</a>
+
+</pre></div>
+
+  </div>
+  <p>
+  <div class="CommentReplyButton">
+    <form action="/Articles/259592/comment" method="post">
+      <input type="submit" value="Reply to this comment">
+    </form>
+  </div>
+  
+</div>
+<div class="Comment">
+
+<a name="CommAnchor259602"></a>
+<div class="CommentBox">
+  <p class="CommentTitle">Supporting electronic paper</p>
+  <div class="CommentBody">
+    <p class="CommentPoster">Posted Nov 22, 2007 10:38 UTC (Thu) by <b>jayakumar</b> (guest, #49119)
+       [<a href="/Articles/259602/">Link</a>]
+    </p>
+    <div class="FormattedComment"><pre>
+<font class="QuotedText">&gt; The kernel display updating is not the only problem.  It taking ~1 sec has</font>
+<font class="QuotedText">&gt; also interesting implications for UI elements, for example scrollbars are</font>
+
+Yes, I agree with you that traditional UI components such as sliders are impacted by the high
+latency of the display media. But you mention "kernel display updating" which is something
+that I am not sure I understand. 
+
+I would like to clarify that I didn't write about fbcon or in-kernel fbdev usage. Deferred IO
+drivers expose a 0-additional latency fb to all fbdev clients, especially clients like Xfbdev.
+This technique allows standard X11 apps like xpdf, etc that run on top of Xfbdev or other
+fbdev servers to use an E-Ink display without knowing about the high latency or having to
+control their draws. Let's say that the xclock (think of it as a rotating slider) ticks every
+10ms and then calls XDraw*. The display could have 1s latency but deferred IO makes it such
+that the clock is never more than 1s behind the current time because it shows the most recent
+state rather than showing every one of each of the 10ms updates. I hope I'm explaining this
+well. If not, there's a youtube video that I've posted of an older version of metronomefb.
+<a href="http://www.youtube.com/watch?v=Or3R3Q8oyuE">http://www.youtube.com/watch?v=Or3R3Q8oyuE</a>
+</pre></div>
+
+  </div>
+  <p>
+  <div class="CommentReplyButton">
+    <form action="/Articles/259602/comment" method="post">
+      <input type="submit" value="Reply to this comment">
+    </form>
+  </div>
+  
+</div>
+</div>
+</div>
+
+<a name="CommAnchor259675"></a>
+<div class="CommentBox">
+  <p class="CommentTitle">Supporting electronic paper</p>
+  <div class="CommentBody">
+    <p class="CommentPoster">Posted Nov 23, 2007 9:55 UTC (Fri) by <b>nlucas</b> (subscriber, #33793)
+       [<a href="/Articles/259675/">Link</a>]
+    </p>
+    <div class="FormattedComment"><pre>
+One thing I noticed when working on a prototype to a virtual display driver (same problems, if
+you can't write directly on the graphic card frame buffer), was that if you have a big latency
+but have enough bandwidth, it may be cheaper to do the deferred write to all the pages,
+instead of controlling what different pages changed.
+
+In the case of a virtual driver, if you have a modern graphic card on the host side, it will
+not be noticeable in speed if you do 640x480, 800x600 or a 1024x768 blit, but it will be
+noticeable if you do a sequence of smaller blits to changed parts of the screen (making it
+ugly).
+
+</pre></div>
+
+  </div>
+  <p>
+  <div class="CommentReplyButton">
+    <form action="/Articles/259675/comment" method="post">
+      <input type="submit" value="Reply to this comment">
+    </form>
+  </div>
+  
+</div>
+<div class="Comment">
+
+<a name="CommAnchor260448"></a>
+<div class="CommentBox">
+  <p class="CommentTitle">Supporting electronic paper</p>
+  <div class="CommentBody">
+    <p class="CommentPoster">Posted Nov 30, 2007 2:05 UTC (Fri) by <b>jayakumar</b> (guest, #49119)
+       [<a href="/Articles/260448/">Link</a>]
+    </p>
+    <div class="FormattedComment"><pre>
+<font class="QuotedText">&gt; In the case of a virtual driver, if you have a modern graphic card on the host side, it will</font>
+<font class="QuotedText">&gt; not be noticeable in speed if you do 640x480, 800x600 or a 1024x768 blit, but it will be</font>
+<font class="QuotedText">&gt; noticeable if you do a sequence of smaller blits to changed parts of the screen (making it</font>
+<font class="QuotedText">&gt; ugly).</font>
+
+I'm not sure but I think you are referring to "tearing" right? ie: on a normal display (LCD or
+CRT), if you're updating parts of the display during the retrace, then you would get tearing
+if the part that was changing was part of an overall image. For example, if I was spinning a
+globe on the display and then updating parts of the globe map without syncing to retrace, I
+would get tearing which is what I understand when you say "making it ugly". This imposes the
+need for synchronization with the vertical blanking interval. In the case of E-paper, there is
+no retrace, and it is currently too slow to use for over 4Hz, so a partial display update is
+ok because its unlikely to be used for moving images. I hope I have understood you correctly.
+Thanks.
+
+
+</pre></div>
+
+  </div>
+  <p>
+  <div class="CommentReplyButton">
+    <form action="/Articles/260448/comment" method="post">
+      <input type="submit" value="Reply to this comment">
+    </form>
+  </div>
+  
+</div>
+</div>
+
+</div><!-- Printable -->
+</td> <!-- MC -->
+</tr></table></td>
+</tr></table><!-- endpage -->
+
+        <center>
+        <P>
+        <font size="-2">
+        Copyright &copy; 2007, Eklektix, Inc.<BR>
+        Comments and public postings are copyrighted by their creators.<br>
+        Linux  is a registered trademark of Linus Torvalds<br>
+        </font>
+        </center>
+        
+            <script type="text/javascript">
+            var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+            document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+            </script>
+            <script type="text/javascript">
+            try {
+            var pageTracker = _gat._getTracker("UA-2039382-1");
+            pageTracker._trackPageview();
+            } catch(err) {}</script>
+            
+        </body></html>
+        
