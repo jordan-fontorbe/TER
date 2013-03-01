@@ -1,1 +1,24 @@
 \chapter{Besoins fonctionnels}
+
+Comme dit dans les 1ère partie de ce document, le but du projet est la réalisation d'un émulateur d'une liseuse avec un écran virtuel fonctionnant comme un écran E-ink. Pour cela plusieurs besoins fonctionnels sont nécessaires à la réalisation de ce projet.  
+
+\section{Conception d'un client RFB pour la liseuse}
+
+Dans un premier temps il nous faut concevoir un prototype de de client permettant de mettre à jour l'écran de la liseuse de test via notre machine de développement.
+
+\subsection{DirectFB}
+ Pour réaliser cela, Mr OLLINGER nous a proposé de travailler avec directFB. DirectFB est une bibliothèque libre qui fournit à la fois un accès aux composants matériels graphiques (accélération graphique) ainsi qu'aux périphériques d'entrées, et un systèmes de gestions de fenetres intégré avec support de la transparence et de calque multiple, tout ceci à travers de l'interface framebuffer de linux. Nous devons ajouter la gestion des écrans e-ink dans directFB avant de pouvoir l'utiliser. 
+\subsection{Client RFB}
+Lorsque directFB est prêt à être utilisé, on travaille ensuite sur le protocole RFB (Remote FrameBuffer ) qui est un simple protocole permettant des accès à distance à des interfaces graphiques d'utilisateur. On doit ajouter la gestions des mises à jour de l'affichage pour les écran de type e-ink via ioctl(). De tout ces éléments, on peut ainsi concevoir un client RFB interagissant sur la liseuse et la conception d'un serveur gérant les mises à jour. 
+
+\section{E-ink QEMU via VNC}
+
+Dans un second temps, on travaille sur QEMU qui permet l'émulation de processeur et de machine virtuelle permettant l'exécution de système d'exploitation. On ajoute la gestion des ioctl() à QEMU. Ensuite on intègre l'extension RFB ajouter dans la partie conception du client dans QEMU via l'option VNC permettant la gestion de bureau distant.
+
+\section{Liseuse Android sous qemu}
+
+Après la création de la base de l'émulateur, on ajoute à celui-ci la version e-ink d'Android développer pour la liseuse Sony. 
+
+\section{Simulation d'écran E-ink}
+
+Pour finir le développement de l'émulateur, on intègre un simulateur d'écran e-ink reproduisant l'affichage de la liseuse de Sony directemnt sur la machine de test et on y intègre quelque fonctionnalité supplémentaire tel que l'affichage optionnel des zones de mise à jour pour le debug.
