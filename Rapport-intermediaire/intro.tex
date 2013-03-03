@@ -1,5 +1,20 @@
 \chapter{Introduction au domaine}
 Ce TER, Android au pays des liseuses, fait appel à plusieurs technologies. Dans cette partie, nous allons nous interesser a ces différentes technologies afin de préciser les avantages et les inconvéniants de chacunes d'entre elles.
 \section{Les écrans E-ink}
-L'e-ink est une technologie d'écran qui permet de construire des écrans offrant de nombreux avantages tel qu'une consomation d'énergie très limitée. En effet, les écrans e-ink ne consomment de l'énergie que pour mettre à jour l'affichage. Ainsi, ces écrans n'ont pas de retro-éclairage ce qui apporte un confort visuel proche du papier en ne fatigant pas les yeux du lecteur. Par contre, les écrans e-ink, ont une durée de rafraichissement très longue ce qui est pénalisant pour afficher des animations par exemple. On estime que pour raffraichir entièrement et "proprement" un écran de 7 pouces, il faut environ 1 seconde. Ce problème peut être limité en ne raffraichissant qu'une petite partie de l'écran ou en n'effaçant pas entièrement l'affichage précedent. Un description technique du fonctionnment des écrans à encre électronique sera donnée plus en avant dans ce rapport.
-\section{}
+L'e-ink est une technologie d'écran qui permet de construire des écrans offrant de nombreux avantages.
+\subsection{Avantages}
+La consomation d'énergie très limitée. En effet, les écrans e-ink ne consomment de l'énergie que pour mettre à jour l'affichage. Ainsi, ces écrans n'ont pas de retro-éclairage ce qui apporte un confort visuel proche du papier en ne fatigant pas les yeux du lecteur. 
+\subsection{Inconvéniants}
+Par contre, les écrans e-ink, ont une durée de rafraichissement très longue ce qui est pénalisant pour afficher des animations par exemple. On estime que pour raffraichir entièrement et "proprement" un écran de 7 pouces, il faut environ 1 seconde. Ce problème peut être limité en ne raffraichissant qu'une petite partie de l'écran ou en n'effaçant pas entièrement l'affichage précedent. 
+\subsection{Détails techniques}
+Plusieurs technologie existent pour les écrans e-ink, comme les écrans à cristaux liquides bistables, les écrans électrophorétiques ou encore les écrans polychromatiques. Nous allons nous interesser plus particulièrement aux écrans électrophorétiques.\\
+\includegraphics{Electrophoretic.png}
+\section{Android}
+Android est un système d'exploitation open source utilisant le noyau Linux, pour terminaux mobiles conçu par Android, une startup rachetée par Google, et annoncé officiellement le 5 novembre 2007.
+\subsection{Android pour liseuses}
+Pour les liseuses, Android permet une adaptation relativement simple. L'avantage principal étant le système open-source qui permet de pouvoir modifier le middleware, comme montré dans l'exemple dans le cas de freescale.\\
+\includegraphics{pileAndroidLiseuse.png}
+\section{Handheld devices}
+Les handheld devices regroupe l'ensemble des terminaux mobiles. Ce qu'il faut noter en particulier avec ces terminaux est le mode de fonctionnement un peu différent des ordinateurs dit 'de bureau'. En effet, par économie d'espace et d'énergie, les constructeurs ont recours aux solutions System on Chip (SoC).
+\subsection{System on Chip}
+Un SoC est un système complet embarqué sur une puce, pouvant comprendre de la mémoire, un ou plusieurs microprocesseurs, des périphériques d'interface, ou tout autre composant nécessaire à la réalisation de la fonction attendue.
