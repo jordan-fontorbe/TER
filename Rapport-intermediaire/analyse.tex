@@ -1,5 +1,81 @@
 \chapter{Analyse de l'existant}
 
+\section{Le processeur iMX508}
+
+\subsection{Présentation des processeur iMX}
+
+Les processeurs iMX de Freescale sont des processeurs mobile basé sur l'architecture ARM et réputé pour leur faible consommation d'énergie. Ce sont des System-on-Chip (SoC), c'est-à-dire que ce sont des systèmes complet embarqué sur une puce comprenant de la mémoire, un microprocesseur, des périphériques d'interface ou encore des interfaces USB.
+
+On retrouve cette gamme de processeurs dans divers produits comme des téléphones, des imprimantes, des système de navigation pour voiture, des tablettes numériques et bien évidemment sûr des liseuses.
+
+Les solutions proposées par Freescale sur cette gamme de processeurs sont aussi bien sur la partie hardware (avec la conception de leur SoC) que software (optimisations spécifiques pour ces processeurs).
+
+\subsection{Le processeur iMX508}
+
+Le iMX508 est le processeur que l'on va retrouvé sur la liseuse SONY PRS-T1. Il est le résultat de la collaboration entre Freescale et E Ink et est le premier conçu spécialement pour les liseuses. 
+
+L'atout principal du iMX508 est son architecture ARM Cortex A8 disposant d'un contrôleur d'écran de liseuse intégré (Electrophoretic Paper Display Controller abrégé EPDC). Cette intégration lui permet d'être environ 50\% moins coûteux que les autres processeurs utilisant l'architecture ARM Cortex A8 mais avec un EPDC indépendant. Il est aussi plus performant car l'accès au contrôleur est direct.
+
+Le processeur iMX508 peut accueillir de la mémoire mDDR ou LPDDR2 qui consomme peu d'énergie et un système de voltage et fréquence dynamique qui lui permet de réduire sa consommation d'énergie durant les faibles activités.
+
+Il intègre aussi la technology NEON permettant de meilleurs performance graphique (dans le cas de la liseuse on notera une augmentation de la rapidité pour tourner les pages par exemple).
+
+Ce processeur permet donc une faible consommation d'energie tout en conservant de bonnes performances grâces aux modifications apportés par Freescale.
+
+
+Voici un petit schéma du Soc iMX508 :
+
+\begin{center}
+	\includegraphics{iMX508.png}
+\end{center}
+
+
+\section{Le contrôleur (EPDC)}
+
+L'EPDC (Electrophoretic Display Controller) conçu spécialement pour les écran E Ink  est une partie importante du processeur iMX508. Il a été intégré directement à l'architecture ARM pour de meilleures performances et une dépense d'énergie moindre. C'est ce contrôleur qui va faire le lien entre l'écran E Ink et le processeur.
+Avant de parler de l'EPDC il est nécessaire de faire un point sur le fonctionnement des écrans électrophorétiques.
+
+\subsection{Les écrans électrophorétiques}
+
+La liseuse à laquelle nous nous intéressons (Sony PRS-T1) possède un écran utilisant la technologie de l'électrophorétique.
+
+L'écran possède des microcapsules contenant des particules blanches chargées négativement ainsi que des particules noires chargées positivement. Lorsque l'on applique un champ électrique négatif, les particules blanches et noires se sépares (les blanches vont vers une extrémité de la capsule et les noires vers l'autres). Ainsi avec plusieurs millions de capsules et en appliquant des champs électriques, on peut afficher une image en noire et blanc. Une fois que la capsule à reçu un signal électrique, celle-ci garde son état.
+
+Cette technologie à pour principal avantage sa très faible consommation d'énergie puisqu'une fois l'image chargée, elle reste telle qu'elle sans consommation d'énergie et ne nécessite pas d'éclairage particulier (la lumière ambiante suffit).
+
+\begin{center}
+	\includegraphics{Electrophoretic.png}
+\end{center}
+
+
+\subsection{Problématique}
+
+Les écrans électrophorétiques nécessite des contrôleurs capables de diriger des ondes (appelées waveforms) pour afficher des images. C'est-à-dire que ces contrôleurs doivent produire un signal (waveform) qui va placer les particules de l'écran de sorte à afficher l'image souhaitée.
+
+Il y a trois problèmes majeures pour les écrans électrophorétiques :
+\begin{itemize}
+	\item[$\bullet$] Comment mapper une mémoire non mappable ?
+	\item[$\bullet$] Comment diminuer la latence entre les mises à jour d'affichage ?
+	\item[$\bullet$] Comment détecter que l'on a écrit à une adresse mémoire mappée ?
+\end{itemize}
+
+Pour résoudres ces problèmes on peut utiliser les Deferred IO.
+
+\subsection{Deferred IO}
+
+J'ai pas bien compris cette partie, j'attends de voir avec Tristan ...
+
+\subsection{Caractéristiques principales de l'EPDC}
+
+\begin{itemize}
+	\item[$\bullet$] Résolution jusqu'à 4096 x 4096 pixels à 20 Hz et 2048 x 1536 à 106 Hz
+	\item[$\bullet$] De 5 à 32 niveau de pixels
+	\item[$\bullet$] Peux mettre à jour jusqu'à 16 région sur un écran
+	\item[$\bullet$] Mise a jour partielle ou totale de l'écran 
+	\item[$\bullet$] Interfaçage avec la mémoire du processeur pour garantir un taux de rafraîchissement
+	\item[$\bullet$] Peux réduire sa consommation d'énergie
+\end{itemize}
+
 
 %pré-requis : notion de deferred_io, lookup table (LuT), waveforme
 %a supprimer : framebuffer si vu plus tôt
@@ -143,3 +219,24 @@ Le driver dispose aussi d'une gestion des ioctl pour le framebuffer.
 Les ioctls permettent dans les système Unix d'ajouter des fonctionnalité qui ne serait pas accessible autrement (dans notre cas les fonctionnalité propre aux écrans E-Ink).
 
 Le driver implémente les ioctls grâce à la fonction mxc\_epdc\_fb\_ioclt, cette fonction permet l'accès à toutes les fonctionnalités du framebuffer depuis l'espace utilisateur.
+
+
+\section{Caractéristiques de la liseuse Sony PRS-T1}
+
+\begin{itemize}
+		\item[$\bullet$] Processeur : Freescale iMX508
+		\item[$\bullet$] Dimensions : 173 x 110 x 8.9 mm
+		\item[$\bullet$] Poids : 168 g
+		\item[$\bullet$] Ecran :
+			\begin{itemize}
+				\item Taille : 15,5 cm de diagonal (6")
+				\item Résolution : Jusqu'à 16 niveaux de gris
+			\end{itemize}
+		\item[$\bullet$] Mémoire : 2 Go en interne, extension possible de 32 Go via microSD
+		\item[$\bullet$] Batterie : Lithium-ion (tient environ un mois)
+		\item[$\bullet$] Interfaces : USB
+		\item[$\bullet$] Formats e-book supportés : EPUB, PDF, TXT
+		\item[$\bullet$] Formats audio supportés : MP3, AAC
+		\item[$\bullet$] Sans-fil : WiFi
+		
+\end{itemize}
