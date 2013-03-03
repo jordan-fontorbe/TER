@@ -1,1 +1,145 @@
 \chapter{Analyse de l'existant}
+
+
+%pré-requis : notion de deferred_io, lookup table (LuT), waveforme
+%a supprimer : framebuffer si vu plus tôt
+\section{Le driver e-ink}
+
+\subsection{notions générales}
+La liseuse sony prs-t1 dispose de trois éléments hardware et software afin 
+de rendre possible l'affichage sur écran e-ink. Le framebuffer, le pixel pipeline (pxp), l'accès direct à la mémoire (dma) et les lookup tables.
+
+%La notion de framebuffer étant déja expliquer dans la partie  <partie> je ne vais présenter que le pixel pipeline est l'accès mémoire direct
+\subsubsection{le framebuffer}
+
+La notion de framebuffer permet l'accès à une zone mémoire contenant l'image affichée actuellement à l'écran sans être dépendant  du matériel utilisé en aval.
+
+Le framebuffer utilisé dans le cas d'un écran e-ink se base sur la notion de deferred io vu plus tôt.
+%inserer la partie correspondante ? sinon inserer une description du deferred_io
+
+\subsubsection{le pixel pipeline}
+
+La plate-forme freescale (mx50) dispose d'un enhanced pixel pipeline (ePXP), ce dernier est utilisé pour : 
+	\begin{itemize}
+		\item[$\bullet$] gérer la transparence
+		\item[$\bullet$] faire des rotations d'images
+		\item[$\bullet$] faire des agrandissement / réduction d'images\\
+	\end{itemize}
+
+Le ePXP dispose en mémoire d'une image de fond mais aussi de calque(s) afin de pouvoir faire des 
+mélange (via la transparence) de chacune d'entre-elles avant d'envoyer le tout à l'écran.
+
+Il est important de noté que l' ePXP ne gère que des blocs d'une taille donnée (par exemple : 8x8 pixels) pour la résolution des zones de transparence.
+
+\subsubsection{l'accès direct a la mémoire (DMA)}
+
+Le DMA permet au matériel d' avoir accès à la mémoire sans que le transfert ne soit géré par le processeur est donc de rester inactif en attendant la fin de l'opération de lecture/écriture.
+Le processeur envoie juste un ordre au contrôleur DMA, ce dernier notifiera la fin du transfert via une opération d'interruption.
+
+Ce mode de transfert de donnée est utilisé lorsque le processeur ou la mémoire ont une différence dans la capacité de traitement (par exemple : le processeur ne pouvant pas géré le taux de transfert de la mémoire).
+%utilité ?
+Sur la plate-forme mx50 le DMA est géré pour le bus AHB, ce dernier étant synchrone le module de gestion AHB-to-APBH bridge implémente donc un contrôleur DMA afin de pouvoir gérer un mode d'échange asynchrone sur ce bus.
+
+\subsubsection{Les lookup tables (LuT)}
+
+Les lookup tables permettent au contrôleur de gérer plusieurs zone de mis à jour de l'écran en même temps, permettant ainsi de contrer la latence du à la mise à jour de l'écran via les waveforme.
+
+Les LuT représentent chacune une zone de mis à jour de l'écran, cette zone est défini par : 
+	\begin{itemize}
+		\item[$\bullet$] une taille
+		\item[$\bullet$] la fonction de waveforme associé
+	\end{itemize}
+La gestions des zones de mis a jour étant dynamique les Lut peuvent etre de taille variables, cependant la fonction de waveforme peut influer sur le nombre de LuT disponible car certains mode remettent l'écran a zéro avant de faire une mis a jour.
+
+Lorsque deux zones géré par les LuTs se chevauchent on dit qu'il y a collision. Lors d'une collision 
+la zone en qui écrase les zones pré-existante doit attendre que ces dernières aient fini leurs mis à jour. Ce système est établi car on ne doit pas interrompre l'application d'une waveforme a une zone de l'écran (et encore moins appliquer deux waveforme en même temps).
+\subsection{Organisation du driver}
+
+Le driver s'organise de ma manière suivante : 
+	\begin{itemize}
+		\item[$\bullet$] fonctions d'initialisation du driver
+		\item[$\bullet$] fonctions de bas niveau
+	\end{itemize}
+	
+\subsubsection{Fonctions d'initialisation du driver} % changer le nom ??
+
+	Ces fonction sont communes a tout drivers linux.
+	\begin{itemize}
+		\item[$\bullet$] mxc\_epdc\_fb\_probe : \\
+		initialisation du driver mis en place des fonctions de callback, du gestionnaire d'interruption
+		\item[$\bullet$] mxc\_epdc\_fb\_exit :\\
+		dés-allocation des ressources du noyau pour ce driver
+	\end{itemize}
+	Le driver dispose aussi de fonctions prenant en charge les événement de gestion d'alimentation (mis en veille, réveil, extinction).
+	
+\subsubsection{Fonctions de bas niveau}
+
+Les fonctions de bas niveau s'occupe de toutes l'interaction avec le matériel (contrôleur EPD, pixel pipeline, LuT).
+Ces fonctions dispose d'accès direct au registre du matériel via les appels à \_\_raw\_writel et \_\_raw\_readl, ce sont les seules fonctions à disposer d'un accès direct au matériel.
+
+
+%utilité du listing ??
+Ces fonctions peuvent être organisé en  sous catégories : 
+
+\begin{itemize}
+\renewcommand{\labelitemi}{$\bullet$}
+	\item fonction d'initialisation de paramètre du contrôleur : 
+		\begin{itemize}
+		\renewcommand{\labelitemi}{$\to$}
+			\item epdc\_clock\_gatting
+			\item epdc\_set\_screen\_res
+			\item epdc\_init\_settings
+			\item epdc\_init\_sequence
+			\item epdc\_set\_horizontal/vertical\_timing
+			\item epdc\_set\_temp
+			\item epdc\_set\_border\_gpio
+		\end{itemize}
+	\item fonctions de gestion des LuTs : 
+		\begin{itemize}
+			\item epdc\_lut\_complete\_intr
+			\item epdc\_is\_lut\_complete
+			\item epdc\_is\_lut\_active
+			\item epdc\_any\_luts\_available
+			\item epdc\_get\_next\_lut
+			\item epdc\_is\_collision
+			\item epdc\_get\_collision\_luts
+		\end{itemize}
+	\item fonction de gestion du buffer de travail (au sein du PxP) : 
+		\begin{itemize}
+			\item epdc\_working\_buf\_intr
+			\item epdc\_clear\_working\_buf
+			\item epdc\_eof\_intr
+			\item epdc\_signal\_eof
+			\item epdc\_is\_working\_buffer\_busy
+			\item epdc\_is\_working\_buffer\_complete
+		\end{itemize}
+	\item fonction de gestion des updates : 
+		\begin{itemize}
+			\item epdc\_set\_update\_addr
+			\item epdc\_set\_update\_dimension
+			\item epdc\_set\_update\_coord
+			\item epdc\_submit\_update
+		\end{itemize}
+	\item le gestionnaire d'interruption et fonctions d'interruptions : 
+	\begin{itemize}
+		\item epdc\_irq\_handler
+		\item epdc\_clear\_eof\_irq
+		\item epdc\_clear\_lut\_complete\_irq
+	\end{itemize}
+\end{itemize}
+
+\subsubsection{Les fonctions de gestions du framebuffer}
+
+Ces fonctions permettent prennent en charge toutes la gestion du framebuffer avec deferred\_io 
+propre au controleurs d'écran E-Ink.
+Ce framebuffer gère les particularité des écrans E-Ink : 
+	\begin{itemize}
+		\item gestion de la température
+		\item gestion des waveforme
+		\item latence importante de l'écran
+	\end{itemize}
+
+Le driver dispose aussi d'une gestion des ioctl pour le framebuffer.
+Les ioctls permettent dans les système Unix d'ajouter des fonctionnalité qui ne serait pas accessible autrement (dans notre cas les fonctionnalité propre aux écrans E-Ink).
+
+Le driver implémente les ioctls grâce à la fonction mxc\_epdc\_fb\_ioclt, cette fonction permet l'accès à toutes les fonctionnalités du framebuffer depuis l'espace utilisateur.
