@@ -1,28 +1,33 @@
 \chapter{Besoins fonctionnels}
 
-Comme énoncé dans la 1ère partie de ce document, le but du projet est la réalisation d'un émulateur d'une liseuse avec un écran virtuel fonctionnant comme un écran E-ink directement sur notre machine ayant pour système d'exploitation Linux. La réalisation de ce projet se découpe en plusieurs parties à réaliser dans un ordre strict afin d'aboutir au résultat final souhaité. Ce plan nous a été proposé par notre encadrant de projet. N'ayant pas encore eu le temps de tester les points suivant il se peut que certains des éléments peuvent avoir été mal interprété donc peut contenir des erreurs.
+Comme énoncé dans la 1ère partie de ce document, le but du projet est la réalisation d'un émulateur d'une liseuse avec un écran virtuel fonctionnant comme un écran E-Ink directement sur notre machine ayant pour système d'exploitation Linux. La réalisation de ce projet se découpe en plusieurs parties à réaliser dans un ordre strict afin d'aboutir au résultat final souhaité. Ce plan nous a été proposé par notre encadrant de projet M. OLLINGER. N'ayant pas encore eu le temps de tester les points suivants il se peut que certains des éléments peuvent avoir été mal interprété d'où la présence possible d'erreur. D'autres points peuvent aussi manquer de détails.
 
 \section{Conception d'un client RFB pour la liseuse}
 
 Dans un premier temps il nous faut concevoir un prototype de de client permettant de mettre à jour l'écran de la liseuse de test via notre ordinateur.
 
 \subsection{DirectFB}
-Pour réaliser cela, Mr OLLINGER nous a proposé de travailler avec directFB. DirectFB est une bibliothèque libre qui fournit à la fois un accès aux composants matériels graphiques (accélération graphique) ainsi qu'aux périphériques d'entrées, et un systèmes de gestions de fenêtres intégré avec support de la transparence et de calque multiple, tout ceci à travers de l'interface framebuffer de linux. Nous devons ajouter la gestion des écrans e-ink dans directFB avant de pouvoir l'utiliser et ainsi reproduire le fonctionnement d'un controlleur d'une liseuse. 
+Pour réaliser cela, M. OLLINGER nous a proposé de travailler avec DirectFB. DirectFB est une bibliothèque libre qui fournit à la fois un accès aux composants matériels graphiques (accélération graphique) ainsi qu'aux périphériques d'entrées, et un systèmes de gestions de fenêtres intégrées avec support de la transparence et de calques multiple, tout ceci à travers de l'interface framebuffer de linux. Nous devons ajouter la gestion des écrans E-Ink dans DirectFB. 
  
 \subsection{Client RFB}
-Lorsque directFB est prêt à être utilisé, on travaille ensuite sur le protocole RFB (Remote FrameBuffer ) qui est un simple protocole permettant des accès à distance à des interfaces graphiques d'utilisateur. On doit ajouter la gestions des mises à jour de l'affichage pour les écran de type e-ink via ioctl(). De tout ces éléments, on peut ainsi concevoir un client RFB interagissant sur la liseuse et la conception d'un serveur gérant les mises à jour.
-Les tests consisteront à essayer de produire des changements d'affichage sur la liseuse grâce à des demandes précis envoyées via l'ordinateur de test et transmis par le serveur de mise à jour. 
+Lorsque DirectFB est prêt à être employé, on travaille ensuite sur le protocole RFB (Remote framebuffer ) qui est un simple protocole permettant des accès à distance à des interfaces graphiques d'utilisateur. On doit ajouter la gestions des mises à jour de l'affichage pour les écran de type E-Ink via ioctl(). De tout ces éléments, on peut ainsi concevoir un client RFB interagissant sur la liseuse et la conception d'un serveur gérant les mises à jour.
+\\Les tests consisteront à essayer de produire des changements d'affichage sur la liseuse grâce à des demandes précises envoyées via l'ordinateur de test et transmis par le serveur de mise à jour. 
+
+\newpage
 
 \section{E-ink QEMU via VNC}
 
-Dans un second temps, on développe la base de l'émulateur, c'est à dire la mise en place d'une machine virtuelle pouvant reproduire les actions nécessaire aux fonctionnement d'un écran e-ink. Pour réaliser cela nous travaillons sur QEMU qui permet l'émulation de processeur et de machine virtuelle permettant l'exécution de système d'exploitation. On ajoute la gestion des ioctl() à QEMU. ?????
+Dans un second temps, on développe la base de l'émulateur, c'est à dire la mise en place d'une machine virtuelle pouvant reproduire les actions nécessaire au fonctionnement d'un écran E-Ink. Pour réaliser cela nous travaillons sur QEMU qui permet l'émulation de processeur et de machine virtuelle permettant l'exécution de système d'exploitation. On ajoute la gestion des ioctl() à QEMU. Ensuite ajouter à l'options VNC de QEMU l'extensions RFB du client de la liseuse.
+\\Le test consiste à vérifier si depuis une machine virtuelle QEMU utilisant l'image du noyau linux de la liseuse de test, on peut via VNC intéragir avec la liseuse. 
+
 
 \section{Liseuse Android sous qemu}
 
-Après la création de la base de l'émulateur, on intègre à celui-ci un système d'exploitation Android conçue pour fonctionner sur une liseuse. Dans notre cas çà sera la version d'Android présent sur notre liseuse de test Sony PRS-T1. ??????
+Après la création de la base de l'émulateur, on intègre à celui-ci un système d'exploitation Android conçue pour fonctionner sur une liseuse. Dans notre cas çà sera la version d'Android présent sur notre liseuse de test Sony PRS-T1.
+Pour les tests, on lance l'émulateur muni d'Android et on test le fonctionnement des applications Sony fournit de base avec le système d'exploitation.
 
 \section{Simulation d'écran E-ink}
 
-Pour finir le développement de l'émulateur, on développe un simulateur d'écran e-ink reproduisant virtuellement le comportement de celui-ci en y ajoutant des fonctionnalité facilitant les tests tel que choisir une zone précise à mettre à jour sur un écran. Ensuite on intègre celui-ci dans notre émulateur.
-\\Les tests consisteraient à réaliser des mini-applications et les lancé sur l'émulateur et vérifier les réaction de notre écran virtuelle.
+Pour finir le développement de l'émulateur, on développe un simulateur d'écran e-ink reproduisant virtuellement le comportement de celui-ci en y ajoutant des fonctionnalités facilitant les tests tel que choisir une zone précise à mettre à jour sur un écran (utile au debug). Ensuite on intègre celui-ci dans notre émulateur.
+\\Les tests consisteraient à réaliser des mini-applications et les lancer sur l'émulateur et vérifier les réactions de notre écran virtuelle.
 
