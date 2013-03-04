@@ -1,1 +1,70 @@
 \chapter{Besoins non fonctionnels}
+\section{Hacks de la PRS-T1}
+
+La PRS-T1 étant fermé, il nous est impossible dans sa configuration de base de pouvoir y ajouter la mise à jour 
+de l'affichage depuis une machine hôte.
+Plusieurs méthode existent pour débloquer la liseuse : 
+
+\subsubsection{Mise a jour du firmware}
+
+La méthode la plus répandues pour débloquer la liseuse consiste à faire une mise à jour du firmware.
+La liseuse n'acceptant que les mises à jour signée par Sony. Les clefs privées de cette signature étant connues des hackers (elles sont stoquées dans la liseuse pour la vérification).
+
+Plusieurs firmware modifié existe déjà pour mettre à jour la liseuse, c'est derniers débloque complètement la liseuse tout en gardant les logiciels Sony pré-installé.
+
+Cette méthode dispose donc de plusieurs avantages : 
+	\begin{itemize}
+		\item permet un accès total a la liseuse (installation d'application Android, ...)
+		\item on conserve les fonctions normale de la liseuse (logiciel de lecture Sony)
+	\end{itemize}
+Cependant le fait de modifier le firmware interne de la liseuse comporte certains risques : 
+	\begin{itemize}
+		\item risque de rendre la liseuse inutilisable
+		\item perte de la garantie constructeur
+	\end{itemize}
+
+Étant donné que la PRS-T1 est un prêt de M. Ollinger cette méthode de hack comporte trop de risques.
+
+\subsubsection{Utilisation du mode Recovery}
+
+Une autre méthode de hack consiste à utiliser le mode recovery de la liseuse.
+Ce mode permet normalement de récupérer la liseuse suite à un problème.
+Pour entrer en mode recovery la liseuse a besoin d'un  système de fichier de récupération.
+Ce dernier pouvant être situé sur une carte mémoire externe.
+
+Cette méthode réduits les risques encouru lors de la manipulation car un simple redémarrage de la liseuse, 
+suffit pour revenir au système de base.
+
+les caractéristiques de cette méthodes sont  : 
+%Les avantages de cette méthodes sont : 
+\begin{itemize}
+	\renewcommand{\labelitemi}{$\bullet$}
+	\item Avantages : 
+	\begin{itemize}
+		\item risque minime pour la liseuse
+		\item permet des modifications importante (car on fait nous même le système à partir des sources du noyau fournit par Sony)%un peu long non ?
+	\end{itemize}
+	\item désavantages : 
+		\begin{itemize}
+			\item nécessite un pc hôte pour la mise en place du système (nécessitent de compiler le noyau)
+			\item On repart de zéro donc on n'a pas accès aux application sony (pour la lecture d'Ebook notamment)
+			\item nécessite beaucoup de travail car on repart avec uniquement le noyau.
+		\end{itemize}
+\end{itemize}
+\section{Risque}
+\subsection{Les Waveformes}
+	Le driver permet de redéfinir les fonctions de waveforme du contrôleur.
+Cependant le bon fonctionnement des écrans E-Ink dépend fortement de ces fonctions, modifier ces fonctions peut donc entraîner dans le meilleur des cas une différence entre la représentation virtuelle de l'affichage et ce que va réellement afficher l'écran, dans le pire cas cela peu endommager de manière définitive l'écran de la liseuse.
+
+\section{Tests}
+
+La spécificité des liseuses venant de leur écran il faut faire attention a respecter au maximum le comportement de ce dernier pour faire un environnement de développement dédié aux liseuses.
+
+\subsubsection{Taux de rafraîchissement}
+
+Les écrans E-Ink ayant un taux de rafraîchissement assez bas il devient nécessaire de veiller à ne pas le réduire d'avantage.
+Pour cela Il va falloir mettre en place un test comparatif entre le rafraîchissement de la liseuse seule et le rafraîchissement avec un ordinateur hôte via VNC.
+
+\subsubsection{Update bloquante}
+
+De la même manière l'ordinateur hôte ne doit pas se comporter de la meme manière qu'avec un écran classique. En effet il serait très facile pour l'hôte de surcharger complètement l'écran en faisant des mises à jour de l'affichage comme il le ferait avec un écran classique. %a véifier un peu tordu
