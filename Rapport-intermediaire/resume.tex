@@ -1,12 +1,15 @@
 \chapter{Résumé du projet}
-\section{Documentation}
-La première partie du projet a pour objectif de se documenter sur le sujet, c'est à dire la technologie du papier électronique et comment elle est mise en oeuvre au travers des différentes couches matérielles et logicielles.
-Cette partie va servir a la production de ce premier document de synthèse. 
-\section{Écriture du client RFB}
-Cette étape, a pour but de s'approprier les outils mis à notre disposition pour le développement. Il faudra dans un premier temps tester l'image de la liseuse. Puis mettre en oeuvre l'environnement de développement ltib de Freescale pour i.MX508. Il faut ensuite écrire un programme de test du framebuffer eink et ajouter un ioctl de mise à jour pour ensuite développer le support du gadget USB Ethernet au noyau. Il faut aussi ajouter ce module à l'image de test et une connexion via ssh. Il faut modifier DirectFB pour le support e-ink. Il faudra enfin modifier le protocole RFB pour supporter les mises à jour ioctl et mettre en oeuvre un client RFB pour la liseuse après avoir créé un serveur de gestion des mises à jour et effectuer des tests intensifs.
-\section{E-ink sous qemu via VNC}
-L'objectif de cette étape est de comprendre la gestion du framebuffer par l'émulateur qemu pour pouvoir y ajouter la gestion des ioctl. Dans un deuxième temps la compréhension de l'option VNC de qemu permettra l'ajout de l'extension RFB du client de la liseuse. Enfin des tests seront menés pour valider l'étape.
-\section{Liseuse Android sous qemu}
-Dans cette étape la compréhension des versions e-ink d'Android chez Freescale et Sony permettra la mise en place de cette pile dans l'émulateur. Cette étape sera testée à l'aide d'applications Sony. Enfin nous pourront écrire nos propres applications pour l'émulateur.
-\section{Simulateur d'écran E-ink}
-Cette dernière étape a pour objectif d'écrire un simulateur raisonnable d'écran e-ink. Celui-ci devra contenir une option de debug permettant d'afficher les zones de mise à jour. Le simulateur sera ensuite intégré à l'émulateur. Cette étape se terminera par des tests.
+
+Notre projet est proposé par M. OLLINGER et nous entraine dans le monde des liseuses. Il consiste à étudier dans un premier temps les spécificités du déploiement d'Android sur une liseuse. Dans un second temps, d'émuler la plate-forme à l'aide d'une machine virtuelle sur un écran déporté sur un ordinateur. Tout le développement ce concentrera sur la liseuse Sony PRS-T1 et son environnement Android fournit par notre chef de projet. 
+
+%\section{Documentation}
+%La première partie du projet a pour objectif de se documenter sur le sujet, c'est à dire la technologie du papier électronique et comment elle est mise en oeuvre au travers des différentes couches matérielles et logicielles.
+%Cette partie va servir a la production de ce premier document de synthèse. 
+%\section{Écriture du client RFB}
+%Cette étape, a pour but de s'approprier les outils mis à notre disposition pour le développement. Il faudra dans un premier temps tester l'image de la liseuse. Puis mettre en oeuvre l'environnement de développement ltib de Freescale pour i.MX508. Il faut ensuite écrire un programme de test du framebuffer eink et ajouter un ioctl de mise à jour pour ensuite développer le support du gadget USB Ethernet au noyau. Il faut aussi ajouter ce module à l'image de test et une connexion via ssh. Il faut modifier DirectFB pour le support e-ink. Il faudra enfin modifier le protocole RFB pour supporter les mises à jour ioctl et mettre en oeuvre un client RFB pour la liseuse après avoir créé un serveur de gestion des mises à jour et effectuer des tests intensifs.
+%\section{E-ink sous qemu via VNC}
+%L'objectif de cette étape est de comprendre la gestion du framebuffer par l'émulateur qemu pour pouvoir y ajouter la gestion des ioctl. Dans un deuxième temps la compréhension de l'option VNC de qemu permettra l'ajout de l'extension RFB du client de la liseuse. Enfin des tests seront menés pour valider l'étape.
+%\section{Liseuse Android sous qemu}
+%Dans cette étape la compréhension des versions e-ink d'Android chez Freescale et Sony permettra la mise en place de cette pile dans l'émulateur. Cette étape sera testée à l'aide d'applications Sony. Enfin nous pourront écrire nos propres applications pour l'émulateur.
+%\section{Simulateur d'écran E-ink}
+%Cette dernière étape a pour objectif d'écrire un simulateur raisonnable d'écran e-ink. Celui-ci devra contenir une option de debug permettant d'afficher les zones de mise à jour. Le simulateur sera ensuite intégré à l'émulateur. Cette étape se terminera par des tests.
