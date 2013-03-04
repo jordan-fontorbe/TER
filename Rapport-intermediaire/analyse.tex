@@ -51,11 +51,13 @@ Il y a trois problèmes majeures pour les écrans électrophorétiques :
 
 Pour résoudre ces problèmes on peut utiliser les Deferred IO.
 
+\newpage
+
 \subsection{Deferred IO}
 
 Le principe des Deferred IO est le suivant :
 \begin{itemize}
-\renewcommand{\labelitemi}{•$\bullet$}
+\renewcommand{\labelitemi}{$\bullet$}
 	\item Les pages de la mémoire du framebuffer sont initialement marquées en lecture seule.
 	\item Quand une application tente d'écrire sur une de ces pages, un défaut de page est créé.
 	\item Chaque défauts de page est mis dans une file.
@@ -219,8 +221,6 @@ Le driver dispose aussi d'une gestion des ioctl pour le framebuffer.
 Les ioctl permettent dans les système UNIX d'ajouter des fonctionnalités qui ne seraient pas accessibles autrement (dans notre cas les fonctionnalités propres aux écrans E-Ink).
 
 Le driver implémente les ioctl grâce à la fonction mxc\_epdc\_fb\_ioclt, cette fonction permet l'accès à toutes les fonctionnalités du framebuffer depuis l'espace utilisateur.
-
-\newpage
 
 \section{Caractéristiques de la liseuse Sony PRS-T1}
 
