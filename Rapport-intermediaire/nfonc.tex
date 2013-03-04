@@ -1,16 +1,16 @@
 \chapter{Besoins non fonctionnels}
 \section{Hacks de la PRS-T1}
 
-La PRS-T1 étant fermé, il nous est impossible dans sa configuration de base de pouvoir y ajouter la mise à jour 
+La PRS-T1 étant fermée, il nous est impossible dans sa configuration de base de pouvoir y ajouter la mise à jour 
 de l'affichage depuis une machine hôte.
 Plusieurs méthodes existent pour débloquer la liseuse : 
 
 \subsubsection{Mise à jour du firmware}
 
 La méthode la plus répandue pour débloquer la liseuse consiste à faire une mise à jour du firmware.
-La liseuse n'acceptant que les mises à jour signée par SONY. Les clefs privées de cette signature étant connues des hackers (elles sont stockée dans la liseuse pour la vérification).
+La liseuse n'acceptant que les mises à jour signées par SONY. Les clefs privées de cette signature étant connues des hackers (elles sont stockées dans la liseuse pour la vérification).
 
-Plusieurs firmware modifiés existe déjà pour mettre à jour la liseuse, c'est derniers débloquent complètement la liseuse tout en gardant les logiciels SONY pré-installés.
+Plusieurs firmwares modifiés existe déjà pour mettre à jour la liseuse, c'est derniers débloquent complètement la liseuse tout en gardant les logiciels SONY pré-installés.
 
 Cette méthode dispose donc de plusieurs avantages : 
 	\begin{itemize}
@@ -27,12 +27,12 @@ Cependant le fait de modifier le firmware interne de la liseuse comporte certain
 
 \subsubsection{Utilisation du mode Recovery}
 
-Une autre méthode de hack consiste à utiliser le mode recovery de la liseuse.
+Une autre méthode de hack consiste à utiliser le mode Recovery de la liseuse.
 Ce mode permet normalement de récupérer la liseuse suite à un problème.
-Pour entrer en mode recovery la liseuse a besoin d'un système de fichier de récupération.
+Pour entrer en mode Recovery la liseuse a besoin d'un système de fichier de récupération.
 Ce dernier pouvant être situé sur une carte mémoire externe.
 
-Cette méthode réduits les risques encouru lors de la manipulation car un simple redémarrage de la liseuse, 
+Cette méthode réduit les risques encourus lors de la manipulation car un simple redémarrage de la liseuse, 
 suffit pour revenir au système de base.
 
 Les caractéristiques de cette méthode sont  : 
@@ -44,7 +44,7 @@ Les caractéristiques de cette méthode sont  :
 		\item Risque minime pour la liseuse
 		\item Permet des modifications importantes (car on fait nous même le système à partir des sources du noyau fournit par SONY)%un peu long non ?
 	\end{itemize}
-	\item désavantages : 
+	\item Inconvénient : 
 		\begin{itemize}
 			\item Nécessite un pc hôte pour la mise en place du système (nécessite de compiler le noyau)
 			\item On repart de zéro donc on n'a pas accès aux applications SONY (pour la lecture d'Ebook notamment)
@@ -54,7 +54,7 @@ Les caractéristiques de cette méthode sont  :
 \section{Risque}
 \subsection{Les Waveforms}
 	Le driver permet de redéfinir les fonctions de waveform du contrôleur.
-Cependant le bon fonctionnement des écrans E-Ink dépend fortement de ces fonctions, modifier ces fonctions peut donc entraîner dans le meilleur des cas une différence entre la représentation virtuelle de l'affichage et ce que va réellement afficher l'écran, dans le pire cas cela peu endommager de manière définitive l'écran de la liseuse.
+Cependant le bon fonctionnement des écrans E-Ink dépend fortement de ces fonctions. Les modifier peut donc entraîner dans le meilleur des cas une différence entre la représentation virtuelle de l'affichage et ce que va réellement afficher l'écran. Dans le pire cas, cela peu endommager de manière définitive l'écran de la liseuse.
 
 \section{Tests}
 

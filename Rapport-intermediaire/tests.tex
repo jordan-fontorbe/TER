@@ -1,27 +1,27 @@
 \chapter{Résultats de tests}
 
-Étant donné que la PRS-T1 dispose d'un environnement initialement fermée, il nous a parus judicieux de contourner cette limitation dans un premier temps.
+Étant donné que la PRS-T1 dispose d'un environnement initialement fermé, il nous a paru judicieux de contourner cette limitation dans un premier temps.
 
 \section{Hack via le mode Recovery}
 
-La première chose à faire pour débloquer la liseuse a été de tester la méthode de hack choisi.
+La première chose à faire pour débloquer la liseuse a été de tester la méthode de hack choisie.
 
 Pré-requis : 
 \begin{itemize}
 	\item avoir une carte SD avec un système de fichier de récupération 
-	\item avoir un terminal virtuel gérant une connexion usb en série
+	\item avoir un terminal virtuel gérant une connexion USB en série
 \end{itemize}
 
 \subsection{Mettre la liseuse en mode Recovery}
 
-La procédure pour mettre la liseuse en mode Recovery est assez simple, il suffit de booter la liseuse en appuyant sur les boutons HOME et MENU jusqu’à ce que le chargement atteigne 100\%. 
+La procédure pour mettre la liseuse en mode Recovery est assez simple, il suffit de démarrer la liseuse en appuyant sur les boutons HOME et MENU jusqu'à ce que le chargement atteigne 100\%. 
 
-\subsection{Connexion via usb série}
+\subsection{Connexion via USB série}
 
-Une fois la liseuse en mode Recovery le seul moyen d'y accéder se fait via la ligne de commande.
-Pour accéder au terminal sur la liseuse il faut lancer un terminal virtuel gérant une connexion usb en série, par exemple pour linux minicom, ou Putty sur Windows
+Une fois la liseuse en mode Recovery le seul moyen d'y accéder se fait via un terminal.
+Pour accéder au terminal sur la liseuse il faut lancer un terminal virtuel gérant une connexion USB en série, par exemple pour Linux minicom, ou Putty sur Windows.
 
-Pour linux : 
+Pour Linux : 
 \begin{itemize}
 	\item trouver à quel fichier a été rattaché la liseuse \\
 		pour cela : 
@@ -44,21 +44,21 @@ Pour linux :
 \section{Construction du système de fichier de Recovery}
 \subsection{Compilation du noyau}
 
-la compilation du noyau (via les sources de Sony fournit) est la première étape vers la création d'un système de fichier pour le mode Recovery.
+la compilation du noyau (via les sources de SONY fournit) est la première étape vers la création d'un système de fichier pour le mode Recovery.
 
-La compilation du noyau nécessitent un environnement de cross-compilation , le compilateur fournit par Sony ne fonctionnant pas nous avons utilisé le celui fournit avec le NDK d'Android (arm-eabi-gcc-4.4.3).
+La compilation du noyau nécessite un environnement de cross-compilation , le compilateur fournit par SONY ne fonctionnant pas nous avons utilisé celui fourni avec le NDK d'Android (arm-eabi-gcc-4.4.3).
 
-Avant de lancer la compilation du noyau il faut définir les différents driver et module qui vont être utilisé. La plate-forme Sony étant particulière il faut récupérer la configuration du noyau officiel, celle-ci se trouve sur la liseuse dans le fichier : 
+Avant de lancer la compilation du noyau il faut définir les différents drivers et modules qui vont être utilisés. La plate-forme SONY étant particulière il faut récupérer la configuration du noyau officiel, celle-ci se trouve sur la liseuse dans le fichier : 
 \begin{verbatim}
 	/proc/config.gz
 \end{verbatim}
- Après avoir défini les options de compilations (ARCH, SUBARCH et CROSS_COMPILE), il suffit de lancer un make.
+ Après avoir défini les variables d'environnement pour la compilation (ARCH, SUBARCH et CROSS_COMPILE), il suffit de lancer un make.
  
- \subsection{Ajout du support d'usb gadget}
+ \subsection{Ajout du support d'USB gadget}
  
- Le fait que la connexion avec la liseuse se fait via un port usb série, nous retire des fonctionnalité nécessaire a l'environnement de développement. En effet VNC n'est pas prévu pour fonctionner avec un port série.
+ Le fait que la connexion avec la liseuse se fait via un port USB série, nous retire des fonctionnalités nécessaires à l'environnement de développement. En effet VNC n'est pas prévu pour fonctionner avec un port série.
  
- Il faut donc ajouter au noyau le module usb gadget, afin d'avoir un support ethernet via usb.
+ Il faut donc ajouter au noyau le module USB gadget, afin d'avoir un support Ethernet via USB.
 
 \subsection{Création du fichier}
 
@@ -66,20 +66,20 @@ La liseuse nécessite un fichier update.img qui est en fait une image d'un syst�
 
 Pour créer le fichier il suffit de : 
 	\begin{itemize}
-		\item création d'un fichier de la bonne taille \\
+		\item créer un fichier de la bonne taille \\
 			\begin{verbatim}
 				dd if=/dev/zero of=update.img bs=1024 count=0 seek=$[1024*1024]
 			\end{verbatim}
-		\item création du système de fichier \\
+		\item construire le système de fichier \\
 			\begin{verbatim}
 				mkfs -t ext4 update.img
 			\end{verbatim}
 	\end{itemize}
 
-\subsection{Ce qui reste a faire}
+\subsection{Ce qui reste à faire}
 
 Cependant la création du système de fichier n'est pas encore terminée, il faut :
 	\begin{itemize}
-		\item créer l'arborescence nécessaire au noyau linux
-		\item faire booter la liseuse sur ce nouveau noyau
+		\item créer l'arborescence nécessaire au noyau Linux
+		\item faire démarrer la liseuse sur ce nouveau noyau
 	\end{itemize}

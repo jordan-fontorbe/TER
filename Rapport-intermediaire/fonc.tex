@@ -1,6 +1,6 @@
 \chapter{Besoins fonctionnels}
 
-Comme énoncé dans la première partie de ce document, le but du projet est la réalisation d'un émulateur d'une liseuse avec un écran virtuel fonctionnant comme un écran E-Ink directement sur notre machine ayant pour système d'exploitation Linux. La réalisation de ce projet se découpe en plusieurs parties à réaliser dans un ordre strict afin d'aboutir au résultat final souhaité. Ce plan nous a été proposé par notre encadrant de projet M. OLLINGER. N'ayant pas encore eu le temps de tester les points suivants il se peut que certains des éléments peuvent avoir été mal interprété d'où la présence possible d'erreurs. D'autres points peuvent aussi manquer de détails.
+Comme énoncé dans le chapitre 1 de ce document, le but du projet est la réalisation d'un émulateur d'une liseuse avec un écran virtuel fonctionnant comme un écran E-Ink directement sur notre machine ayant pour système d'exploitation Linux. La réalisation de ce projet se découpe en plusieurs parties à réaliser dans un ordre strict afin d'aboutir au résultat final souhaité. Ce plan nous a été proposé par notre encadrant de projet M. OLLINGER. N'ayant pas encore eu le temps de tester les points suivants il se peut que certains des éléments ont été mal interprétés d'où la présence possible d'erreurs. D'autres points peuvent aussi manquer de détails.
 
 \section{Conception d'un client RFB pour la liseuse}
 
@@ -10,14 +10,14 @@ Dans un premier temps il nous faut concevoir un prototype de de client permettan
 Pour réaliser cela, il nous a été proposé de travailler avec DirectFB. DirectFB est une bibliothèque libre qui fournit à la fois un accès aux composants matériels graphiques (accélération graphique) ainsi qu'aux périphériques d'entrées, et un systèmes de gestion de fenêtres intégrées avec support de la transparence et de calques multiples, tout ceci à travers l'interface framebuffer de Linux. Nous devons ajouter la gestion des écrans E-Ink dans DirectFB. 
  
 \subsection{Client RFB}
-Lorsque DirectFB est prêt à être employé, on travaille ensuite sur le protocole RFB (Remote framebuffer) qui est un simple protocole permettant des accès à distance à des interfaces graphiques d'utilisateur. On doit ajouter la gestion des mises à jour de l'affichage pour les écran de type E-Ink via ioctl(). De tous ces éléments, on peut ainsi concevoir un client RFB interagissant sur la liseuse et la conception d'un serveur gérant les mises à jour.
+Lorsque DirectFB est prêt à être employé, on travaille ensuite sur le protocole RFB (Remote FrameBuffer) qui est un simple protocole permettant des accès à distance à des interfaces graphiques d'utilisateur. On doit ajouter la gestion des mises à jour de l'affichage pour les écrans de type E-Ink via ioctl(). De tous ces éléments, on peut ainsi concevoir un client RFB interagissant sur la liseuse et la conception d'un serveur gérant les mises à jour.
 \\Les tests consisteront à essayer de produire des changements d'affichage sur la liseuse grâce à des demandes précises envoyées via l'ordinateur de test et transmis par le serveur de mise à jour. 
 
 \newpage
 
 \section{E-Ink QEMU via VNC}
 
-Dans un second temps, on développe la base de l'émulateur, c'est à dire la mise en place d'une machine virtuelle pouvant reproduire les actions nécessaire au fonctionnement d'un écran E-Ink. Pour réaliser cela nous travaillons sur QEMU qui permet l'émulation de processeur et de machine virtuelle permettant l'exécution de système d'exploitation. On ajoute la gestion des ioctl() à QEMU. Ensuite ajouter à l'option VNC de QEMU l'extension RFB du client de la liseuse.
+Dans un second temps, on développe la base de l'émulateur, c'est à dire la mise en place d'une machine virtuelle pouvant reproduire les actions nécessaires au fonctionnement d'un écran E-Ink. Pour réaliser cela nous travaillons sur QEMU qui permet l'émulation de processeur et de machine virtuelle permettant l'exécution de système d'exploitation. On ajoute la gestion des ioctl() à QEMU. Ensuite ajouter à l'option VNC de QEMU l'extension RFB du client de la liseuse.
 \\Le test consiste à vérifier si depuis une machine virtuelle QEMU utilisant l'image du noyau Linux de la liseuse de test, on peut via VNC interagir avec la liseuse. 
 
 
