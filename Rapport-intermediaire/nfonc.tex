@@ -3,19 +3,19 @@
 
 La PRS-T1 étant fermé, il nous est impossible dans sa configuration de base de pouvoir y ajouter la mise à jour 
 de l'affichage depuis une machine hôte.
-Plusieurs méthode existent pour débloquer la liseuse : 
+Plusieurs méthodes existent pour débloquer la liseuse : 
 
-\subsubsection{Mise a jour du firmware}
+\subsubsection{Mise à jour du firmware}
 
-La méthode la plus répandues pour débloquer la liseuse consiste à faire une mise à jour du firmware.
-La liseuse n'acceptant que les mises à jour signée par Sony. Les clefs privées de cette signature étant connues des hackers (elles sont stoquées dans la liseuse pour la vérification).
+La méthode la plus répandue pour débloquer la liseuse consiste à faire une mise à jour du firmware.
+La liseuse n'acceptant que les mises à jour signée par SONY. Les clefs privées de cette signature étant connues des hackers (elles sont stockée dans la liseuse pour la vérification).
 
-Plusieurs firmware modifié existe déjà pour mettre à jour la liseuse, c'est derniers débloque complètement la liseuse tout en gardant les logiciels Sony pré-installé.
+Plusieurs firmware modifiés existe déjà pour mettre à jour la liseuse, c'est derniers débloquent complètement la liseuse tout en gardant les logiciels SONY pré-installés.
 
 Cette méthode dispose donc de plusieurs avantages : 
 	\begin{itemize}
-		\item permet un accès total a la liseuse (installation d'application Android, ...)
-		\item on conserve les fonctions normale de la liseuse (logiciel de lecture Sony)
+		\item permet un accès total a la liseuse (installation d'applications Android, ...)
+		\item on conserve les fonctions normales de la liseuse (logiciel de lecture SONY)
 	\end{itemize}
 Cependant le fait de modifier le firmware interne de la liseuse comporte certains risques : 
 	\begin{itemize}
@@ -29,31 +29,31 @@ Cependant le fait de modifier le firmware interne de la liseuse comporte certain
 
 Une autre méthode de hack consiste à utiliser le mode recovery de la liseuse.
 Ce mode permet normalement de récupérer la liseuse suite à un problème.
-Pour entrer en mode recovery la liseuse a besoin d'un  système de fichier de récupération.
+Pour entrer en mode recovery la liseuse a besoin d'un système de fichier de récupération.
 Ce dernier pouvant être situé sur une carte mémoire externe.
 
 Cette méthode réduits les risques encouru lors de la manipulation car un simple redémarrage de la liseuse, 
 suffit pour revenir au système de base.
 
-les caractéristiques de cette méthodes sont  : 
+Les caractéristiques de cette méthode sont  : 
 %Les avantages de cette méthodes sont : 
 \begin{itemize}
 	\renewcommand{\labelitemi}{$\bullet$}
 	\item Avantages : 
 	\begin{itemize}
-		\item risque minime pour la liseuse
-		\item permet des modifications importante (car on fait nous même le système à partir des sources du noyau fournit par Sony)%un peu long non ?
+		\item Risque minime pour la liseuse
+		\item Permet des modifications importantes (car on fait nous même le système à partir des sources du noyau fournit par SONY)%un peu long non ?
 	\end{itemize}
 	\item désavantages : 
 		\begin{itemize}
-			\item nécessite un pc hôte pour la mise en place du système (nécessitent de compiler le noyau)
-			\item On repart de zéro donc on n'a pas accès aux application sony (pour la lecture d'Ebook notamment)
-			\item nécessite beaucoup de travail car on repart avec uniquement le noyau.
+			\item Nécessite un pc hôte pour la mise en place du système (nécessite de compiler le noyau)
+			\item On repart de zéro donc on n'a pas accès aux applications SONY (pour la lecture d'Ebook notamment)
+			\item Nécessite beaucoup de travail car on repart avec uniquement le noyau.
 		\end{itemize}
 \end{itemize}
 \section{Risque}
-\subsection{Les Waveformes}
-	Le driver permet de redéfinir les fonctions de waveforme du contrôleur.
+\subsection{Les Waveforms}
+	Le driver permet de redéfinir les fonctions de waveform du contrôleur.
 Cependant le bon fonctionnement des écrans E-Ink dépend fortement de ces fonctions, modifier ces fonctions peut donc entraîner dans le meilleur des cas une différence entre la représentation virtuelle de l'affichage et ce que va réellement afficher l'écran, dans le pire cas cela peu endommager de manière définitive l'écran de la liseuse.
 
 \section{Tests}
@@ -67,4 +67,4 @@ Pour cela Il va falloir mettre en place un test comparatif entre le rafraîchiss
 
 \subsubsection{Update bloquante}
 
-De la même manière l'ordinateur hôte ne doit pas se comporter de la meme manière qu'avec un écran classique. En effet il serait très facile pour l'hôte de surcharger complètement l'écran en faisant des mises à jour de l'affichage comme il le ferait avec un écran classique. %a vérifier un peu tordu
+L'ordinateur hôte ne doit pas se comporter de la même manière qu'avec un écran classique. En effet il serait très facile pour l'hôte de surcharger complètement l'écran en faisant des mises à jour de l'affichage comme il le ferait avec un écran classique. %a véifier un peu tordu
