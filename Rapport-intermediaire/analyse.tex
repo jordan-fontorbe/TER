@@ -52,6 +52,8 @@ Cette technologie à pour principal avantage sa très faible consommation d'éne
 
 Les écrans électrophorétiques nécessite des contrôleurs capables de diriger des ondes (appelées waveforms) pour afficher des images. C'est-à-dire que ces contrôleurs doivent produire un signal (waveform) qui va placer les particules de l'écran de sorte à afficher l'image souhaitée.
 
+Quand une waveform est envoyé, il ne faut pas qu'il soit perturbé. Concrètement, cela implique qu'il faut bloquer la mémoire du framebuffer utilisé par la waveforme pour ne pas l'altérer.
+
 Il y a trois problèmes majeures pour les écrans électrophorétiques :
 \begin{itemize}
 	\item[$\bullet$] Comment mapper une mémoire non mappable ?
@@ -63,8 +65,17 @@ Pour résoudres ces problèmes on peut utiliser les Deferred IO.
 
 \subsection{Deferred IO}
 
-J'ai pas bien compris cette partie, j'attends de voir avec Tristan ...
+Le principe des Deferred IO est le suivant :
+\begin{itemize}
+	\item Les pages de la mémoire du framebuffer sont initialement marqué en lecture seule.
+	\item Quand une application tente d'écrire sur une de ces pages, un défaut de page est créé.
+	\item Chaque défauts de page est mis dans une file.
+	\item Quand la page mémoire est disponible on écrit ce que l'application voulait dans à la bonne adresse mémoire dans l'ordre des défauts de pages de la file. 
+\end{itemize} 
 
+Si on reprends les trois problèmes posés plus haut, le premier (mapper une mamoire non mappable) est résolu puisque lorsque l'on ne peut pas accéder à la mémoire du framebuffer, les écritures vont être mis de côté puis exécuté quand cela sera possible. 
+Il n'y a pas de perte de latence puisque écrire dans le framebuffer est aussi rapide que d'écrire dans la mémoire, le second problème est donc résolu.
+Le troisième problème est lui aussi résolu puisque l'adresse mémoire qui à généré un défaut de page est connu.
 \subsection{Caractéristiques principales de l'EPDC}
 
 \begin{itemize}
