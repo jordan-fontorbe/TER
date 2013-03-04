@@ -1,1 +1,42 @@
+\begin{landscape}
 \chapter{Planning}
+
+\begin{figure}[h!]
+\begin{center}
+
+\begin{ganttchart}[y unit title=0.4cm,
+y unit chart=0.5cm,
+vgrid,hgrid, 
+title label anchor/.style={below=-1.6ex},
+title left shift=.05,
+title right shift=-.05,
+title height=1,
+bar/.style={fill=gray!50},
+incomplete/.style={fill=cyan},
+progress label text={},
+bar height=0.7,
+group right shift=0,
+group top shift=.6,
+group height=.3,
+group peaks={}{}{.2}]{32}
+%labels
+\gantttitle{Planning}{32} \\
+\gantttitle{Février}{8} 
+\gantttitle{Mars}{8} 
+\gantttitle{Avril}{8} 
+\gantttitle{Mai}{8} \\
+%tasks
+\ganttbar[bar/.style={fill=green, rounded corners=3pt}]{Recherche Doc}{1}{8} \\
+\ganttbar[bar/.style={fill=blue, rounded corners=3pt}]{Réunion}{9}{10} \\
+\ganttbar[progress=90,bar/.style={fill=orange, rounded corners=3pt}]{Dev DirectFB}{11}{17} \\
+\ganttbar[progress=90,bar/.style={fill=orange, rounded corners=3pt}]{Dev Client RFB}{11}{17} \\
+\ganttbar[progress=90,bar/.style={fill=orange, rounded corners=3pt}]{Dev Serveur Update}{11}{17} \\
+\ganttbar[progress=90,bar/.style={fill=orange, rounded corners=3pt}]{Dev QEMU et VNC}{17}{21} \\
+\ganttbar[progress=90,bar/.style={fill=orange, rounded corners=3pt}]{Dev QEMU Liseuse SONY}{18}{22} \\
+\ganttbar[progress=90,bar/.style={fill=orange, rounded corners=3pt}]{Dev Simulation Ecran}{23}{27} \\
+\ganttbar[bar/.style={fill=yellow, rounded corners=3pt}]{Finalisation}{28}{31}
+\end{ganttchart}
+\end{center}
+\caption{Planning de réalisation du projet}
+\end{figure}
+\end{landscape}
