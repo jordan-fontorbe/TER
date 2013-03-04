@@ -13,8 +13,9 @@
 \usepackage{verbatim}
 \usepackage{lscape} % Pour pouvoir passer en paysage
 \usepackage{geometry}
-\usepackage{rotating}
 \usepackage{pdflscape}
+\usepackage{colortbl}
+\usepackage[strings]{underscore}
 \geometry{left=2.5cm,right=2.5cm,vmargin=2cm}
 
 
@@ -43,12 +44,6 @@
   }}
 \makeatother
 %%%% fin macro %%%% 
-
-
-
-
-
-
 
 \begin{document}
 
@@ -86,6 +81,10 @@
 \include{fonc}
 \include{tests}
 \include{repartition}
-\include{biblio}
+%\include{biblio}
+
+\bibliographystyle{plain} % Le style est mis entre accolades.
+\bibliography{bibli} % mon fichier de base de données s'appelle bibli.bib
+\nocite{ref1, ref2, ref3, ref4, ref5, ref6, ref7, ref8, ref9}
 
 \end{document} 
