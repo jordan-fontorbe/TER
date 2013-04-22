@@ -1,0 +1,56 @@
+\section {utilitaire}
+\subsection{montage du système de fichier de la liseuse}
+	%copie des fichiers (montage de la carte sd ...)
+	mount -o loop -t ext4 [PATH_to_sd_card]/Os firmware/files/update.img  [dossier_de_montage]
+
+
+\section{Compilation du module g_ether}
+	%configuration de la compilation(cf lien)
+	\subsection{configuration}
+		On utilise le compilateur gcc 4.4.3 fournit avec le ndk android.
+		(bien penser à avoir le ndk android dans son PATH).
+		configuration du ndk : 
+		\begin{verbatim}
+			export CROSS_COMPILE=arm-eabi-
+			export PATH=[PATH_to_ndk]/linux-x86/toolchain/arm-eabi-4.4.3/bin
+			export SUBARCH=arm
+			export ARCH=arm
+		\end{verbatim}
+		mise en place de la configuration officielle du kernel : 
+		\begin{verbatim}
+			zcat [PATH_to_terkit]/nopid/livedata/config.gz >[PATH_to_terkit]/sony/linux-2.6.35.3/.config
+		\end{verbatim}
+		Ensuite il faut faire un make menuconfig et éditer  : 
+			\begin{itemize}
+				%certains : 
+				\item  Device drivers $>$ usb support $>$ usb gadget support $>$ Ethernet gadget -$>$ $<$M$>$ with RNDIS support
+				%peut-être useless
+				\item Device drivers $>$ usb support $>$ usb gadget support $>$ CDC composite device
+			\end{itemize}
+
+Pour compiler : "make modules"
+		
+		Ensuite il faut copier les fichiers g_ether.ko et g_cdc.ko sur "/lib/modules/[version]/kernel/drivers/usb/gadget" (système de fichier de la liseuse)
+	
+	%installation des modules (modification des scripts)
+\subsection{installation des modules}	
+	Les deux modules g_serial et g_ether ne peuvent pas être lancés en même temps, il faut donc modifier sur la liseuse le fichier "/etc/rc.d/rc.local" de manière à ce qu'il coupe le module g_serial et lance g_ether à la place.
+	%ajout code rc.local
+	\begin{verbatim}
+		echo "modprobe -r g_serial" > /initrd/mnt/sd/test/log
+		#desactivation de g_serial
+		modprobe -r g_serial 2>> /initrd/mnt/sd/test/log
+		echo "modprobe g_ether" >> /initrd/mnt/sd/test/log
+		#activiation de g_ether
+		modprobe g_ether host_addr=00:00:00:00:00:01 dev_addr=00:00:00:00:00:02 2>> /initrd/mnt/sd/test/log
+		#on demarre l'interface
+		ifconfig usb0 up
+	\end{verbatim}
+	Les options host_addr et dev_addr permettent à la liseuse d'affecter son adresse mac mais aussi celle du pc sur lequel elle est connecté (host), cela permet de ne pas avoir à refaire la configuration réseau à chaque branchement.	
+	%connection depuis le pc
+	Pour se connecter depuis le pc penser à vérifier que le module usbnet est bien activé	
+	Un interface réseau devrait apparaître, il faut la configurer sur le réseau 192.168.1.0/24 (la liseuse est configurer sur l'adresse 192.168.1.1/24)
+	%
+	%le fichier log permet ... de faire des logs [captain obvious]
+	%modification des scripts de demarrage
+	
