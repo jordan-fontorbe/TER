@@ -1,0 +1,150 @@
+\section {Codes Sources nécessaire}
+Toutes les actions suivantes ont été réalisé sur ARCHLINUX x64 avec kernel > 3.8
+\subsection{Listes des différents codes sources à cross-compiler}
+
+\begin{itemize}
+\item DirectFB v1.6.3
+\item Freetype v2.4.11
+\item Jpegsrc v8c
+\item Libconio v1.0.0
+\item Libpng v1.5.14
+\item LibVNCServer v0.9.7
+\item SDL v1.2.15
+\item Zlib v1.2.5
+\end{itemize}
+
+\subsection{Paramètres de cross-compilation}
+Cross-compilateur utilisé : ARM GNU/Linux cross-compile toolkit téléchargé sur le site suivant : http://www.codesourcery.com/gnu_toolchains/arm/download.html
+Paramètre de PATH de base utilisé pour chaque cross-compilation :
+
+\begin{lstlisting}
+export PATH=$PATH:/PATH-cross-compilateur/bin
+export CC=arm-none-linux-gnueabi-gcc
+export CXX=arm-none-linux-gnueabi-g++
+export CPP=arm-none-linux-gnueabi-cpp
+export AR=arm-none-linux-gnueabi-ar
+export RANLIB=arm-none-linux-gnueabi-ranlib
+export LD=arm-none-linux-gnueabi-ld
+export STRIP=arm-none-linux-gnueabi-strip
+export CCFLAGS="-march=armv7-a -mtune=cortex-a8 -mfpu=vfp"
+\end{lstlisting}
+
+\subsection{Cross-compilation libjpeg}
+Configuration Makefile :
+
+\begin{lstlisting}
+./configure --enable-shared \
+--host=arm-none-linux-gnueabi --build=i386-linux \
+--target=arm-none-linux-gnueabi
+\end{lstlisting}
+
+Ensuite lancer la commande make
+Puis déplacer les fichiers ./libs/libjpeg.so* vers un répertoire regroupant toutes les LIBS générées (PATH-REP-LIBS)
+Pour finir déplacer tous les fichiers *.h vers un répertoire regroupant des fichier .h utilisé durant les cross-compilations future (PATH-REP-INCLUDE).
+
+\subsection{Cross-compilation zlib}
+Configuration Makefile :
+
+\begin{lstlisting}
+./configure --shared
+\end{lstlisting}
+
+Ensuite lancer la commande make
+Puis déplacer les fichiers libz.so* vers un répertoire regroupant toutes les LIBS générées (PATH-REP-LIBS)
+
+\subsection{Cross-compilation libpng}
+Configuration Makefile :
+
+\begin{lstlisting}
+cp scripts/makefile.linux Makefile
+modify Makefile for cross compile
+ligne 23 : change "gcc" to "arm-none-linux-gnueabi-gcc"
+\end{lstlisting}
+
+Ensuite lancer la commande make
+Puis déplacer les fichiers libpng15.so* vers un répertoire regroupant toutes les LIBS générées (PATH-REP-LIBS)
+
+\subsection{Cross-compilation freetype}
+Configuration Makefile :
+
+\begin{lstlisting}
+./configure --host=arm-none-linux-gnueabi
+\end{lstlisting}
+
+Ensuite lancer la commande make
+Puis déplacer les fichiers objs/libs/libfreetype.so* vers un répertoire regroupant toutes les LIBS générées (PATH-REP-LIBS)
+Pour finir déplacer tous les fichiers include/*.h vers un répertoire regroupant des fichier .h utilisé durant les cross-compilations future (PATH-REP-INCLUDE).
+
+\subsection{libVNCServeur}
+Nécessite quelques libs supplémentaire :
+
+\subsubsection{libconio}
+Configuration Makefile :
+
+\begin{lstlisting}
+./configure --host=arm-none-linux-gnueabi --build=i386-linux \
+--target=arm-none-linux-gnueabi --enable-shared --disable-static
+\end{lstlisting}
+Ensuite lancer la commande make
+Pour finir déplacer tous les fichiers *.h vers un répertoire regroupant des fichier .h utilisé (PATH-REP-INCLUDE)
+
+\subsubsection{SDL}
+Configuration Makefile :
+
+\begin{lstlisting}
+./configure CPPFLAGS=-I/home/arkh/Documents/TER/DFB/include \ 
+LDFLAGS=-L/home/arkh/Documents/TER/DFB/lib \
+--host=arm-none-linux-gnueabi --build=i386-linux \ 
+--target=arm-none-linux-gnueabi \
+--enable-shared --enable-static \
+--disable-video-x11 --disable-pulseaudio
+\end{lstlisting}
+
+Ensuite lancer la commande make
+Puis déplacer les fichiers libSDL.so* vers un répertoire regroupant toutes les LIBS générées (PATH-REP-LIBS)
+Pour finir déplacer tous les fichiers *.h vers un répertoire regroupant des fichier .h utilisé (PATH-REP-INCLUDE)
+
+\subsubsection{Cross-compilation libVNCServeur}
+
+Configuration Makefile :
+
+\begin{lstlisting}
+./configure CPPFLAGS=-I/home/arkh/Documents/TER/DFB/include \
+LDFLAGS=-L/home/arkh/Documents/TER/DFB/lib \  
+	--host=arm-none-linux-gnueabi \
+	--build=i386-linux \
+	--target=arm-none-linux-gnueabi \ 
+	--enable-shared \
+	--disable-static \
+	--without-ssl \
+	--without-x
+\end{lstlisting}
+
+Ensuite lancer la commande make
+Puis déplacer les fichiers libVNCServeur.so* vers un répertoire regroupant toutes les LIBS générées (PATH-REP-LIBS)
+Copier le répertoire rfb et son contenu vers le répertoire contenant DirectFB à cross-compiler.
+
+\subsection{Cross-compilation DirectFB}
+
+Configuration Makefile :
+
+\begin{lstlisting}
+PKG_CONFIG_PATH=/home/arkh/Documents/TER/DFB/archive/libpng-1.5.14/ \
+LIBPNG_CFLAGS=-I/home/arkh/Documents/TER/DFB/include \
+LIBPNG_LDFLAGS="-L/home/arkh/Documents/TER/DFB/lib -lpng15 -lz" \
+FREETYPE_CFLAGS=-I/home/arkh/Documents/TER/DFB/include \
+FREETYPE_LIBS="-L/home/arkh/Documents/TER/DFB/lib -lfreetype" \
+GL_LIBS="-L/usr/lib/" \
+LIBS="-lgcc_s -lgcc -ldl -lstdc++ -lz -lm -L/usr/include/GLES -L/usr/include/GL" \
+CXXFLAGS="-march=armv7-a" \
+./configure CC=arm-none-linux-gnueabi-gcc CPPFLAGS=-I/home/arkh/Documents/TER/DFB/include LDFLAGS=-L/home/arkh/Documents/TER/DFB/lib \
+   --disable-imlib2 \
+   --build=i686-linux --host=arm-linux \
+   --disable-static --enable-shared \
+   --enable-freetype --enable-fbdev --disable-x11 \
+   --disable-mesa --disable-x11vdpau \
+   --with-gfxdrivers=none --with-inputdrivers=none --enable-vnc
+\end{lstlisting}
+
+Ensuite lancer la commande make
+
