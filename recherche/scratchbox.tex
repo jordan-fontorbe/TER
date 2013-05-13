@@ -1,0 +1,103 @@
+\chapter{Scratchbox}
+
+Scratchbox est un outils permettant de faciliter la cross-compilation, et l'installation. Scratchbox utilise pour cela une machine virtuelle sous qemu.
+
+\section{installation et configuration}
+
+L'installation de Scratchbox est simple sous une distribution Debian : 
+
+\subsection*{Installation}
+Pour procéder a l'installation il faut suivre ces directives  :
+\begin{itemize}
+	\item ajout du repo  :
+		il faut ajouter le paquet suivant au fichier /etc/apt/sources.list
+		\begin{lstlisting}
+deb http://scratchbox.org/debian apophis main
+		\end{lstlisting}
+	\item 
+		Les paquets à installer sont :
+			\begin{itemize}
+				\item scratchbox-core
+				\item scratchbox-libs
+				\item scratchbox-devkit-cputransp
+				\item scratchbox-toolchain-arm-gcc3.4-uclibc0.9.28
+			\end{itemize}
+	\item Authorisation du compte utilisateur pour la connection sur les machines virtuelles : 
+	\begin{lstlisting}
+sudo /scratchbox/sbin/sbox_adduser <your_username>
+	\end{lstlisting}	
+\end{itemize}
+
+\subsection*{Configuration de la machine virtuelle}
+
+Une fois Scratchbox installé il faut créer la machine virtuelle pour effectuer la cross-compilation.
+
+Pour cela il faut se connecter a la console scratchbox : 
+\begin{lstlisting}
+	/scratchbox/login
+\end{lstlisting}
+Ensuite accéder au menu de gestion des machines virtuelles : 
+\begin{lstlisting}
+	sb-menu
+\end{lstlisting}
+Il faut maintenant créer une machine virtuelle ayant la même architecture que la liseuse. 
+Pour cela il suffit de suivre cette configuration : 
+\begin{itemize}
+	\item compiler : arm-linux-cs2009q1-203sb1
+	\item architecture : arm
+	\item sub-architecture : arm
+%	\item C-library : glibc
+	\item Devkits : cputransp
+	\item cpu-transparency :  qemu-arm-0.8.2-sb2
+	\item rootstrap : répondre non
+	\item intall files : répondre oui et installer :
+		\begin{itemize}
+			\item C-library
+			\item /etc
+			\item Devkits 
+			\item Debug links
+			\item fakeroot
+		\end{itemize}
+	\item selectionner la machine virtuelle créée
+\end{itemize}
+
+Les fichiers de la machine virtuelle sont monter dans le système de l’hôte dans : 
+/scratchbox/users/$<$user$>$/home/$<$user$>$.
+
+\section{Cross-commilation de DirectFB}
+
+\subsection{Dépendance de DirectFB}
+DirectFB a en dépendance plusieurs librairies : 
+	\begin{itemize}
+		\item freetype (ici : 2.4.11)
+		\item libjpeg (ici : 6b)
+		\item zlib (ici : 1.2.5)
+		\item libpng (ici : 1.5.14)
+	\end{itemize}
+
+\subsubsection{Compilation des dépendances}
+
+La compilation des dépendances sous scratchbox est grandement simplifié, il suffit en effet de faire les classiques commandes : 
+	\begin{lstlisting}
+./configure && make && make install
+	\end{lstlisting}
+
+\subsection{Compilation de DirectFB}
+
+La compilation de DirectFB à besoin de quelque configuration supplémentaire dans le cas de la liseuse il est en effet inutile de compiler les drivers graphique et les drivers d'entrées/sorties car la liseuse ne dispose pas de carte graphique, et les entrées/sorties standard ne sont pas présente.
+Pour cela il suffit de modifier l'appel du script de configuration : 
+\begin{lstlisting}
+./configure --disable-x11 --with-gfxdrivers=none 
+	--with-inputdrivers=none
+\end{lstlisting}
+~\\
+La configuration étant faite il faut juste par la suite faire un make  et un make install.
+
+\subsection{Compilation d'un exemple de test DirectFB}
+
+Maintenant la librairie DirectFB étant installé sur la machine virtuelle, on peut compiler un exemple de test directement dans la machine virtuelle.
+
+Pour compiler un exemple utilisant DirectFB il suffit de linker la librairie et d'indiquer l'emplacement des includes de la librairies : 
+\begin{lstlisting}
+	gcc -o test test.c -ldirectfb -I/usr/local/include/directfb/
+\end{lstlisting}
