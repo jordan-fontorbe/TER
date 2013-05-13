@@ -1,1 +1,46 @@
 \chapter{Amélioration du projet}
+
+%% 1) Gestion des évènements
+
+%% 2) Dev client / serveur VNC pour intéragir directement depuis un ordinateur sur la liseuse 
+%% Bref description de VNC
+%% Utilisation de directvnc côté client ?
+%% Serveur vnc côté liseuse
+%% Schéma sur le fonctionnement
+
+%% 3) Inclure ce client vnc à qemu
+
+%% 4) Simulateur d'écran (plus besoin de passer par la liseuse)
+
+\section{Gestion des événements}
+
+
+
+\section{Client / serveur VNC}
+
+Un des objectifs pour améliorer le projet serait de développer un client et un serveur VNC. Le but étant de pouvoir contrôler directement la liseuse depuis un ordinateur.
+
+\subsection{Description de VNC}
+
+VNC est un système de visualisation et de contrôle d'un environ de bureau d'un périphérique distant (dans notre cas la liseuse). Ce système fonctionne via une communication client / serveur. Un serveur VNC doit être installé sur le périphérique à contrôler pour que un ou plusieurs clients s'y connectent. Le client VNC envoi au serveur différentes directives de mise à jour d'écran ou encore d'actions du clavier ou de la souris. Lorsque le serveur reçoit une directive, il met à jour son environnement graphique et le renvoi au client. Ces communications se font à travers un réseau en utilisant le protocole RFB.
+
+\subsection{Côté serveur}
+
+La serveur devra être installé sur la liseuse pour que celle-ci puisse partager son écran. Pour une utilisation optimal, il sera nécessaire de modifier le protocole RFB utilisé par le serveur VNC pour y inclure les événements de la liseuse (événement lors de l'appuie sur une zone de l'écran). Ce serveur va envoyer des directives à DirectFB qui fera ensuite la transition vers le matériel graphique pour modifier l'écran.
+
+\subsection{Côté client}
+
+Un programme client devra pouvoir se connecter au serveur présent sur la liseuse et envoyer des directives pour mettre à jour différentes zones de l'écran de la liseuse.
+
+\begin{center}
+	\includegraphics{VNCClientServeur.png}
+\end{center}
+
+\section{VNC et qemu}
+
+Un autre point que l'on peut ajouter sur ce projet est d'intégrer VNC à qemu, cela afin que l'émulateur qemu puisse utiliser le serveur VNC installé sur la liseuse.
+
+
+\section{Simulateur d'écran}
+
+La dernière étape pour rendre le projet complet est de développer un simulateur d'écran de la liseuse. Pour cela il faut faire en sorte de gérer un affichage cohérent avec les temps de réponse de la liseuse Sony PRS-T1. C'est-à-dire que l'écran doit mettre un certain temps à se rafraîchir et pouvoir modifier seulement certaines zones de l'écran.
