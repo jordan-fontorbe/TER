@@ -1,0 +1,67 @@
+\chapter{Explication de l'application} % a changer 
+
+%application : 
+%• les ioctl
+%∘ la structure upd_data
+%∘ les commandes ioctls
+%• directfb
+%∘ description des structures
+%‣ idrectfb => structures  principale
+%‣ idirectfbsurface
+
+\section{La mise a jour du framebuffer via ioctl}
+
+Le premier test effectué a été d'utiliser le driver pour modifier directement l'affichage.
+Étant donné que les modifications du framebuffer se font directement dans le code, ce dernier est juste défini a un niveau de gris précis. La mise a jour effective du framebuffer se fait via le driver directement.
+
+\subsection{Les commandes ioctls}
+
+Le driver epdc fournit des commandes ioctls pour la mis a jour du buffer, ces commandes 
+permettent de récupérer toutes les variables du driver (par exemple la température de l'écran), mais aussi de lancer une mise à jour de l'écran et c'est ce qui nous intéresse ici.
+
+La fonction ioctl générique prenant cette commande sous la forme d'un entier l'intégralité des commandes utilisé ici sont disponible dans le fichier fbutils.h. %todo : a mettre en annex ?
+
+
+La commandes utilisé ici est la commande de mise à jour de l'écran : 
+\begin{lstlisting}
+MSXC_SEND_UPDATE
+\end{lstlisting}
+Cette commande prend en paramètre l'adresse d'une structure mxcfb_update_data.
+
+\subsection{la structure mxcfb_update_data}
+Cette structure permet de passer l'intégralité des paramètres nécessaire au driver.
+Voici les options importante a retenir : 
+\begin{itemize}
+	\item update_region 
+		permet de définir le rectangle de mis a jour de l'écran à partir de :
+		\begin{itemize}
+			\item les coordonnées du coin supérieur gauche
+			\item la largeur et la hauteur de la zone
+		\end{itemize}
+	\item alt_buffer_data
+		permet de définir un buffer alloué localement dans l'espace utilisateur, 
+		cette option est inutilisé ici
+		
+	\item update_mode : 
+		définit le mode de mis a jour peut être soit :
+		\begin{itemize}
+			\item UPDATE_MODE_PARTIAL (ne met a jour que la région concernée)
+			\item UPDATE_MODE_FULL (met a jour l'écran entier)
+		\end{itemize}
+	\item flags : 
+		ce champs permet de savoir si on souhaite utiliser ou non le champ alt_buffer_data
+	\item update_marker
+		permet d'identifier une demande de mise à jour pour la synchronisation
+	\item waveform_mode 
+		permet de définir le mode de waveforme utilisée, définit dans la structure
+		mxcfb_waveform_modes , ici on utilise uniquement le mode par défaut a cause du risque 
+		d'écraser les waveformes
+	\item temp
+		permet de définir la température utilisé pour paramétrer la waveforme a utiliser.
+	
+\end{itemize}
+
+
+\section{La mis a jour du framebuffer via DirectFB}
+\subsection{Les principales structures}
+\subsection{Utilisation des ioctls avec directfb}
