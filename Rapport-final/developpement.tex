@@ -1,1 +1,181 @@
 \chapter{Développement effectué}
+Dans ce chapitre nous expliquerons les différents moyens nous ayant permit d'obtenir le résultat final présenté dans le chapitre "État final de développement".\\ 
+Dans un premier temps nous parlerons de la mise en place du module permettant une communication Ethernet via le port USB de la liseuse. Dans un second temps nous parlerons de la mise en place de Dropbear (SSH) sur la liseuse facilitant les accès réseaux sur la machine de test et permettant ainsi la copie de fichier du PC hôte à la liseuse. Ensuite nous présenterons les étapes nécessaire à la compilation de DirectFB. Et pour finir nous parlerons d'un exemple de code permettant la modification de l'affichage de la liseuse.
+
+\section{Module g_ether}
+\subsection{Configuration}
+Les commandes suivantes ont été testées sur deux systèmes d'exploitation : 
+
+\begin{itemize}
+
+\item Ubuntu x64 12.04 
+\item Archlinux x64(Version du kernel : 3.8)
+
+\end{itemize}
+
+Pour la cross-compilation, on a utilisé, dans cette partie, le GCC 4.4.3 fournit avec l'android NDK. Voici la configuration des PATH utilisés pour la cross compilation :
+
+\begin{lstlisting}
+# Attention le PATH suivant peut etre different sur certain systeme
+export PATH=[PATH_to_ndk]/linux-x86/toolchain/arm-eabi-4.4.3/bin 
+export CROSS_COMPILE=arm-eabi-
+export SUBARCH=arm
+export ARCH=arm
+\end{lstlisting}
+
+Pour la configuration du kernel, on utilise le contenue de l'archive config.gz que l'on décompresse dans le répertoire du kernel utilisé puis on effectue le make menuconfig :
+
+\begin{lstlisting}
+zcat [PATH_to_terkit]/nopid/livedata/config.gz \
+[PATH_to_terkit]/sony/linux-2.6.35.3/.config
+cd [PATH_to_terkit]/sony/linux-2.6.35.3/
+make menuconfig
+\end{lstlisting}
+
+Suite à la commande make menuconfig, une fenêtre s'ouvre dans le terminal permettant de choisir certaines fonctionnalités du kernel. On va éditer l'option suivant : \\
+Device drivers $>$ usb support $>$ usb gadget support $>$ Ethernet gadget -$>$ $<$M$>$ with RNDIS support
+
+Avant de faire la suite, pour la réussite pour éviter une erreur lors de la compilation, on modifie la ligne 135 du fichier fs/nfs/nfsroot.c :
+
+\begin{lstlisting}
+# on modifie la ligne 135 :
+static const match_table_t tokens __initconst = {
+# par la ligne suivante :
+static const match_table_t tokens /*__initconst */ = { 
+\end{lstlisting} 
+
+Ensuite on compile les modifications avec la commande suivante :
+
+\begin{lstlisting}
+make modules
+\end{lstlisting}
+
+Pour finir on copie le fichier g_ether.ko dans le système de fichier de la liseuse dans le répertoire suivant : /lib/modules/[version]/kernel/drivers/usb/gadget
+ 
+\subsection{Installation du modules}
+
+Initialement la liseuse possède un module g_serial rentrant en conflit avec le module g_ether à installer, donc on désactive le module g_serial puis on lance le module g_ether. Pour réaliser cela au démarrage de la liseuse, on a édité le fichier "/etc/rc.d/rc.local" en ajoutant les ligne suivante à la fin : 
+
+\begin{lstlisting}
+echo "modprobe -r g_serial" > /initrd/mnt/sd/test/log
+#desactivation de g_serial
+modprobe -r g_serial 2>> /initrd/mnt/sd/test/log
+echo "modprobe g_ether" >> /initrd/mnt/sd/test/log
+#activation de g_ether
+modprobe g_ether host_addr=00:00:00:00:00:01 \
+dev_addr=00:00:00:00:00:02 2>> /initrd/mnt/sd/test/log
+#on demarre l'interface
+ifconfig usb0 up
+ifconfig usb0 192.168.2.1
+\end{lstlisting}		
+
+Les options host_addr et dev_addr permettent à la liseuse d'affecter son adresse MAC mais aussi celle du pc sur lequel elle est connectée (host), cela permet de ne pas avoir à refaire la configuration réseau à chaque branchement.	
+	%connection depuis le pc
+	Pour se connecter depuis le pc penser à vérifier que le module usbnet est bien activé	
+	Une interface réseau devrait apparaître, il faut la configurer sur le sous-réseau 192.168.2.0/24 (la liseuse est configurer sur l'adresse 192.168.2.1/24)
+	
+\section{Dropbear (SSH)}	
+
+\subsection{Configuration système}
+
+Les actions suivantes ont été réalisé sur Archlinux x64 (kernel 3.8)
+Pour l'ajout de dropbear, on a utilisé la version 2013-58 de celui-ci. La compilation de celui-ci a été réalisé par arm-none-linux-gnueabi-gcc en version 4.7.2. Ce compilateur est conçu pour la cross-compilation en architecture ARM compatible avec la liseuse. 
+Pour la réalisation de la compilation, on a configuré les PATH de la manière suivante : 
+
+\begin{lstlisting}
+export PATH=$PATH:/[PATH-cross-compilateur]/bin
+export CC=arm-none-linux-gnueabi-gcc
+export CXX=arm-none-linux-gnueabi-g++
+export CPP=arm-none-linux-gnueabi-cpp
+export AR=arm-none-linux-gnueabi-ar
+export RANLIB=arm-none-linux-gnueabi-ranlib
+export LD=arm-none-linux-gnueabi-ld
+export STRIP=arm-none-linux-gnueabi-strip
+export CCFLAGS="-march=armv7-a -mtune=cortex-a8 -mfpu=vfp"
+\end{lstlisting}
+
+\subsection{Dépendance : zlib}
+Pour la compilation de dropbear, la library zlib est nécessaire.
+Pour l'obtenir on télécharge zlib (Dans notre cas la version 1.2.5) puis on décompresse celui-ci. Ensuite on se rend dans le répertoire créé (zlib[version]). On effectue la configuration de la compilation via la commande suivante :
+
+\begin{lstlisting}
+./configure --shared
+\end{lstlisting}
+
+L'option --shared permet de sortir un fichier au format .so reconnu par la liseuse.
+Ensuite on lance la commande make
+Et pour finir on déplace les fichiers libz.so* vers un répertoire regroupant toutes les LIBS que l'on a obtenu suite à une compilation([PATH-REP-LIBS]) 
+
+\subsection{Compilation et installation}
+\subsubsection{Sur le PC HOST}
+Dans un premier temps on se rend dans le répertoire dropbear et on Configurationconfigure dropbear avec les options voulut via la commande suivante :
+
+\begin{lstlisting}
+./configure --host=arm-none-linux-gnueabi \
+LDFLAGS="-L/home/arkh/Documents/TER/DFB/lib"
+\end{lstlisting} 
+
+Pour la configuration on a choisie de préciser le paramètre host :
+
+\begin{lstlisting}
+--host=HOST 	l'architecture ou sera lance le programme    
+\end{lstlisting}
+
+De plus le paramètre LDFLAGS indique le chemin d'accès vers la library libz créé précédemment.
+
+Dans notre cas arm-none-linux-gnueabi.
+Suite à cette compilation on obtient un Makefile utilisable et paramétré selon nos besoins.
+Ensuite en utilise la commande suivante :
+
+\begin{lstlisting}
+make strip
+\end{lstlisting}
+
+La commande strip permet un gain de place de l'exécutable en supprimant de celui-ci la table des symboles et les informations de débogage. Un exécutable nommer dropbearmulti est disponible.
+
+Ensuite on copie l'exécutable dans le répertoire /bin de l'image de la liseuse. Dans ce répertoire, on créer des liens symboliques vers les différents programme de dropbear via les commandes suivantes :
+
+\begin{lstlisting}
+ln -s dropbearmulti dropbear
+ln -s dropbearmulti dropbearkey
+ln -s dropbearmulti scp
+ln -s dropbearmulti dbclient
+\end{lstlisting}  
+
+\subsubsection{Sur la liseuse via telnet}
+
+Pour le bon fonctionnement de dropbear, il est nécessaire qu'un mot de passe root soit présent. Pour en ajouter un, on utilise sur la liseuse lancer (connecter via telnet), la commande "gpasswd".
+De plus, il est nécessaire de générer les clefs RSA et DSS via les commandes suivantes :
+
+\begin{lstlisting}
+dropbearkey -t rsa -f dropbear_rsa_host_key
+dropbearkey -t dss -f dropbear_dss_host_key
+\end{lstlisting}
+
+Normalement il vous maintenant possible de vous connecter à la liseuse via ssh ou d'effectuer des copie sur celle-ci après avoir au préalable lancer le serveur dropbear sur la liseuse.
+
+\section{DirectFB}
+
+\subsection{Dépendance nécessaire pour DirectFB}
+
+DirectFB est une librairie nécessitant plusieurs dépendance pour ça compilation. Voici la liste des dépendances nécessaires :
+
+\begin{itemize}
+\item Zlib
+\item Freetype
+\item Jpegsrc
+\item Libpng
+\item Libconio
+\item SDL
+\item LibVNCServer
+\end{itemize}
+
+Il est nécessaire de compiler toutes les libs présent dans la liste en suivante l'ordre de celle-ci (Pour éviter les problèmes de dépendances).
+
+\subsection{Configuration système}
+Les cross-compilations suivantes ont été réaliser de deux manière selon le système d'exploitation employé : 
+
+\begin{itemize}
+\item Sur Archlinux x64 (kernel 3.8) on a utilisé les mêmes configurations employées pour la compilation de dropbear.
+\item Sur Ubuntu x64 12.04 on a utilisé 
+\end{itemize}
