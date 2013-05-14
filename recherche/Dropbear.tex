@@ -1,0 +1,59 @@
+\section {Cross-compilation Dropbear(SSH)}
+Version de dropbear utilisé : dropbear-2013.58
+Cross-compilateur utilisé : arm-none-linux-gnueabi-gcc-4.7.2
+Paramètre de PATH utilisé :
+
+\begin{lstlisting}
+export PATH=$PATH:/PATH-cross-compilateur/bin
+export CC=arm-none-linux-gnueabi-gcc
+export CXX=arm-none-linux-gnueabi-g++
+export CPP=arm-none-linux-gnueabi-cpp
+export AR=arm-none-linux-gnueabi-ar
+export RANLIB=arm-none-linux-gnueabi-ranlib
+export LD=arm-none-linux-gnueabi-ld
+export STRIP=arm-none-linux-gnueabi-strip
+export CCFLAGS="-march=armv7-a -mtune=cortex-a8 -mfpu=vfp"
+\end{lstlisting}
+
+Configuration cross-compilation Dropbear : 
+
+\begin{lstlisting}
+./configure --host=arm-none-linux-gnueabi CPPFLAGS=-I/home/arkh/Documents/TER/DFB/include LDFLAGS="-L/home/arkh/Documents/TER/DFB/lib"
+\end{lstlisting}
+
+Ensuite lancer les commandes suivantes :
+
+\begin{lstlisting}
+export STATIC=1 MULTI=1 CC=arm-none-linux-gnueabi-gcc SCPPROGRESS=0 PROGRAMS="dropbear dropbearkey scp dbclient"
+make strip
+\end{lstlisting}
+
+Puis copier dropbearmulti dans le répertoire /bin de l'image de la Liseuse. Pour finir créer des liens symboliques avec les commandes suivantes (Lancer du pc hôte car l'image est en lecture seule) :
+
+\begin{lstlisting}
+ln -s dropbearmulti dropbear
+ln -s dropbearmulti dropbearkey
+ln -s dropbearmulti scp
+ln -s dropbearmulti dbclient
+\end{lstlisting}
+
+Pour le bon fonctionnement de dropbear, il est nécessaire d'avoir un mot de passe root sur le système. pour en générer un, utiliser la commande gpasswd.
+
+De plus, il est nécessairfe de générer les clef RSA et DSS via les commandes suivantes : 
+
+\begin{lstlisting}
+dropbearkey -t rsa -f dropbear_rsa_host_key
+dropbearkey -t dss -f dropbear_dss_host_key
+\end{lstlisting}
+
+Normalement les fichiers sont générés dans le répertoire /etc/dropbear.
+Pour démarrer dropbear (le serveur ssh de la Liseuse) au démarrage de l'image de la Liseuse, ajouter la ligne suivante à la fin du fichier /etc/rc.d/rc.local de l'image :
+
+\begin{lstlisting}
+dropbear start
+\end{lstlisting}
+
+Si vous voulez vous connecter en SSH au PC hôte, il faut utiliser la commande suivante : 
+\begin{lstlisting}
+dbclient [Nom-User]@[AdresseIP]
+\end{lstlisting}
