@@ -48,11 +48,24 @@ La modification de l'écran E-Ink peut se faire de deux manières, soit en envoy
 Le programme de test d'affichage via ioctl permet d'envoyer un buffer d'affichage directement dans le framebuffer du driver EPDC.
 Ici ce buffer est constitué de pixels aléatoire : 
 %capture d'écran get_temp
-
+	
+	\begin{figure}[h!]
+		\begin{center}
+			\includegraphics[scale=0.15]{screen_get_temp.jpg}
+			 \caption{Modification de l'affichage en utilisant les ioctl}
+		\end{center}
+	\end{figure}
 \subsection{Affichage via DirectFB}
 
 Le programme d'affichage via Librairie graphique génère le framebuffer en utilisant les primitives de DirectFB.
 Le programme de test dessine ici 10 lignes avec points d'arrivé aléatoire.
+
+	\begin{figure}[h!]
+		\begin{center}
+			\includegraphics[scale=0.15]{screen_direct.jpg}
+			\caption{modification de l'affichage en utilisant DirectFB}
+		\end{center}
+	\end{figure}
 
 %capture direct
 % 2 : programme d'affichage
