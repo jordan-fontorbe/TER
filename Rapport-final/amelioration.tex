@@ -43,4 +43,18 @@ Un autre point que l'on peut ajouter sur ce projet est d'intégrer VNC à qemu, 
 
 \section{Simulateur d'écran}
 
-La dernière étape pour rendre le projet complet est de développer un simulateur d'écran de la liseuse. Pour cela il faut faire en sorte de gérer un affichage cohérent avec les temps de réponse de la liseuse Sony PRS-T1. C'est-à-dire que l'écran doit mettre un certain temps à se rafraîchir et pouvoir modifier seulement certaines zones de l'écran.
+La dernière étape pour rendre le projet complet est de développer un simulateur d'écran de la liseuse. Pour cela il faut faire en sorte de gérer un affichage cohérent avec les temps de réponse de la liseuse Sony PRS-T1. C'est-à-dire que l'écran doit mettre un certain temps à se rafraîchir et pouvoir modifier seulement certaines zones de l'écran. De plus il faudrait y intégrer la gestion des événements, par exemple lors d'un clique souris simuler un appuie sur une zone de l'écran de la liseuse.
+
+Enfin, une fois ce simulateur d'écran développé, l'objectif est de l'intégrer à qemu pour ne plus être dépendant de la liseuse. On aura alors un émulateur complet de la liseuse Sony PRS-T1.
+
+
+%% A deplacer ...
+\section{Protocol RFB}
+
+RFB est un protocol simple pour l'accès à distance aux interfaces graphiques ds utilisateurs. C'est ce protocol qui est utilisé par VNC. Il y a d'un côté un visionneur, appelé client, et de l'autre côté un serveur qui va modifier le framebuffer afin de modifier l'affichage.
+
+Le protocol RFB peut se décomposer en trois phases. Une première où le client et le serveur vont s'accorder sur la version du protocole à utiliser. Ensuite le client et le serveur vont s'envoyer des messages d'initialisation pour enfin pouvoir communiquer. A partir de ce moment, le client peut envoyer des demandes au serveur qui va lui retournera le résultat de cette requête.
+
+\begin{center}
+	\includegraphics[scale=0.6]{RFBProtocol.png}
+\end{center}
