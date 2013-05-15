@@ -37,16 +37,16 @@ Pour Linux :
 		\begin{itemize}
 			\item aller dans "configuration du port série"
 			\item changer le port série par celui trouvé à l'étape précédente
-		\end{itemize}
-	\item se loger en tant que root (aucun mot de passe requis)
+		\end{itemize} \\
+	\item se logger en tant que root (aucun mot de passe requis)
 \end{itemize}
 
 \section{Construction du système de fichier de Recovery}
 \subsection{Compilation du noyau}
 
-la compilation du noyau (via les sources de SONY fournit) est la première étape vers la création d'un système de fichier pour le mode Recovery.
+La compilation du noyau (via les sources de SONY fournit) est la première étape vers la création d'un système de fichier pour le mode Recovery.
 
-La compilation du noyau nécessite un environnement de cross-compilation , le compilateur fournit par SONY ne fonctionnant pas nous avons utilisé celui fourni avec le NDK d'Android (arm-eabi-gcc-4.4.3).
+La compilation du noyau nécessite un environnement de cross-compilation , le compilateur fourni par SONY ne fonctionnant pas nous avons utilisé celui fourni avec le NDK d'Android (arm-eabi-gcc-4.4.3).
 
 Avant de lancer la compilation du noyau il faut définir les différents drivers et modules qui vont être utilisés. La plate-forme SONY étant particulière il faut récupérer la configuration du noyau officiel, celle-ci se trouve sur la liseuse dans le fichier : 
 \begin{verbatim}
@@ -76,7 +76,7 @@ Pour créer le fichier il suffit de :
 			\end{verbatim}
 	\end{itemize}
 
-\subsection{Ce qui reste à faire}
+\subsection{Ce qu'il reste à faire}
 
 Cependant la création du système de fichier n'est pas encore terminée, il faut :
 	\begin{itemize}
