@@ -4,7 +4,7 @@
 
 \subsection{Présentation des processeurs iMX}
 
-Les processeurs iMX de Freescale sont des processeurs mobile basés sur l'architecture ARM et réputés pour leur faible consommation d'énergie. Ce sont des System-on-Chip (SoC).
+Les processeurs iMX de Freescale sont des processeurs mobiles basés sur l'architecture ARM et réputés pour leur faible consommation d'énergie. Ce sont des System-on-Chip (SoC).
 %'est-à-dire que ce sont des systèmes complet embarqué sur une puce comprenant de la mémoire, un microprocesseur, des périphériques d'interface ou encore des interfaces USB.
 
 %On retrouve cette gamme de processeurs dans divers produits comme des téléphones, des imprimantes, des systèmes de navigation pour voiture, des tablettes numériques et bien évidemment sur des liseuses.
@@ -13,7 +13,7 @@ Les solutions proposées par Freescale sur cette gamme de processeurs sont aussi
 
 \subsection{Le processeur iMX508}
 
-Le iMX508 est le processeur que l'on va retrouvé sur la liseuse SONY PRS-T1. Il est le résultat de la collaboration entre Freescale et E-Ink et est le premier conçu spécialement pour les liseuses. 
+Le iMX508 est le processeur que l'on va retrouver sur la liseuse SONY PRS-T1. Il est le résultat de la collaboration entre Freescale et E-Ink et est le premier conçu spécialement pour les liseuses. 
 
 L'atout principal du iMX508 est son architecture ARM Cortex A8 disposant d'un contrôleur d'écran de liseuse intégré (Electrophoretic Paper Display Controller abrégé EPDC). Cette intégration lui permet d'être environ 50\% moins coûteux que les autres processeurs utilisant cette même architecture mais avec un EPDC indépendant. Il est aussi plus performant car l'accès au contrôleur est direct.
 
@@ -21,7 +21,7 @@ Le processeur iMX508 peut accueillir de la mémoire mDDR ou LPDDR2 qui consomme 
 
 Il intègre aussi la technologie NEON permettant de meilleurs performances graphiques (dans le cas de la liseuse on notera une augmentation de la rapidité pour tourner les pages par exemple).
 
-Ce processeur permet donc une faible consommation d’énergie tout en conservant de bonnes performances grâces aux modifications apportées par Freescale.
+Ce processeur permet donc une faible consommation d’énergie tout en conservant de bonnes performances grâce aux modifications apportées par Freescale.
 
 
 Voici un petit schéma du SoC iMX508 :
@@ -33,7 +33,7 @@ Voici un petit schéma du SoC iMX508 :
 
 \section{Le contrôleur (EPDC)}
 
-L'EPDC (Electrophoretic Display Controller) conçu spécialement pour les écran E-Ink est une partie importante du processeur iMX508. Il a été intégré directement à l'architecture ARM pour de meilleures performances et une dépense d'énergie moindre. C'est ce contrôleur qui va faire le lien entre l'écran E-Ink et le processeur.
+L'EPDC (Electrophoretic Display Controller) conçu spécialement pour les écrans E-Ink est une partie importante du processeur iMX508. Il a été intégré directement à l'architecture ARM pour de meilleures performances et une dépense d'énergie moindre. C'est ce contrôleur qui va faire le lien entre l'écran E-Ink et le processeur.
 %Avant de parler de l'EPDC il est nécessaire de faire un point sur le fonctionnement des écrans électrophorétiques.
 
 \subsection{Problématique}
@@ -42,7 +42,7 @@ Les écrans électrophorétiques nécessitent des contrôleurs capables de dirig
 
 Quand une waveform est envoyée, il ne faut pas qu'elle soit perturbée. Concrètement, cela implique qu'il faut bloquer toute mise à jour du framebuffer jusqu'à la fin de l'application de la waveform.
 
-Il y a trois problèmes majeures pour les écrans électrophorétiques :
+Il y a trois problèmes majeurs pour les écrans électrophorétiques :
 \begin{itemize}
 	\item[$\bullet$] Comment mapper une mémoire non mappable ?
 	\item[$\bullet$] Comment diminuer la latence entre les mises à jour d'affichage ?
@@ -60,19 +60,19 @@ Le principe des Deferred IO est le suivant :
 \renewcommand{\labelitemi}{$\bullet$}
 	\item Les pages de la mémoire du framebuffer sont initialement marquées en lecture seule.
 	\item Quand une application tente d'écrire sur une de ces pages, un défaut de page est créé.
-	\item Chaque défauts de page est mis dans une file.
-	\item Quand la page mémoire est disponible on écrit ce que l'application voulait dans à la bonne adresse mémoire dans l'ordre des défauts de pages de la file. 
+	\item Chaque défaut de page est mis dans une file.
+	\item Quand la page mémoire est disponible on écrit ce que l'application voulait à la bonne adresse mémoire dans l'ordre des défauts de page de la file. 
 \end{itemize} 
 
 Si on reprends les trois problèmes posés plus haut, le premier (mapper une mémoire non mappable) est résolu puisque lorsque l'on ne peut pas accéder à la mémoire du framebuffer, les écritures vont être mises de côté puis exécutées quand cela sera possible. 
 Il n'y a pas de perte de latence puisque écrire dans le framebuffer est aussi rapide que d'écrire dans la mémoire, le second problème est donc résolu.
-Le troisième problème est lui aussi résolu puisque l'adresse mémoire qui à générée un défaut de page est connu.
+Enfin le troisième problème l'est lui aussi puisque l'adresse mémoire qui à généré un défaut de page est connu.
 \subsection{Caractéristiques principales de l'EPDC}
 
 \begin{itemize}
 	\item[$\bullet$] Résolution jusqu'à 4096 x 4096 pixels à 20 Hz et 2048 x 1536 à 106 Hz
 	\item[$\bullet$] De 5 à 32 niveaux de pixels
-	\item[$\bullet$] Peux mettre à jour jusqu'à 16 régions sur un écran
+	\item[$\bullet$] Peut mettre à jour jusqu'à 16 régions sur un écran
 	\item[$\bullet$] Mise a jour partielle ou totale de l'écran 
 	\item[$\bullet$] Interfaçage avec la mémoire du processeur pour garantir un taux de rafraîchissement
 	\item[$\bullet$] Peux réduire sa consommation d'énergie
@@ -90,7 +90,7 @@ de rendre possible l'affichage sur écran E-Ink. Le framebuffer, le pixel pipeli
 %La notion de framebuffer étant déja expliquer dans la partie  <partie> je ne vais présenter que le pixel pipeline est l'accès mémoire direct
 \subsubsection{Le framebuffer}
 
-La notion de framebuffer permet l'accès à une zone mémoire contenant l'image affichée actuellement à l'écran sans être dépendante du matériel utilisé en aval.
+La notion de framebuffer permet l'accès à une zone mémoire contenant l'image affichée actuellement à l'écran sans être dépendant du matériel utilisé en aval.
 
 Le framebuffer utilisé dans le cas d'un écran E-Ink se base sur la notion de deferred io vu plus tôt.
 %inserer la partie correspondante ? sinon inserer une description du deferred_io
@@ -105,7 +105,7 @@ La plate-forme Freescale (iMX50) dispose d'un enhanced pixel pipeline (ePXP), ce
 	\end{itemize}
 
 Le ePXP dispose en mémoire d'une image de fond mais aussi de calque(s) afin de pouvoir faire des 
-mélanges (via la transparence) de chacune d'entre-elles avant d'envoyer le tout à l'écran.
+mélanges (via la transparence) de chacune d'entre-eux avant d'envoyer le tout à l'écran.
 
 Il est important de noter que l'ePXP ne gère que des blocs d'une taille donnée (par exemple : 8x8 pixels) pour la résolution des zones de transparence.
 
@@ -122,12 +122,12 @@ Sur la plate-forme iMX50 le DMA est géré pour le bus AHB (Advanced Microcontro
 
 Les lookup tables permettent au contrôleur de gérer plusieurs zones de mise à jour de l'écran en même temps, permettant ainsi de contrer la latence dû à la mise à jour de l'écran via les waveforms.
 
-Les LuT représentent chacune une zone de mise à jour de l'écran, cette zone est défini par : 
+Les LuT représentent chacune une zone de mise à jour de l'écran, cette zone est définie par : 
 	\begin{itemize}
 		\item[$\bullet$] une taille
 		\item[$\bullet$] la fonction de waveform associée
 	\end{itemize}
-La gestion des zones de mise à jour étant dynamique les LuT peuvent être de tailles variables. Cependant la fonction de waveform peut influer sur le nombre de LuT disponibles car certains modes remettent l'écran à zéro avant de faire une mise à jour.
+La gestion des zones de mise à jour étant dynamique, les LuT peuvent être de taille variable. Cependant la fonction de waveform peut influer sur le nombre de LuT disponibles car certains modes remettent l'écran à zéro avant de faire une mise à jour.
 
 Lorsque deux zones gérées par les LuT se chevauchent on dit qu'il y a collision. Lors d'une collision 
 la zone qui écrase les zones pré-existantes doit attendre que ces dernières aient fini leurs mises à jour. Ce système est établi car on ne doit pas interrompre l'application d'une waveform à une zone de l'écran (et encore moins appliquer deux waveforms en même temps).
@@ -146,9 +146,9 @@ Le driver s'organise de la manière suivante :
 		\item[$\bullet$] mxc\_epdc\_fb\_probe : \\
 		initialisation du driver mis en place des fonctions de callback, du gestionnaire d'interruption
 		\item[$\bullet$] mxc\_epdc\_fb\_exit :\\
-		dés-allocation des ressources du noyau pour ce driver
+		désallocation des ressources du noyau pour ce driver
 	\end{itemize}
-	Le driver dispose aussi de fonctions prenant en charge les événement de gestion d'alimentation (mis en veille, réveil, extinction).
+	Le driver dispose aussi de fonctions prenant en charge les événements de gestion d'alimentation (mise en veille, réveil, extinction).
 	
 \subsubsection{Fonctions de bas niveau}
 
