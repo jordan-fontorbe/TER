@@ -24,7 +24,7 @@ La fonction ioctl générique prenant cette commande sous la forme d'un entier l
 
 La commandes utilisé ici est la commande de mise à jour de l'écran : 
 \begin{lstlisting}
-MSXC_SEND_UPDATE
+	MXC_SEND_UPDATE
 \end{lstlisting}
 Cette commande prend en paramètre l'adresse d'une structure mxcfb_update_data.
 
@@ -32,36 +32,120 @@ Cette commande prend en paramètre l'adresse d'une structure mxcfb_update_data.
 Cette structure permet de passer l'intégralité des paramètres nécessaire au driver.
 Voici les options importante a retenir : 
 \begin{itemize}
-	\item update_region 
+	\renewcommand{\labelitemi}{$\bullet$}
+	\item update_region \\
 		permet de définir le rectangle de mis a jour de l'écran à partir de :
 		\begin{itemize}
 			\item les coordonnées du coin supérieur gauche
 			\item la largeur et la hauteur de la zone
 		\end{itemize}
-	\item alt_buffer_data
+	\item alt_buffer_data\\
 		permet de définir un buffer alloué localement dans l'espace utilisateur, 
 		cette option est inutilisé ici
 		
-	\item update_mode : 
+	\item update_mode \\
 		définit le mode de mis a jour peut être soit :
 		\begin{itemize}
 			\item UPDATE_MODE_PARTIAL (ne met a jour que la région concernée)
 			\item UPDATE_MODE_FULL (met a jour l'écran entier)
 		\end{itemize}
-	\item flags : 
+	\item flags\\
 		ce champs permet de savoir si on souhaite utiliser ou non le champ alt_buffer_data
-	\item update_marker
+	\item update_marker\\
 		permet d'identifier une demande de mise à jour pour la synchronisation
-	\item waveform_mode 
+	\item waveform_mode \\
 		permet de définir le mode de waveforme utilisée, définit dans la structure
 		mxcfb_waveform_modes , ici on utilise uniquement le mode par défaut a cause du risque 
 		d'écraser les waveformes
-	\item temp
+	\item temp\\
 		permet de définir la température utilisé pour paramétrer la waveforme a utiliser.
 	
 \end{itemize}
 
+\subsection{L'envoie des information sur le framebuffer}
+
+Comme on utilise pas le champs alt_buffer_data il faut mettre à jour directement le framebuffer, via le fichier special /dev/fb0, pour cela il suffit juste de créer dans le programme un espace mémoire de la bonne taille pour le mapper sur l'emplacement de ce fichier.
+
+Ensuite un appel à l'ioctl MSXC_SEND_UPDATE, permet de mettre à jour l'affichage directement.
 
 \section{La mis a jour du framebuffer via DirectFB}
+
+DirectFB fournissant les primitives d'affichage il est possible de faire des choses un peu plus
+évolué que de colorié le framebuffer dans une couleur donnée.
+L'exemple de test dessine ainsi en boucle 10 lignes avec points de départ fixe mais points d'arrivée aléatoire.
+
 \subsection{Les principales structures}
+
+Toute la librairie DirectFB repose sur la structure IDirectFB. Cette dernière permet la génération de toutes les autres structures.~\\
+ Le programmes de test utilise principalement les structures :
+\begin{itemize}
+	\item DFBSurfaceDescription qui permet de décrire la surface d'affichage
+	\item IDirectFBSurface qui représente la surface d'affichage
+\end{itemize}
+
+\subsubsection{Paramètre de l'affichage}
+
+%a voir si on laisse
+Sur la liseuse l'affichage dispose d'une résolution de 800*600 pixels et le format des pixels 
+réglé par default est le RGBA16, c'est paramètre sont détecté automatiquement par DirectFB.
+
+La structure DFBSurfaceDescription dispose d'un champs caps décrivant les capacités de la surface d'affichage, ici les paramètres sont : 
+	\begin{itemize}
+		\item DCAPS_FLIPPING
+			indique que l'affichage a besoin d'un appel à Flip pour être mis a jour.
+		\item DCAPS_PRIMARY
+			indique que la surface est la surface d'affichage principale
+	\end{itemize}
+
+La création de la surface d'affichage se fait via : 
+	\begin{lstlisting}
+	IDirectFB->CreateSurface( IdirectFB , DFBSurfaceDescription, 
+			IDirectFBSurface)
+	\end{lstlisting}
+
+Il faut ensuite définir la résolution et la couleur de l'affichage via les appels a :
+	\begin{lstlisting}
+	IDirectFBSurface->GetSize( IDirectFBSurface, int width, 
+			int height)
+	IDirectFBSurface->SetColor(IdirectFBSurface,uint8,uint8,unint8)
+	\end{lstlisting}
+
+Une fois tous les réglages effectué on peut appeler les primitives graphique : 
+\begin{itemize}
+	\item FillRectangle
+	\item FillRectangles
+	\item DrawRectangle
+	\item DrawLine
+	\item DrawLines
+	\item FillTriangle
+	\item FillTriangles
+	\item FillSpans
+\end{itemize}
+
+Pour mettre à jour l'affichage il faut faire un appel à : 
+	\begin{lstlisting}
+	IDirectFBSurface->Flip( IDirectFBSurface, DFBRegion, DFBSurfaceFlipFlags)
+	\end{lstlisting}
+
+%	\begin{itemize}
+%		\item IDirectFBSurface \\
+%		permet l’interaction avec le framebuffer, gestion des primitives graphique
+%		\item IDirectFBInputDevice \\
+%		permet la gestion des événements d'entrée utilisateur
+%	\end{itemize}
+
+
+
 \subsection{Utilisation des ioctls avec directfb}
+
+Au stade actuel on a le framebuffer mis a jour par DirectFB. Cependant le driver n'actualise l'affichage que sur demande.
+Il faut donc ajouter un appel a l'ioctl SEND_UPDATE vu précédemment.
+
+Cependant un autre problème se pose. Le programme n'étant pas synchronisé avec le drivers, il envoie ces commandes d'affichages plus vite que le driver ne peut les gérer.
+Le driver ne peut gérer que 12 tables LuT pour faire une mise à jour, une fois ces dernières remplit le drivers refuse la mise à jour.
+
+Pour forcer la mise à jour il faut :
+\begin{itemize}
+	\item définir le champs update_marker de la structure mxcfb_update_data
+	\item faire un appel ioctl MXCFB_WAIT_FOR_UPDATE_COMPLETE avec l'update_marker
+\end{itemize}
