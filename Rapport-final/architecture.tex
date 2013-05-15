@@ -3,64 +3,62 @@
 \section{L'image du mode recovery}
 
 \subsection{L'image de base}
-le mode recovery se base sur le kernel linux 2.6.35.3 qui est contenu dans une ROM interne à la liseuse (il est donc inaccessible). Le sytème de fichier est compris dans un fichier image contenu lui sur la carte SD, ce fichier peut être modifié depuis l'extérieur.
+Le mode Recovery se base sur le kernel Linux 2.6.35.3 qui est contenu dans une ROM interne à la liseuse (il est donc inaccessible). Le système de fichier est compris dans un fichier image contenu lui sur la carte SD, ce fichier peut être modifié depuis l'extérieur.
 
-L'image fournit par default pour le mode recovery, contient : 
+L'image fournie par défaut pour le mode Recovery, contient : 
 \begin{itemize}
-	\item un exécutable busybox \\
-		qui permet l'accès aux commandes usuelles linux dans les systèmes embarqués
-	\item un serveur dhcp
-	\item un daemon telnet
+	\item un exécutable Busybox \\
+		qui permet l'accès aux commandes usuelles Linux dans les systèmes embarqués
+	\item un serveur DHCP
+	\item un démon telnet
 	%peut etre a mettre dans la partie du rapport intermediaire
-	\item un accès au port usb en mode série (via le module g_serial)
+	\item un accès au port USB en mode série (via le module g_serial)
 \end{itemize}
 
-Busybox est un exécutable reprenant toutes les commandes usuelles linux pour les environnements
-embarqués.
 
-Le système de fichier du mode recovery est en lecture seule, seul les dossier suivant sont accessible en lecture écriture : 
+Le système de fichier du mode Recovery est en lecture seule, seuls les dossiers suivant sont accessibles en lecture / écriture : 
 \begin{itemize}
 	\item /etc
 	\item /initrd/mnt/sd
 	\item /tmp
 \end{itemize}
 
-Pour modifier le système de fichier racine il faut passer par un pc hôte.
+Pour modifier le système de fichier racine il faut passer par un PC hôte.
 
 \subsection{L'image finale}
 
 L'image finale ajoute les fonctionnalités suivante à l'image : 
 	\begin{itemize}
-		\item un accès au port usb par connexion Ethernet
+		\item un accès au port USB par connexion Ethernet
 		\item le support du protocole SSH
 		\item la librairie DirectFB
 	\end{itemize}
 
-Plusieurs fonctionnalités devenues inutiles ont été désactivé :
+Plusieurs fonctionnalités devenues inutiles ont été désactivées :
 \begin{itemize}
-	\item Le serveur dhcp : \\
-		il est peut utile d'avoir un support dhcp alors que le pc hôte et la liseuse 
+	\item Le serveur DHCP : \\
+		il est peu utile d'avoir un support DHCP alors que le PC hôte et la liseuse 
 		ont un réseau pour eux seuls.
 		%peut etre rajouté le fait qu'il sont en plus défini statiquement ??
-	\item Le daemon telnet : \\
-		la gestion du protocole telnet est devenue inutile et peut pratique (la copie de fichier
-		 n'étant pas gérer par exemple), depuis l'ajout du support du protocole SSH.
+	\item Le démon telnet : \\
+		la gestion du protocole telnet est devenu inutile et peu pratique (la copie de fichier
+		 n'étant pas géré par exemple), depuis l'ajout du support du protocole SSH.
 \end{itemize}
 
-L'émulation d'un lien Ethernet sur le port usb de la liseuse se fait via le module g_ether.
+L'émulation d'un lien Ethernet sur le port USB de la liseuse se fait via le module g_ether.
 %a verifier si c'est pas déjà dis avant
-Ce module est située comme les autres modules dans :
+Ce module est situé comme les autres modules dans :
 	\begin{lstlisting}
 	/lib/modules/2.6.35.3/kernel/drivers/usb/gadget
 	\end{lstlisting}
 
-Le support du protocole SSH se fait via la l'exécutable dropbear situé dans : 
+Le support du protocole SSH se fait via l'exécutable Dropbear situé dans : 
 	\begin{lstlisting}
 	/bin
 	\end{lstlisting}
 
-Les fichiers concernant la librairies DirectFB se situe dans le dossier /usr/local/lib.
-Pour pouvoir lancer une exècutable utilisant DirectFB il faut vérifier que ce dossier soit bien inclus dans la variable d'environnement LD_LIBRARY_PATH, cette variable est défini dans le scripte rc.local.
+Les fichiers concernant la librairie DirectFB se situe dans le dossier /usr/local/lib.
+Pour pouvoir lancer une exécutable utilisant DirectFB il faut vérifier que ce dossier soit bien inclus dans la variable d'environnement LD_LIBRARY_PATH, cette variable est définie dans le script rc.local.
 \section{La mise en place de l'affichage}
 %architecture pour affichage via directfb
 
@@ -70,10 +68,10 @@ L'affichage de la liseuse se fait grâce aux modules suivant :
 	\item DirectFB
 \end{itemize}~\\
 
-Le driver se charge de faire les optimisation pour pallier au problème de réactivité de l'écran (via les tables LuTs notamment), ainsi que l'application des waveforms pour l'affichage sur l'écran.\\
+Le driver se charge de faire les optimisations pour pallier au problème de réactivité de l'écran (via les tables LuT notamment), ainsi que l'application des waveforms pour l'affichage sur l'écran.\\
 Le driver fournit des ioctl pour permettre l'exécution des fonctionnalités du driver depuis l'espace utilisateur.~\\~\\
 %verifier si c'est pas deja dis plus tot dans le rapport
-DirectFB implémente des primitives graphique, comme le traçage de ligne. Ces dernières permettent de faire une abstraction sur le format du framebuffer.
+DirectFB implémente des primitives graphiques, comme le traçage de ligne. Ces dernières permettent de faire une abstraction sur le format du framebuffer.
 
 Voici un schéma modulaire de l'application utilisant DirectFB : 
 
