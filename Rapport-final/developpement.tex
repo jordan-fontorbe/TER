@@ -1,6 +1,6 @@
 \chapter{Développement effectué}
-Dans ce chapitre nous expliquerons les différents moyens nous ayant permit d'obtenir le résultat final présenté dans le chapitre "État final de développement".\\ 
-Dans un premier temps nous parlerons de la mise en place du module permettant une communication Ethernet via le port USB de la liseuse. Dans un second temps nous parlerons de la mise en place de Dropbear (SSH) sur la liseuse facilitant les accès réseaux sur la machine de test et permettant ainsi la copie de fichier du PC hôte à la liseuse. Ensuite nous présenterons les étapes nécessaire à la compilation de DirectFB. Et pour finir nous parlerons d'un exemple de code permettant la modification de l'affichage de la liseuse.
+Dans ce chapitre nous présenterons les différents moyens nous ayant permit d'obtenir le résultat final présenté dans le chapitre "État final de développement".\\ 
+Dans un premier temps nous parlerons de la mise en place du module permettant une communication Ethernet via le port USB de la liseuse. Dans un second temps nous présenterons de la mise en place de Dropbear (SSH) sur la liseuse facilitant les accès réseaux sur la machine de test et permettant ainsi la copie de fichier du PC hôte à la liseuse. Ensuite nous présenterons les étapes nécessaires à la compilation de DirectFB. Et pour finir nous détaillerons des exemples de code permettant la modification de l'affichage de la liseuse avec DirectFB ou les IOCTL.
 
 \section{Module g_ether}
 \subsection{Configuration}
@@ -13,7 +13,7 @@ Les commandes suivantes ont été testées sur deux systèmes d'exploitation :
 
 \end{itemize}
 
-Pour la cross-compilation, on a utilisé, dans cette partie, le GCC 4.4.3 fournit avec l'android NDK. Voici la configuration des PATH utilisés pour la cross compilation :
+Pour la cross-compilation, on a utilisé, dans cette section, le compilateur GCC 4.4.3 fournit avec l'android NDK. Voici la configuration des PATHS utilisés pour la cross-compilation :
 
 \begin{lstlisting}
 # Attention le PATH suivant peut etre different sur certain systeme
@@ -23,7 +23,7 @@ export SUBARCH=arm
 export ARCH=arm
 \end{lstlisting}
 
-Pour la configuration du kernel, on utilise le contenue de l'archive config.gz que l'on décompresse dans le répertoire du kernel utilisé puis on effectue le make menuconfig :
+Pour la configuration du kernel, on a employé le contenue de l'archive config.gz que l'on décompresse dans le répertoire du kernel utilisé puis on a effectué la commande make menuconfig. Voici la liste des commandes que l'on a utilisées:
 
 \begin{lstlisting}
 zcat [PATH_to_terkit]/nopid/livedata/config.gz \
@@ -32,10 +32,10 @@ cd [PATH_to_terkit]/sony/linux-2.6.35.3/
 make menuconfig
 \end{lstlisting}
 
-Suite à la commande make menuconfig, une fenêtre s'ouvre dans le terminal permettant de choisir certaines fonctionnalités du kernel. On va éditer l'option suivant : \\
+Suite à la commande make, une fenêtre s'ouvre dans le terminal permettant de choisir certaines fonctionnalités du kernel. On a édité l'option suivant : \\
 Device drivers $>$ usb support $>$ usb gadget support $>$ Ethernet gadget -$>$ $<$M$>$ with RNDIS support
 
-Avant de faire la suite, pour la réussite pour éviter une erreur lors de la compilation, on modifie la ligne 135 du fichier fs/nfs/nfsroot.c :
+Avant de faire la suite, pour éviter une erreur lors de la compilation, on a modifié la ligne 135 du fichier fs/nfs/nfsroot.c :
 
 \begin{lstlisting}
 # on modifie la ligne 135 :
@@ -44,17 +44,17 @@ static const match_table_t tokens __initconst = {
 static const match_table_t tokens /*__initconst */ = { 
 \end{lstlisting} 
 
-Ensuite on compile les modifications avec la commande suivante :
+Ensuite on a compilé les modifications avec la commande suivante :
 
 \begin{lstlisting}
 make modules
 \end{lstlisting}
 
-Pour finir on copie le fichier g_ether.ko dans le système de fichier de la liseuse dans le répertoire suivant : /lib/modules/[version]/kernel/drivers/usb/gadget
+Pour finir on a copié le fichier g_ether.ko dans le système de fichier de la liseuse dans le répertoire suivant : /lib/modules/[version]/kernel/drivers/usb/gadget
  
 \subsection{Installation du modules}
 
-Initialement la liseuse possède un module g_serial rentrant en conflit avec le module g_ether à installer, donc on désactive le module g_serial puis on lance le module g_ether. Pour réaliser cela au démarrage de la liseuse, on a édité le fichier "/etc/rc.d/rc.local" en ajoutant les ligne suivante à la fin : 
+Initialement la liseuse possède un module g_serial rentrant en conflit avec le module g_ether à installer, donc on a désactivé le module g_serial puis on  a lancé le module g_ether. Pour réaliser cela au démarrage de la liseuse, on a édité le fichier "/etc/rc.d/rc.local" en ajoutant les ligne suivante à la fin de ce fichier : 
 
 \begin{lstlisting}
 echo "modprobe -r g_serial" > /initrd/mnt/sd/test/log
@@ -69,18 +69,81 @@ ifconfig usb0 up
 ifconfig usb0 192.168.2.1
 \end{lstlisting}		
 
-Les options host_addr et dev_addr permettent à la liseuse d'affecter son adresse MAC mais aussi celle du pc sur lequel elle est connectée (host), cela permet de ne pas avoir à refaire la configuration réseau à chaque branchement.	
+Les options host_addr et dev_addr permettent à la liseuse d'affecter son adresse MAC mais aussi celle de la machine hôte sur lequel elle est connectée (host), cela permet de ne pas avoir à refaire la configuration réseau à chaque branchement en USB.	
 	%connection depuis le pc
-	Pour se connecter depuis le pc penser à vérifier que le module usbnet est bien activé	
+	Pour se connecter depuis le pc on a pensé à vérifier que le module usbnet est bien activé.	
 	Une interface réseau devrait apparaître, il faut la configurer sur le sous-réseau 192.168.2.0/24 (la liseuse est configurer sur l'adresse 192.168.2.1/24)
+
+\newpage
+
+\section{Information de configuration}
+
+Avant d'expliquer les différentes procédures de cross-compilation pour les différents besoins du projet, voici une liste d'informations sur les paramètres de fichiers "configure" rencontrés :
+
+\begin{lstlisting}
+# Parametres generaux
+  
+  --build=BUILD   configure for building on BUILD [guessed]
+  --host=HOST     cross-compile to build programs to run on HOST [BUILD]
+  --target=TARGET configure for building compilers for TARGET [HOST]
+  --shared (--enable-shared) construit shared librairies
+  --static (--enable-static) construit static librairies
+ 
+  LDFLAGS=-I[PATH-LIBS] indique la position de librairies \ 
+  n'etant pas dans une position standard (/usr/lib)
+  
+  CPPFLAGS=-L[PATH-INCLUDE] indique la position de hearders \ 
+  n'etant pas dans une position standard (/usr/include)
+  
+# Parametre libSDL
+
+  --disable-video-x11 desactive l'utilisation des drivers x11 
+  --disable-pulseaudio desactive l'utilisation de PulseAudio
+  
+# Parametre libVNCServer  
+
+  --without-ssl desactive le support de l'openssl
+  --without-x desactive l'utilisation x window system
+  
+# Parametre DirectFB 
+
+  LIBPNG_CFLAGS=-I[PATH-REP-LIBPNG] indique la position \ 
+  des librairies libpng
+  
+  LIBPNG_LDFLAGS=-L[PATH-REP-HEARDERS-LIBPNG] indique \ 
+  la position des hearders utilise par la libpng
+  
+  FREETYPE_CFLAGS=-I[PATH-REP-FREETYPE] indique la position \ 
+  des librairies de freetype
+ 
+  FREETYPE_LIBS="-L[PATH-REP-HEARDERS-FREETYPE] indique \ 
+  la position des hearders utilise par freetype
+ 
+  LIBS="-l[lib] exemple (-lz pour libz)" librairie passee en lien
+  
+  --prefix=[PATH-aux-Choix]/usr/local installe l'architecture \ 
+  independant a l'emplacement specifie
+  --disable-imlib2 desactive la gestion des image de type imlib2 \
+  --enable-freetype active le support des fonts freetype 
+  --enable-fbdev construit avec le support linux fbdev
+  --disable-x11 desactive le support de x11
+  --disable-mesa desactive le support de mesa
+  --disable-x11vdpau desactive le support x11/VDPAU
+  --with-gfxdrivers=none construit aucun gfxdrivers
+  --with-inputdrivers=none construit aucun inputdriver
+  --enable-vnc construit avec le support de VNC
+  
+\end{lstlisting}
+
+\newpage   	
 	
 \section{Dropbear (SSH)}	
 
 \subsection{Configuration système}
 
 Les actions suivantes ont été réalisé sur Archlinux x64 (kernel 3.8)
-Pour l'ajout de dropbear, on a utilisé la version 2013-58 de celui-ci. La compilation de celui-ci a été réalisé par arm-none-linux-gnueabi-gcc en version 4.7.2. Ce compilateur est conçu pour la cross-compilation en architecture ARM compatible avec la liseuse. 
-Pour la réalisation de la compilation, on a configuré les PATH de la manière suivante : 
+Pour l'ajout de dropbear, on a utilisé la version 2013-58 de celui-ci. La compilation de celui-ci a été réalisé avec le compilateur arm-none-linux-gnueabi-gcc en version 4.7.2. Ce compilateur est conçu pour la cross-compilation en architecture ARM compatible avec la liseuse. 
+Pour la réalisation de la compilation, on a configuré les PATHS de la manière suivante : 
 
 \begin{lstlisting}
 export PATH=$PATH:/[PATH-cross-compilateur]/bin
@@ -96,42 +159,34 @@ export CCFLAGS="-march=armv7-a -mtune=cortex-a8 -mfpu=vfp"
 
 \subsection{Dépendance : zlib}
 Pour la compilation de dropbear, la library zlib est nécessaire.
-Pour l'obtenir on télécharge zlib (Dans notre cas la version 1.2.5) puis on décompresse celui-ci. Ensuite on se rend dans le répertoire créé (zlib[version]). On effectue la configuration de la compilation via la commande suivante :
+Pour l'obtenir on télécharge zlib (Dans notre cas la version 1.2.5) puis on décompresse celui-ci. Ensuite on se rend dans le répertoire créé (zlib[version]). On a effectué la configuration de la compilation via la commande suivante :
 
 \begin{lstlisting}
 ./configure --shared
 \end{lstlisting}
 
 L'option --shared permet de sortir un fichier au format .so reconnu par la liseuse.
-Ensuite on lance la commande make
+Ensuite on a exécuté la commande make pour lancer la compilation
 Et pour finir on déplace les fichiers libz.so* vers un répertoire regroupant toutes les LIBS que l'on a obtenu suite à une compilation([PATH-REP-LIBS]) 
 
 \subsection{Compilation et installation}
 \subsubsection{Sur le PC HOST}
-Dans un premier temps on se rend dans le répertoire dropbear et on Configurationconfigure dropbear avec les options voulut via la commande suivante :
+Dans un premier temps on s'est rendu dans le répertoire dropbear et on a configuré le fichier configure de dropbear avec les options voulut :
 
 \begin{lstlisting}
 ./configure --host=arm-none-linux-gnueabi \
 LDFLAGS="-L/home/arkh/Documents/TER/DFB/lib"
 \end{lstlisting} 
 
-Pour la configuration on a choisie de préciser le paramètre host :
-
-\begin{lstlisting}
---host=HOST 	l'architecture ou sera lance le programme    
-\end{lstlisting}
-
-De plus le paramètre LDFLAGS indique le chemin d'accès vers la library libz créé précédemment.
-
-Dans notre cas arm-none-linux-gnueabi.
-Suite à cette compilation on obtient un Makefile utilisable et paramétré selon nos besoins.
-Ensuite en utilise la commande suivante :
+Pour la configuration, on a précisé le paramètre --host et le paramètre LDFLAG qui pour le premier indique l'architecture ou sera lancé le programme (armv7 dans notre cas) et pour le second indique où de trouve la librairie libz compiler précédemment.
+Suite à cette configuration on a obtenu un Makefile utilisable et paramétré selon nos besoins.
+On a lancé la compilation via la commande suivante :
 
 \begin{lstlisting}
 make strip
 \end{lstlisting}
 
-La commande strip permet un gain de place de l'exécutable en supprimant de celui-ci la table des symboles et les informations de débogage. Un exécutable nommer dropbearmulti est disponible.
+La commande strip permet un gain de place de l'exécutable en supprimant de celui-ci la table des symboles et les informations de débogage. Un exécutable nommer dropbearmulti est créé.
 
 Ensuite on copie l'exécutable dans le répertoire /bin de l'image de la liseuse. Dans ce répertoire, on créer des liens symboliques vers les différents programme de dropbear via les commandes suivantes :
 
@@ -144,38 +199,175 @@ ln -s dropbearmulti dbclient
 
 \subsubsection{Sur la liseuse via telnet}
 
-Pour le bon fonctionnement de dropbear, il est nécessaire qu'un mot de passe root soit présent. Pour en ajouter un, on utilise sur la liseuse lancer (connecter via telnet), la commande "gpasswd".
-De plus, il est nécessaire de générer les clefs RSA et DSS via les commandes suivantes :
+Pour le bon fonctionnement de dropbear, il est nécessaire qu'un mot de passe root soit présent. Pour en ajouter un, on a exécuté la commande "gpasswd" directement sur la liseuse après s'être connecter dessus via telnet.
+De plus, il était nécessaire de générer les clefs RSA et DSS via les commandes suivantes :
 
 \begin{lstlisting}
 dropbearkey -t rsa -f dropbear_rsa_host_key
 dropbearkey -t dss -f dropbear_dss_host_key
 \end{lstlisting}
 
-Normalement il vous maintenant possible de vous connecter à la liseuse via ssh ou d'effectuer des copie sur celle-ci après avoir au préalable lancer le serveur dropbear sur la liseuse.
+Suite à cette installation, il est possible de se connecter à la liseuse via SSH exécuté sur la machine hôte ou d'effectuer des copies sur celle-ci via la commande "scp". Il est nécessaire au préalable d'avoir démarrer le serveur SSH de la liseuse via la commande suivante :
+
+\begin{lstlisting}
+dropbear start
+\end{lstlisting}
+
+\newpage
 
 \section{DirectFB}
 
-\subsection{Dépendance nécessaire pour DirectFB}
+\subsection{Dépendances nécessaires pour DirectFB}
 
-DirectFB est une librairie nécessitant plusieurs dépendance pour ça compilation. Voici la liste des dépendances nécessaires :
+DirectFB est une librairie nécessitant plusieurs dépendances pour ça compilation. Voici la liste des dépendances nécessaires (contient aussi certaines librairies pouvant nous être nécessaire avec certaines fonctionnalités de DirectFB) :
 
 \begin{itemize}
 \item Zlib
-\item Freetype
 \item Jpegsrc
 \item Libpng
+\item Freetype
 \item Libconio
 \item SDL
 \item LibVNCServer
 \end{itemize}
 
-Il est nécessaire de compiler toutes les libs présent dans la liste en suivante l'ordre de celle-ci (Pour éviter les problèmes de dépendances).
+Il était nécessaire de compiler toutes les libs présents dans la liste en suivant l'ordre de celle-ci pour éviter des problèmes de dépendances.
 
 \subsection{Configuration système}
-Les cross-compilations suivantes ont été réaliser de deux manière selon le système d'exploitation employé : 
+Les cross-compilations suivantes ont été réalisées de deux manières selon le système d'exploitation employé : 
 
 \begin{itemize}
 \item Sur Archlinux x64 (kernel 3.8) on a utilisé les mêmes configurations employées pour la compilation de dropbear.
-\item Sur Ubuntu x64 12.04 on a utilisé 
+\item Sur Ubuntu x64 12.04 on a utilisé scratchbox % A completer % 
 \end{itemize}
+
+\subsection{Compilation sur Archlinux}
+
+\subsubsection{Configuration}
+La compilation a été réalisé avec le compilateur arm-none-linux-gnueabi-gcc en version 4.7.2.
+Pour la réalisation de la compilation, on a configuré les PATHS de la manière suivante : 
+
+\begin{lstlisting}
+export PATH=$PATH:/[PATH-cross-compilateur]/bin
+export CC=arm-none-linux-gnueabi-gcc
+export CXX=arm-none-linux-gnueabi-g++
+export CPP=arm-none-linux-gnueabi-cpp
+export AR=arm-none-linux-gnueabi-ar
+export RANLIB=arm-none-linux-gnueabi-ranlib
+export LD=arm-none-linux-gnueabi-ld
+export STRIP=arm-none-linux-gnueabi-strip
+export CCFLAGS="-march=armv7-a -mtune=cortex-a8 -mfpu=vfp"
+\end{lstlisting}
+
+\subsubsection{Compilation libjpeg}
+Génération du Makefile pour la compilation libjpeg :
+
+\begin{lstlisting}
+./configure --enable-shared \
+--host=arm-none-linux-gnueabi \
+--target=arm-none-linux-gnueabi
+\end{lstlisting}
+
+On a précisé le système pour lequel on compile la librairie avec l'option "--host" et l'option "--target". 
+
+Ensuite on a lancé la commande make pour la compilation.
+Puis on a déplacé les fichiers ./libs/libjpeg.so* vers un répertoire regroupant toutes les LIBS générées (PATH-REP-LIBS)
+Pour finir on a déplacé tous les fichiers *.h vers un répertoire regroupant des fichier .h nécessaire aux cross-compilations futures (PATH-REP-INCLUDE).
+
+\subsubsection{Cross-compilation libpng}
+Génération du Makefile pour la compilation libpng :
+
+\begin{lstlisting}
+cp scripts/makefile.linux Makefile
+modify Makefile for cross compile
+ligne 23 : change "gcc" to "arm-none-linux-gnueabi-gcc"
+\end{lstlisting}
+
+Ensuite on a lancé la commande make pour la compilation.
+Puis on a  déplacé les fichiers libpng15.so* vers un répertoire regroupant toutes les librairies générées (PATH-REP-LIBS).
+
+\subsubsection{Cross-compilation freetype}
+Génération du Makefile pour la compilation freetype :
+
+\begin{lstlisting}
+./configure --host=arm-none-linux-gnueabi
+\end{lstlisting}
+
+Ensuite on a lancé la commande make pour la compilation.
+Puis on a déplacé les fichiers objs/libs/libfreetype.so* vers un répertoire regroupant toutes les librairies générées (PATH-REP-LIBS).
+Pour finir on a déplacé tous les fichiers include/*.h vers un répertoire regroupant des fichier .h utilisé durant les cross-compilations future (PATH-REP-INCLUDE).
+
+\subsubsection{libconio}
+Génération du Makefile pour la compilation libconio :
+
+\begin{lstlisting}
+./configure --host=arm-none-linux-gnueabi --build=i386-linux \
+--target=arm-none-linux-gnueabi --enable-shared --disable-static
+\end{lstlisting}
+Ensuite on a lancé la commande make pour la compilation.
+Pour finir on a déplacé tous les fichiers *.h vers un répertoire regroupant des fichier .h utilisé (PATH-REP-INCLUDE).
+
+\subsubsection{SDL}
+Génération du Makefile pour la compilation libSDL :
+
+\begin{lstlisting}
+./configure CPPFLAGS=-I/home/arkh/Documents/TER/DFB/include \ 
+LDFLAGS=-L/home/arkh/Documents/TER/DFB/lib \
+--host=arm-none-linux-gnueabi --build=i386-linux \ 
+--target=arm-none-linux-gnueabi \
+--enable-shared --enable-static \
+--disable-video-x11 --disable-pulseaudio
+\end{lstlisting}
+
+Ensuite on a lancé la commande make pour la compilation.
+Puis déplacer les fichiers libSDL.so* vers un répertoire regroupant toutes les librairies générées (PATH-REP-LIBS).
+Pour finir déplacer tous les fichiers *.h vers un répertoire regroupant des fichier .h utilisé (PATH-REP-INCLUDE).
+
+\subsubsection{Cross-compilation libVNCServeur}
+
+Génération du Makefile pour la compilation libVNCServer :
+
+\begin{lstlisting}
+./configure CPPFLAGS=-I/home/arkh/Documents/TER/DFB/include \
+LDFLAGS=-L/home/arkh/Documents/TER/DFB/lib \  
+	--host=arm-none-linux-gnueabi \
+	--build=i386-linux \
+	--target=arm-none-linux-gnueabi \ 
+	--enable-shared \
+	--disable-static \
+	--without-ssl \
+	--without-x
+\end{lstlisting}
+
+Ensuite on a lancé la commande make pour la compilation.
+Puis on a déplacé les fichiers libVNCServeur.so* vers un répertoire regroupant toutes les librairies générées (PATH-REP-LIBS)
+Copier le répertoire ./rfb et son contenu vers le répertoire contenant DirectFB à cross-compiler.
+
+\subsubsection{Cross-compilation DirectFB}
+
+Génération du Makefile pour la compilation de DirectFB :
+
+\begin{lstlisting}
+LIBPNG_CFLAGS=-I/home/arkh/Documents/TER/DFB/include \
+LIBPNG_LDFLAGS="-L/home/arkh/Documents/TER/DFB/lib -lpng15 -lz" \
+FREETYPE_CFLAGS=-I/home/arkh/Documents/TER/DFB/include \
+FREETYPE_LIBS="-L/home/arkh/Documents/TER/DFB/lib -lfreetype" \
+GL_LIBS="-L/usr/lib/" \
+LIBS="-lgcc_s -lgcc -ldl -lstdc++ -lz -lm -L/usr/include/GLES -L/usr/include/GL" \
+./configure CC=arm-none-linux-gnueabi-gcc CPPFLAGS=-I/home/arkh/Documents/TER/DFB/include \
+LDFLAGS=-L/home/arkh/Documents/TER/DFB/lib \
+   --disable-imlib2 \
+   --prefix=[PATH-aux-Choix]/usr/local \
+   --build=i686-linux --host=arm-linux \
+   --disable-static --enable-shared \
+   --enable-freetype --enable-fbdev --disable-x11 \
+   --disable-mesa --disable-x11vdpau \
+   --with-gfxdrivers=none --with-inputdrivers=none --enable-vnc
+\end{lstlisting}
+
+Ensuite on a lancé la commande "make" pour la compilation. Pour finir il est fortement conseiller de faire un "make install" en ayant préciser un prefix dans la commande de configuration. Cela nous a facilité la copie des éléments de DirectFB sur la liseuse. 
+
+\subsection{Installation sur la liseuse}
+
+L'installation de DirectFB sur la liseuse consiste simplement à copier les fichiers générer par la commande "make install" sur l'image système de celle-ci. Pour cela, on a monter l'image sur la machine hôte. On a copié tout le contenu de (PATH-aux-Choix]/usr/local)/usr/local à l'emplacement /usr/local dans l'image montée. Ensuite il était nécessaire de copier le répertoire des librairies (PATH-REP-LIBS) et des includes (PATH-REP-INCLUDE) générées pour les différentes compilations sur l'image. On les a copiés dans à l'emplacement /usr/local sur la liseuse. 
+
