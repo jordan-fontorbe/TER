@@ -1,19 +1,22 @@
 \chapter{Développement effectué}
+
 Dans ce chapitre nous présenterons les différents moyens nous ayant permit d'obtenir le résultat final présenté dans le chapitre "État final de développement".\\ 
-Dans un premier temps nous parlerons de la mise en place du module permettant une communication Ethernet via le port USB de la liseuse. Dans un second temps nous présenterons de la mise en place de Dropbear (SSH) sur la liseuse facilitant les accès réseaux sur la machine de test et permettant ainsi la copie de fichier du PC hôte à la liseuse. Ensuite nous présenterons les étapes nécessaires à la compilation de DirectFB. Et pour finir nous détaillerons des exemples de code permettant la modification de l'affichage de la liseuse avec DirectFB ou les IOCTL.
+Dans un premier temps nous parlerons de la mise en place du module permettant une communication Ethernet via le port USB de la liseuse. Dans un second temps nous présenterons de la mise en place de Dropbear (SSH) sur la liseuse facilitant les accès réseaux sur la machine de test et permettant ainsi la copie de fichier du PC hôte à la liseuse. Ensuite nous présenterons les étapes nécessaires à la compilation de DirectFB. Et pour finir nous détaillerons des exemples de code permettant la modification de l'affichage de la liseuse avec DirectFB ou les ioctl.
 
-\section{Module g_ether}
+\section{g_ether}
 \subsection{Configuration}
-Les commandes suivantes ont été testées sur deux systèmes d'exploitation : 
 
+Les commandes suivantes ont été testées sur deux systèmes d'exploitation Linux différents : 
+\\
 \begin{itemize}
 
-\item Ubuntu x64 12.04 
-\item Archlinux x64(Version du kernel : 3.8)
+\item Ubuntu 12.04 x64 
+\item Archlinux x64(Version du kernel : 3.8.*-*-ARCH)
 
 \end{itemize}
 
-Pour la cross-compilation, on a utilisé, dans cette section, le compilateur GCC 4.4.3 fournit avec l'android NDK. Voici la configuration des PATHS utilisés pour la cross-compilation :
+
+Pour la cross-compilation, on a utilisé, dans cette section, le compilateur GCC 4.4.3 fournit avec l'android NDK. Pour la bonne utilisation de celui-ci et non du GCC présent sur notre système, on configure la variable PATH avec le chemin d'accès au GCC du NDK et on indique d'autre élément et d'autres variables d'environnements pour obtenir la bonne compilation :
 
 \begin{lstlisting}
 # Attention le PATH suivant peut etre different sur certain systeme
@@ -23,19 +26,20 @@ export SUBARCH=arm
 export ARCH=arm
 \end{lstlisting}
 
-Pour la configuration du kernel, on a employé le contenue de l'archive config.gz que l'on décompresse dans le répertoire du kernel utilisé puis on a effectué la commande make menuconfig. Voici la liste des commandes que l'on a utilisées:
+Pour la configuration du kernel(2.6.35.3) pouvant être utilisé sur la liseuse, on a employé le contenu de l'archive config.gz que l'on a décompressé dans le répertoire de ce kernel puis on a effectué la commande "make menuconfig". Voici la procédure employée :
 
 \begin{lstlisting}
 zcat [PATH_to_terkit]/nopid/livedata/config.gz \
 [PATH_to_terkit]/sony/linux-2.6.35.3/.config
+
 cd [PATH_to_terkit]/sony/linux-2.6.35.3/
 make menuconfig
 \end{lstlisting}
 
-Suite à la commande make, une fenêtre s'ouvre dans le terminal permettant de choisir certaines fonctionnalités du kernel. On a édité l'option suivant : \\
+Suite à la commande "make", une fenêtre s'ouvre dans le terminal qui permet de sélectionner certaines fonctionnalités pour le kernel. On a édité l'option suivante pour obtenir le module g_ether : \\
 Device drivers $>$ usb support $>$ usb gadget support $>$ Ethernet gadget -$>$ $<$M$>$ with RNDIS support
 
-Avant de faire la suite, pour éviter une erreur lors de la compilation, on a modifié la ligne 135 du fichier fs/nfs/nfsroot.c :
+Au cour de la phase suivante, on a obtenu une erreur lors de la compilation du kernel donc pour éviter l'erreur, on a modifié la ligne 135 du fichier fs/nfs/nfsroot.c :
 
 \begin{lstlisting}
 # on modifie la ligne 135 :
@@ -54,7 +58,7 @@ Pour finir on a copié le fichier g_ether.ko dans le système de fichier de la l
  
 \subsection{Installation du modules}
 
-Initialement la liseuse possède un module g_serial rentrant en conflit avec le module g_ether à installer, donc on a désactivé le module g_serial puis on  a lancé le module g_ether. Pour réaliser cela au démarrage de la liseuse, on a édité le fichier "/etc/rc.d/rc.local" en ajoutant les ligne suivante à la fin de ce fichier : 
+Initialement la liseuse possède un module g_serial qui après quelque test, rentrer en conflit avec le module g_ether installer. On a désactivé le module g_serial puis on  a lancé le module g_ether. Pour réaliser cela au démarrage de la liseuse, on a édité le fichier "/etc/rc.d/rc.local" en ajoutant les lignes suivantes à la fin : 
 
 \begin{lstlisting}
 echo "modprobe -r g_serial" > /initrd/mnt/sd/test/log
@@ -69,18 +73,32 @@ ifconfig usb0 up
 ifconfig usb0 192.168.2.1
 \end{lstlisting}		
 
-Les options host_addr et dev_addr permettent à la liseuse d'affecter son adresse MAC mais aussi celle de la machine hôte sur lequel elle est connectée (host), cela permet de ne pas avoir à refaire la configuration réseau à chaque branchement en USB.	
+Les sorties standards nous on permit d'observer la présence d'erreur lors de l'exécution de ces différentes commandes car pendant le changement du module USB, il nous était plus possible de nous connecter à la liseuse si une erreur était présente.
+Les options host_addr et dev_addr permettent à la liseuse d'affecter son adresse MAC mais aussi celle de la machine hôte sur lequel elle est connectée (host), cela permet de ne pas avoir à refaire la configuration réseau à chaque branchement en USB.	\\
 	%connection depuis le pc
-	Pour se connecter depuis le pc on a pensé à vérifier que le module usbnet est bien activé.	
-	Une interface réseau devrait apparaître, il faut la configurer sur le sous-réseau 192.168.2.0/24 (la liseuse est configurer sur l'adresse 192.168.2.1/24)
+	Pour se connecter depuis le pc hôte on a pensé à vérifier que le module usbnet est bien activé.	
+	Une interface réseau devrait apparaître et il faut la configurer sur le sous-réseau 192.168.2.0/24 (la liseuse est configurer sur l'adresse 192.168.2.1/24)
 
 \newpage
 
 \section{Information de configuration}
 
-Avant d'expliquer les différentes procédures de cross-compilation pour les différents besoins du projet, voici une liste d'informations sur les paramètres de fichiers "configure" rencontrés :
+Avant d'expliquer les différentes procédures de cross-compilation pour les différents besoins du projet, voici une liste d'informations sur les paramètres de fichiers "configure" ou de variables d'environnements rencontrés :
 
 \begin{lstlisting}
+# Variables d'environnements ajoutees
+ PATH => chemin vers un repertoire qui contiennent des
+ executables que vous souhaitez pouvoir lancer sans
+ indiquer leur repertoire.
+ CC => cross-compilateur employe (gcc)
+ CXX => compilateur g++
+ CPP => compilateur cpp
+ AR => compilateur ar
+ RANLIB => compilateur ranlib
+ LD => compilateur ld
+ STRIP => compilateur strip
+ CCFLAGS => precise l'architecture de sortie au compilateur
+
 # Parametres generaux
   
   --build=BUILD   configure for building on BUILD [guessed]
@@ -143,7 +161,7 @@ Avant d'expliquer les différentes procédures de cross-compilation pour les dif
 
 Les actions suivantes ont été réalisé sur Archlinux x64 (kernel 3.8)
 Pour l'ajout de dropbear, on a utilisé la version 2013-58 de celui-ci. La compilation de celui-ci a été réalisé avec le compilateur arm-none-linux-gnueabi-gcc en version 4.7.2. Ce compilateur est conçu pour la cross-compilation en architecture ARM compatible avec la liseuse. 
-Pour la réalisation de la compilation, on a configuré les PATHS de la manière suivante : 
+Pour la réalisation de la compilation, on a configuré les variables d'environnements de la manière suivante : 
 
 \begin{lstlisting}
 export PATH=$PATH:/[PATH-cross-compilateur]/bin
@@ -158,37 +176,37 @@ export CCFLAGS="-march=armv7-a -mtune=cortex-a8 -mfpu=vfp"
 \end{lstlisting}
 
 \subsection{Dépendance : zlib}
-Pour la compilation de dropbear, la library zlib est nécessaire.
-Pour l'obtenir on télécharge zlib (Dans notre cas la version 1.2.5) puis on décompresse celui-ci. Ensuite on se rend dans le répertoire créé (zlib[version]). On a effectué la configuration de la compilation via la commande suivante :
+Pour la compilation de dropbear, la library zlib était nécessaire.
+Pour l'obtenir on a téléchargé zlib (Dans notre cas la version 1.2.5) puis on  l'a décompressé. Ensuite on s'est rendu dans le répertoire créé (zlib[version]). On a effectué la configuration de la compilation via la commande suivante :
 
 \begin{lstlisting}
 ./configure --shared
 \end{lstlisting}
 
-L'option --shared permet de sortir un fichier au format .so reconnu par la liseuse.
 Ensuite on a exécuté la commande make pour lancer la compilation
-Et pour finir on déplace les fichiers libz.so* vers un répertoire regroupant toutes les LIBS que l'on a obtenu suite à une compilation([PATH-REP-LIBS]) 
+Et pour finir on a déplacé les fichiers libz.so* vers un répertoire regroupant toutes les librairies créées pour la liseuse ([PATH-REP-LIBS]). 
 
 \subsection{Compilation et installation}
+
 \subsubsection{Sur le PC HOST}
-Dans un premier temps on s'est rendu dans le répertoire dropbear et on a configuré le fichier configure de dropbear avec les options voulut :
+
+Dans un premier temps on s'est rendu dans le répertoire dropbear ou l'on a configuré le fichier configure de dropbear avec les options suivante :
 
 \begin{lstlisting}
 ./configure --host=arm-none-linux-gnueabi \
 LDFLAGS="-L/home/arkh/Documents/TER/DFB/lib"
 \end{lstlisting} 
 
-Pour la configuration, on a précisé le paramètre --host et le paramètre LDFLAG qui pour le premier indique l'architecture ou sera lancé le programme (armv7 dans notre cas) et pour le second indique où de trouve la librairie libz compiler précédemment.
 Suite à cette configuration on a obtenu un Makefile utilisable et paramétré selon nos besoins.
-On a lancé la compilation via la commande suivante :
+Ensuite on a lancé la compilation via la commande suivante :
 
 \begin{lstlisting}
 make strip
 \end{lstlisting}
 
-La commande strip permet un gain de place de l'exécutable en supprimant de celui-ci la table des symboles et les informations de débogage. Un exécutable nommer dropbearmulti est créé.
+La commande strip permet un gain de place de l'exécutable en supprimant de celui-ci la table des symboles et les informations de débogage. Un exécutable nommé dropbearmulti est généré.
 
-Ensuite on copie l'exécutable dans le répertoire /bin de l'image de la liseuse. Dans ce répertoire, on créer des liens symboliques vers les différents programme de dropbear via les commandes suivantes :
+Ensuite on copie l'exécutable dans le répertoire /bin de l'image de la liseuse. Dans ce répertoire, on a créé des liens symboliques vers les différents programmes de dropbear via les commandes suivantes :
 
 \begin{lstlisting}
 ln -s dropbearmulti dropbear
@@ -199,7 +217,7 @@ ln -s dropbearmulti dbclient
 
 \subsubsection{Sur la liseuse via telnet}
 
-Pour le bon fonctionnement de dropbear, il est nécessaire qu'un mot de passe root soit présent. Pour en ajouter un, on a exécuté la commande "gpasswd" directement sur la liseuse après s'être connecter dessus via telnet.
+Pour le bon fonctionnement de dropbear, il est nécessaire qu'un mot de passe root soit présent sur le système. Pour en ajouter un, on a exécuté la commande "gpasswd" directement sur la liseuse après s'être connecté dessus via telnet.
 De plus, il était nécessaire de générer les clefs RSA et DSS via les commandes suivantes :
 
 \begin{lstlisting}
@@ -207,7 +225,7 @@ dropbearkey -t rsa -f dropbear_rsa_host_key
 dropbearkey -t dss -f dropbear_dss_host_key
 \end{lstlisting}
 
-Suite à cette installation, il est possible de se connecter à la liseuse via SSH exécuté sur la machine hôte ou d'effectuer des copies sur celle-ci via la commande "scp". Il est nécessaire au préalable d'avoir démarrer le serveur SSH de la liseuse via la commande suivante :
+Suite à cette installation, il était possible de se connecter à la liseuse via SSH exécuté sur la machine hôte ou d'effectuer des copies sur celle-ci via la commande "scp". Il était nécessaire au préalable d'avoir démarré le serveur SSH de la liseuse via la commande suivante :
 
 \begin{lstlisting}
 dropbear start
@@ -215,25 +233,26 @@ dropbear start
 
 \newpage
 
+
 \section{DirectFB}
 
 \subsection{Dépendances nécessaires pour DirectFB}
 
-DirectFB est une librairie nécessitant plusieurs dépendances pour ça compilation. Voici la liste des dépendances nécessaires (contient aussi certaines librairies pouvant nous être nécessaire avec certaines fonctionnalités de DirectFB) :
+DirectFB est une librairie nécessitant plusieurs dépendances pour sa compilation. Voici la liste des dépendances nécessaires (contient aussi certaines librairies pouvant nous être nécessaire avec certaines fonctionnalités de DirectFB comme VNC) :
 
 \begin{itemize}
-\item Zlib
-\item Jpegsrc
-\item Libpng
-\item Freetype
-\item Libconio
-\item SDL
-\item LibVNCServer
+\item Zlib version 1.2.5
+\item Jpegsrc version 8c
+\item Libpng version 1.5.14
+\item Freetype version 2.4.11
+\item Libconio version 1.0.0
+\item SDL version 1.2.15
+\item LibVNCServer 0.9.7
 \end{itemize}
 
-Il était nécessaire de compiler toutes les libs présents dans la liste en suivant l'ordre de celle-ci pour éviter des problèmes de dépendances.
+Il était nécessaire de compiler toutes les librairies présents dans la liste en suivant l'ordre de celle-ci pour éviter des problèmes de dépendances entre ces librairies.
 
-\subsection{Configuration système}
+\subsection{Configuration système utilisée}
 Les cross-compilations suivantes ont été réalisées de deux manières selon le système d'exploitation employé : 
 
 \begin{itemize}
@@ -241,11 +260,13 @@ Les cross-compilations suivantes ont été réalisées de deux manières selon l
 \item Sur Ubuntu x64 12.04 on a utilisé scratchbox % A completer % 
 \end{itemize}
 
+\newpage
+
 \subsection{Compilation sur Archlinux}
 
 \subsubsection{Configuration}
 La compilation a été réalisé avec le compilateur arm-none-linux-gnueabi-gcc en version 4.7.2.
-Pour la réalisation de la compilation, on a configuré les PATHS de la manière suivante : 
+Pour la réalisation de la compilation, on a configuré les variables d'environnements de la manière suivante : 
 
 \begin{lstlisting}
 export PATH=$PATH:/[PATH-cross-compilateur]/bin
@@ -268,23 +289,20 @@ Génération du Makefile pour la compilation libjpeg :
 --target=arm-none-linux-gnueabi
 \end{lstlisting}
 
-On a précisé le système pour lequel on compile la librairie avec l'option "--host" et l'option "--target". 
-
 Ensuite on a lancé la commande make pour la compilation.
-Puis on a déplacé les fichiers ./libs/libjpeg.so* vers un répertoire regroupant toutes les LIBS générées (PATH-REP-LIBS)
-Pour finir on a déplacé tous les fichiers *.h vers un répertoire regroupant des fichier .h nécessaire aux cross-compilations futures (PATH-REP-INCLUDE).
+Puis on a déplacé les fichiers ./libs/libjpeg.so* vers le répertoire regroupant toutes les librairies générées (PATH-REP-LIBS)
+Pour finir on a déplacé tous les fichiers *.h vers le répertoire regroupant des fichiers headers nécessaires aux cross-compilations futures (PATH-REP-INCLUDE).
 
 \subsubsection{Cross-compilation libpng}
-Génération du Makefile pour la compilation libpng :
+Pour la libpng, il nous a suffit de copier le fichier makefile.linux situé dans le répertoire libpng-1.5.14/scripts/ dans le répertoire libpng-1.5.14/ tout en le renommant Makefile. Ensuite on a modifié la ligne 23 contenant une référence CCFLAG : 
 
 \begin{lstlisting}
-cp scripts/makefile.linux Makefile
-modify Makefile for cross compile
-ligne 23 : change "gcc" to "arm-none-linux-gnueabi-gcc"
+changer "gcc" en "arm-none-linux-gnueabi-gcc"
 \end{lstlisting}
 
 Ensuite on a lancé la commande make pour la compilation.
-Puis on a  déplacé les fichiers libpng15.so* vers un répertoire regroupant toutes les librairies générées (PATH-REP-LIBS).
+Puis on a  déplacé les fichiers libpng15.so* vers un répertoire regroupant toutes les librairies générées (PATH-REP-LIBS). 
+Pour finir on a déplacé tous les fichiers *.h vers le répertoire regroupant des fichiers headers nécessaires aux cross-compilations futures (PATH-REP-INCLUDE).
 
 \subsubsection{Cross-compilation freetype}
 Génération du Makefile pour la compilation freetype :
@@ -293,9 +311,9 @@ Génération du Makefile pour la compilation freetype :
 ./configure --host=arm-none-linux-gnueabi
 \end{lstlisting}
 
-Ensuite on a lancé la commande make pour la compilation.
+Ensuite on a exécuté la commande make pour la compilation.
 Puis on a déplacé les fichiers objs/libs/libfreetype.so* vers un répertoire regroupant toutes les librairies générées (PATH-REP-LIBS).
-Pour finir on a déplacé tous les fichiers include/*.h vers un répertoire regroupant des fichier .h utilisé durant les cross-compilations future (PATH-REP-INCLUDE).
+Pour finir on a déplacé tous les fichiers headers /*.h vers un répertoire regroupant les fichiers de ce type pouvant être utilisés durant les cross-compilations future (PATH-REP-INCLUDE).
 
 \subsubsection{libconio}
 Génération du Makefile pour la compilation libconio :
@@ -305,7 +323,7 @@ Génération du Makefile pour la compilation libconio :
 --target=arm-none-linux-gnueabi --enable-shared --disable-static
 \end{lstlisting}
 Ensuite on a lancé la commande make pour la compilation.
-Pour finir on a déplacé tous les fichiers *.h vers un répertoire regroupant des fichier .h utilisé (PATH-REP-INCLUDE).
+Pour finir on a déplacé tous les fichiers *.h vers un répertoire regroupant des fichiers headers utilisés (PATH-REP-INCLUDE).
 
 \subsubsection{SDL}
 Génération du Makefile pour la compilation libSDL :
@@ -321,9 +339,9 @@ LDFLAGS=-L/home/arkh/Documents/TER/DFB/lib \
 
 Ensuite on a lancé la commande make pour la compilation.
 Puis déplacer les fichiers libSDL.so* vers un répertoire regroupant toutes les librairies générées (PATH-REP-LIBS).
-Pour finir déplacer tous les fichiers *.h vers un répertoire regroupant des fichier .h utilisé (PATH-REP-INCLUDE).
+Pour finir déplacer tous les fichiers *.h vers un répertoire regroupant des fichiers headers utilisés (PATH-REP-INCLUDE).
 
-\subsubsection{Cross-compilation libVNCServeur}
+\subsubsection{libVNCServeur}
 
 Génération du Makefile pour la compilation libVNCServer :
 
@@ -367,7 +385,263 @@ LDFLAGS=-L/home/arkh/Documents/TER/DFB/lib \
 
 Ensuite on a lancé la commande "make" pour la compilation. Pour finir il est fortement conseiller de faire un "make install" en ayant préciser un prefix dans la commande de configuration. Cela nous a facilité la copie des éléments de DirectFB sur la liseuse. 
 
+\newpage
+
+\subsection{Compilation sur Ubuntu avec Scratchbox}
+
+Scratchbox est un outils permettant de faciliter la cross-compilation et l'installation. Scratchbox utilise pour cela une machine virtuelle sous QEMU.
+
+\subsubsection{Installation}
+
+L'installation de Scratchbox est simple sous une distribution Debian : 
+Pour procéder à l'installation il nous a fallu suivre les directives suivantes :
+\begin{itemize}
+	\item ajout du repository :
+		il faut ajouter le paquet suivant au fichier /etc/apt/sources.list
+		\begin{lstlisting}
+deb http://scratchbox.org/debian apophis main
+		\end{lstlisting}
+	\item 
+		Les paquets à installer sont :
+			\begin{itemize}
+				\item scratchbox-core
+				\item scratchbox-libs
+				\item scratchbox-devkit-cputransp
+				\item scratchbox-toolchain-arm-gcc3.4-uclibc0.9.28
+			\end{itemize}
+	\item il faut autoriser les comptes utilisateurs à ce connecter sur des machines virtuelles : 
+	\begin{lstlisting}
+sudo /scratchbox/sbin/sbox_adduser <your_username>
+	\end{lstlisting}	
+\end{itemize}
+
+\subsubsection{Configuration}
+
+Une fois Scratchbox installé, on a dut créer la machine virtuelle pour effectuer la cross-compilation.
+
+Pour cela on s'est connecté à la console de scratchbox : 
+\begin{lstlisting}
+	/scratchbox/login
+\end{lstlisting}
+Ensuite on a accédé au menu de gestion des machines virtuelles : 
+\begin{lstlisting}
+	sb-menu
+\end{lstlisting}
+on a dut maintenant créer une machine virtuelle ayant la même architecture que la liseuse. 
+Pour cela on a suivi cette configuration : 
+\begin{itemize}
+	\item compiler : arm-linux-cs2009q1-203sb1
+	\item architecture : arm
+	\item sub-architecture : arm
+%	\item C-library : glibc
+	\item Devkits : cputransp
+	\item cpu-transparency :  qemu-arm-0.8.2-sb2
+	\item rootstrap : répondre non
+	\item intall files : répondre oui et installer :
+		\begin{itemize}
+			\item C-library
+			\item /etc
+			\item Devkits 
+			\item Debug links
+			\item fakeroot
+		\end{itemize}
+	\item on a sélectionné la machine virtuelle créée
+\end{itemize}
+
+Les fichiers de la machine virtuelle sont montée dans le système de l’hôte dans : 
+/scratchbox/users/$<$user$>$/home/$<$user$>$.
+
+\subsubsection{Cross-compilation de DirectFB}
+
+\paragraph{Dépendance de DirectFB}
+DirectFB possède plusieurs librairies dont il est dépendant: 
+	\begin{itemize}
+		\item freetype (ici : 2.4.11)
+		\item libjpeg (ici : 6b)
+		\item zlib (ici : 1.2.5)
+		\item libpng (ici : 1.5.14)
+	\end{itemize}
+
+\paragraph{Compilation des dépendances :}
+
+La compilation des dépendances sous scratchbox est grandement simplifiée. En effet, on a simplement exécuté les classiques commandes suivantes : 
+	\begin{lstlisting}
+./configure && make && make install
+	\end{lstlisting}
+
+\paragraph{Compilation de DirectFB :}
+
+La compilation de DirectFB a besoin de quelques configurations supplémentaires dans le cas de la liseuse.il est en effet inutile de compiler les drivers graphiques et les drivers d'entrées/sorties car la liseuse ne dispose pas de carte graphique, et les entrées/sorties standard ne sont pas présente.
+Pour cela on a modifié l'appel du script de configuration : 
+\begin{lstlisting}
+./configure --disable-x11 --with-gfxdrivers=none 
+	--with-inputdrivers=none
+\end{lstlisting}
+~\\
+La configuration étant faite on a exécuté les commandes "make" et "make install".
+
+\subsubsection{Compilation d'un exemple de test DirectFB}
+
+Maintenant la librairie DirectFB étant installé sur la machine virtuelle, on peut compiler un exemple de test directement dans la machine virtuelle.
+
+Pour compiler un exemple utilisant DirectFB, on a créé le lien vers la librairie DirectFB et d'indiquer l'emplacement des headers de la librairies : 
+\begin{lstlisting}
+	gcc -o test test.c -ldirectfb -I/usr/local/include/directfb/
+\end{lstlisting}
+
 \subsection{Installation sur la liseuse}
 
 L'installation de DirectFB sur la liseuse consiste simplement à copier les fichiers générer par la commande "make install" sur l'image système de celle-ci. Pour cela, on a monter l'image sur la machine hôte. On a copié tout le contenu de (PATH-aux-Choix]/usr/local)/usr/local à l'emplacement /usr/local dans l'image montée. Ensuite il était nécessaire de copier le répertoire des librairies (PATH-REP-LIBS) et des includes (PATH-REP-INCLUDE) générées pour les différentes compilations sur l'image. On les a copiés dans à l'emplacement /usr/local sur la liseuse. 
 
+\newpage
+
+\section{Application de modification d'affichage} % a changer 
+
+%application : 
+%• les ioctl
+%∘ la structure upd_data
+%∘ les commandes ioctls
+%• directfb
+%∘ description des structures
+%‣ idrectfb => structures  principale
+%‣ idirectfbsurface
+
+\subsection{La mise a jour du framebuffer via ioctl}
+
+Le premier test effectué a été d'utiliser le driver pour modifier directement l'affichage.
+Étant donné que les modifications du framebuffer se font directement dans le code, ce dernier est juste défini a un niveau de gris précis. La mise a jour effective du framebuffer se fait via le driver directement.
+
+\subsubsection{Les commandes ioctl}
+
+Le driver epdc fournit des commandes ioctl pour la mise a jour du buffer, ces commandes permettent de récupérer toutes les variables du driver (par exemple la température de l'écran), mais aussi de lancer une mise à jour de l'écran et c'est ce qui nous intéresse ici.
+
+La fonction ioctl générique prenant cette commande sous la forme d'un entier, l'intégralité des commandes utilisées ici sont disponibles dans le fichier fbutils.h. %todo : a mettre en annex ?
+
+
+La commande utilisé ici est celle de mise à jour de l'écran : 
+\begin{lstlisting}
+	MXC_SEND_UPDATE
+\end{lstlisting}
+Cette commande prend en paramètre l'adresse d'une structure mxcfb_update_data.
+
+\subsubsection{la structure mxcfb_update_data}
+Cette structure permet de passer l'intégralité des paramètres nécessaires au driver.
+Voici les options importantes à retenir : 
+\begin{itemize}
+	\renewcommand{\labelitemi}{$\bullet$}
+	\item update_region \\
+		permet de définir le rectangle de mise à jour de l'écran à partir de :
+		\begin{itemize}
+			\item les coordonnées du coin supérieur gauche
+			\item la largeur et la hauteur de la zone
+		\end{itemize}
+	\item alt_buffer_data\\
+		permet de définir un buffer alloué localement dans l'espace utilisateur, 
+		cette option est inutilisé ici
+		
+	\item update_mode \\
+		définit le mode de mise à jour peut être soit :
+		\begin{itemize}
+			\item UPDATE_MODE_PARTIAL (ne met à jour que la région concernée)
+			\item UPDATE_MODE_FULL (met à jour l'écran entier)
+		\end{itemize}
+	\item flags\\
+		ce champs permet de savoir si l'on souhaite utiliser ou non le champ alt_buffer_data
+	\item update_marker\\
+		permet d'identifier une demande de mise à jour pour la synchronisation
+	\item waveform_mode \\
+		permet de définir le mode de waveforme utilisé, définit dans la structure
+		mxcfb_waveform_modes , ici on utilise uniquement le mode par défaut à cause du risque 
+		d'écraser les waveformes
+	\item temp\\
+		permet de définir la température utilisée pour paramétrer la waveforme à utiliser.
+	
+\end{itemize}
+
+\subsubsection{L'envoie des information sur le framebuffer}
+
+Comme on utilise pas le champs alt_buffer_data il faut mettre à jour directement le framebuffer, via le fichier special /dev/fb0, pour cela il suffit juste de créer dans le programme un espace mémoire de la bonne taille pour le mapper sur l'emplacement de ce fichier.
+
+Ensuite un appel à l'ioctl MSXC_SEND_UPDATE, permet de mettre à jour l'affichage directement.
+
+\subsection{La mise à jour du framebuffer via DirectFB}
+
+DirectFB fournissant les primitives d'affichage il est possible de faire des choses un peu plus
+évoluées que de colorier le framebuffer dans une couleur donnée.
+L'exemple de test dessine ainsi en boucle 10 lignes avec points de départ fixe mais avec des points d'arrivés aléatoires.
+
+\subsubsection{Les principales structures}
+
+Toute la librairie DirectFB repose sur la structure IDirectFB. Cette dernière permet la génération de toutes les autres structures.~\\
+ Le programmes de test utilise principalement les structures :
+\begin{itemize}
+	\item DFBSurfaceDescription qui permet de décrire la surface d'affichage
+	\item IDirectFBSurface qui représente la surface d'affichage
+\end{itemize}
+
+\subsubsection{Paramètre de l'affichage}
+
+%a voir si on laisse
+Sur la liseuse l'affichage dispose d'une résolution de 800*600 pixels et le format des pixels 
+réglé par default est le RGB16, ces paramètres sont détectés automatiquement par DirectFB.
+
+La structure DFBSurfaceDescription dispose d'un champs caps décrivant les capacités de la surface d'affichage, ici les paramètres sont : 
+	\begin{itemize}
+		\item DCAPS_FLIPPING
+			indique que l'affichage a besoin d'un appel à Flip pour être mise à jour.
+		\item DCAPS_PRIMARY
+			indique que la surface est la surface d'affichage principale
+	\end{itemize}
+
+La création de la surface d'affichage se fait via : 
+	\begin{lstlisting}
+	IDirectFB->CreateSurface( IdirectFB , DFBSurfaceDescription, 
+			IDirectFBSurface)
+	\end{lstlisting}
+
+Il faut ensuite définir la résolution et la couleur de l'affichage via les appels à :
+	\begin{lstlisting}
+	IDirectFBSurface->GetSize( IDirectFBSurface, int width, 
+			int height)
+	IDirectFBSurface->SetColor(IdirectFBSurface,uint8,uint8,unint8)
+	\end{lstlisting}
+
+Une fois tous les réglages effectués on peut appeler les primitives graphiques : 
+\begin{itemize}
+	\item FillRectangle
+	\item FillRectangles
+	\item DrawRectangle
+	\item DrawLine
+	\item DrawLines
+	\item FillTriangle
+	\item FillTriangles
+	\item FillSpans
+\end{itemize}
+
+Pour mettre à jour l'affichage il faut faire un appel à : 
+	\begin{lstlisting}
+	IDirectFBSurface->Flip( IDirectFBSurface, DFBRegion, DFBSurfaceFlipFlags)
+	\end{lstlisting}
+
+%	\begin{itemize}
+%		\item IDirectFBSurface \\
+%		permet l’interaction avec le framebuffer, gestion des primitives graphique
+%		\item IDirectFBInputDevice \\
+%		permet la gestion des événements d'entrée utilisateur
+%	\end{itemize}
+
+
+
+\subsubsection{Utilisation des ioctls avec directfb}
+
+Au stade actuel on a le framebuffer mise à jour par DirectFB. Cependant le driver n'actualise l'affichage que sur demande.
+Il faut donc ajouter un appel à l'ioctl SEND_UPDATE vu précédemment.
+
+Cependant un autre problème se pose. Le programme n'étant pas synchronisé avec le driver, il envoie ces commandes d'affichage plus vite que le driver ne peut les gérer.
+Le driver ne peut gérer que 12 tables LuT pour faire une mise à jour, une fois ces dernières remplit le driver refuse la mise à jour.
+
+Pour forcer la mise à jour il faut :
+\begin{itemize}
+	\item définir le champs update_marker de la structure mxcfb_update_data
+	\item faire un appel ioctl MXCFB_WAIT_FOR_UPDATE_COMPLETE avec l'update_marker
+\end{itemize}
