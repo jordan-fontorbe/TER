@@ -217,15 +217,15 @@ Ensuite on a lancé la compilation via la commande suivante :
 make strip
 \end{lstlisting}
 
-La commande strip permet un gain de place de l'exécutable en supprimant de celui-ci la table des symboles et peut aussi supprimer les informations de débogage. Un exécutable nommé dropbearmulti est généré.
+La commande strip permet un gain de place de l'exécutable en supprimant de celui-ci la table des symboles et peut aussi supprimer les informations de débogage. Un exécutable nommé Dropbearmulti est généré.
 
 Ensuite on copie l'exécutable dans le répertoire /bin de l'image de la liseuse. Dans ce répertoire, on a créé des liens symboliques vers les différents programmes de Dropbear via les commandes suivantes :
 
 \begin{lstlisting}
-ln -s dropbearmulti dropbear
-ln -s dropbearmulti dropbearkey
-ln -s dropbearmulti scp
-ln -s dropbearmulti dbclient
+ln -s Dropbearmulti Dropbear
+ln -s Dropbearmulti Dropbearkey
+ln -s Dropbearmulti scp
+ln -s Dropbearmulti dbclient
 \end{lstlisting}  
 
 \subsubsection{Sur la liseuse via telnet}
@@ -234,14 +234,14 @@ Pour le bon fonctionnement de Dropbear, il est nécessaire qu'un mot de passe ro
 De plus, il était nécessaire de générer les clefs RSA et DSS via les commandes suivantes :
 
 \begin{lstlisting}
-dropbearkey -t rsa -f dropbear_rsa_host_key
-dropbearkey -t dss -f dropbear_dss_host_key
+Dropbearkey -t rsa -f Dropbear_rsa_host_key
+Dropbearkey -t dss -f Dropbear_dss_host_key
 \end{lstlisting}
 
 Suite à cette installation, il était possible de se connecter à la liseuse via SSH exécuté sur la machine hôte ou d'effectuer des copies sur celle-ci via la commande "scp". Il était nécessaire au préalable d'avoir démarré le serveur SSH de la liseuse via la commande suivante :
 
 \begin{lstlisting}
-dropbear start
+Dropbear start
 \end{lstlisting}
 
 \newpage
@@ -269,7 +269,7 @@ Il était nécessaire de compiler toutes les librairies présents dans la liste 
 Les cross-compilations suivantes ont été réalisées de deux manières selon le système d'exploitation employé : 
 
 \begin{itemize}
-\item Sur Archlinux x64 (kernel 3.8) on a utilisé les mêmes configurations employées pour la compilation de dropbear.
+\item Sur Archlinux x64 (kernel 3.8) on a utilisé les mêmes configurations employées pour la compilation de Dropbear.
 \item Sur Ubuntu x64 12.04 on a utilisé scratchbox % A completer % 
 \end{itemize}
 
