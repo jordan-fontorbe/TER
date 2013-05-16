@@ -15,7 +15,7 @@ Les solutions proposées par Freescale sur cette gamme de processeurs sont aussi
 
 Le iMX508 est le processeur que l'on va retrouver sur la liseuse SONY PRS-T1. Il est le résultat de la collaboration entre Freescale et E-Ink et est le premier conçu spécialement pour les liseuses. 
 
-L'atout principal du iMX508 est son architecture ARM Cortex A8 disposant d'un contrôleur d'écran de liseuse intégré (Electrophoretic Paper Display Controller abrégé EPDC). Cette intégration lui permet d'être environ 50\% moins coûteux que les autres processeurs utilisant cette même architecture mais avec un EPDC indépendant. Il est aussi plus performant car l'accès au contrôleur est direct.
+L'atout principal du iMX508 est son architecture ARM Cortex A8 disposant d'un contrôleur d'écran de liseuse intégré (Electrophoretic Display Controller abrégé EPDC). Cette intégration lui permet d'être environ 50\% moins coûteux que les autres processeurs utilisant cette même architecture mais avec un EPDC indépendant. Il est aussi plus performant car l'accès au contrôleur est direct.
 
 Le processeur iMX508 peut accueillir de la mémoire mDDR ou LPDDR2 qui consomme peu d'énergie et un système de voltage et fréquence dynamique qui lui permet de réduire sa consommation d'énergie durant les faibles activités.
 
@@ -26,10 +26,14 @@ Ce processeur permet donc une faible consommation d’énergie tout en conservan
 
 Voici un petit schéma du SoC iMX508 :
 
+\begin{figure}[h!]
 \begin{center}
 	\includegraphics{iMX508.png}
+	\caption{SoC iMX508}
 \end{center}
+\end{figure}
 
+\newpage
 
 \section{Le contrôleur (EPDC)}
 
@@ -38,7 +42,7 @@ L'EPDC (Electrophoretic Display Controller) conçu spécialement pour les écran
 
 \subsection{Problématique}
 
-Les écrans électrophorétiques nécessitent des contrôleurs capables de diriger des signaux (appelées waveforms) pour afficher des images. C'est-à-dire que ces contrôleurs doivent produire un signal qui va placer les particules de l'écran de sorte à afficher l'image souhaitée.
+Les écrans électrophorétiques nécessitent des contrôleurs capables de diriger des signaux (appelées waveforms) pour effectuer l'affichage. C'est-à-dire que ces contrôleurs doivent produire un signal qui va placer les particules de l'écran de sorte à obtenir l'affichage souhaité.
 
 Quand une waveform est envoyée, il ne faut pas qu'elle soit perturbée. Concrètement, cela implique qu'il faut bloquer toute mise à jour du framebuffer jusqu'à la fin de l'application de la waveform.
 
@@ -75,29 +79,30 @@ Enfin le troisième problème l'est lui aussi puisque l'adresse mémoire qui à 
 	\item[$\bullet$] Peut mettre à jour jusqu'à 16 régions sur un écran
 	\item[$\bullet$] Mise a jour partielle ou totale de l'écran 
 	\item[$\bullet$] Interfaçage avec la mémoire du processeur pour garantir un taux de rafraîchissement
-	\item[$\bullet$] Peux réduire sa consommation d'énergie
+	\item[$\bullet$] Peut réduire sa consommation d'énergie
 \end{itemize}
 
 
 %pré-requis : notion de deferred_io, lookup table (LuT), waveforme
 %a supprimer : framebuffer si vu plus tôt
+\newpage
 \section{Le driver E-Ink}
 
 \subsection{Notions générales}
 La liseuse SONY PRS-T1 dispose de quatre éléments hardware et software afin 
-de rendre possible l'affichage sur écran E-Ink. Le framebuffer, le pixel pipeline (pxp), l'accès direct à la mémoire (dma) et les lookup tables.
+de rendre possible l'affichage sur écran E-Ink. Le framebuffer, le pixel pipeline (pxp), l'accès direct à la mémoire (Direct Memory Access abrégé DMA) et les lookup tables.
 
 %La notion de framebuffer étant déja expliquer dans la partie  <partie> je ne vais présenter que le pixel pipeline est l'accès mémoire direct
 \subsubsection{Le framebuffer}
 
-La notion de framebuffer permet l'accès à une zone mémoire contenant l'image affichée actuellement à l'écran sans être dépendant du matériel utilisé en aval.
+La notion de framebuffer permet l'accès à une zone mémoire contenant l'affichage  actuel de l'écran sans être dépendant du matériel utilisé en aval.
 
-Le framebuffer utilisé dans le cas d'un écran E-Ink se base sur la notion de deferred io vu plus tôt.
+Le framebuffer utilisé dans le cas d'un écran E-Ink se base sur la notion de Deferred IO vu plus tôt.
 %inserer la partie correspondante ? sinon inserer une description du deferred_io
 
 \subsubsection{Le pixel pipeline}
 
-La plate-forme Freescale (iMX50) dispose d'un enhanced pixel pipeline (ePXP), ce dernier est utilisé pour : 
+La plate-forme Freescale (iMX50) dispose d'un enhanced Pixel Pipeline (ePXP), ce dernier est utilisé pour : 
 	\begin{itemize}
 		\item[$\bullet$] gérer la transparence
 		\item[$\bullet$] faire des rotations d'images
@@ -116,11 +121,11 @@ Le processeur envoie juste un ordre au contrôleur DMA, ce dernier notifiera la 
 
 Ce mode de transfert de données est utilisé lorsque le processeur ou la mémoire ont une différence dans la capacité de traitement (par exemple : le processeur ne pouvant pas gérer le taux de transfert de la mémoire).
 %utilité ?
-Sur la plate-forme iMX50 le DMA est géré pour le bus AHB (Advanced Microcontroller Bus Architecture High-performance Bus), ce dernier étant synchrone le module de gestion AHB-to-APBH bridge implémente donc un contrôleur DMA afin de pouvoir gérer un mode d'échange asynchrone sur ce bus.
+Sur la plate-forme iMX50, le DMA est géré pour le bus AHB (Advanced Microcontroller Bus Architecture High-performance Bus). Ce dernier étant synchrone, le module de gestion AHB-to-APBH bridge implémente donc un contrôleur DMA afin de pouvoir gérer un mode d'échange asynchrone sur ce bus.
 
 \subsubsection{Les lookup tables (LuT)}
 
-Les lookup tables permettent au contrôleur de gérer plusieurs zones de mise à jour de l'écran en même temps, permettant ainsi de contrer la latence dû à la mise à jour de l'écran via les waveforms.
+Les lookup tables permettent au contrôleur de gérer plusieurs zones de mise à jour de l'écran en même temps, permettant ainsi de diminuer la latence dû à la mise à jour de l'écran via les waveforms.
 
 Les LuT représentent chacune une zone de mise à jour de l'écran, cette zone est définie par : 
 	\begin{itemize}
@@ -141,10 +146,10 @@ Le driver s'organise de la manière suivante :
 	
 \subsubsection{Fonctions d'initialisation du driver} % changer le nom ??
 
-	Ces fonctions sont communes a tous drivers Linux.
+	Ces fonctions sont communes à tous drivers Linux.
 	\begin{itemize}
 		\item[$\bullet$] mxc\_epdc\_fb\_probe : \\
-		initialisation du driver mis en place des fonctions de callback, du gestionnaire d'interruption
+		initialisation du driver, mise en place des fonctions de callback du gestionnaire d'interruption
 		\item[$\bullet$] mxc\_epdc\_fb\_exit :\\
 		désallocation des ressources du noyau pour ce driver
 	\end{itemize}
@@ -208,7 +213,7 @@ Ces fonctions peuvent être organisées en sous-catégories :
 
 \subsubsection{Les fonctions de gestion du framebuffer}
 
-Ces fonctions permettent de prendre en charge toute la gestion du framebuffer avec deferred\_io 
+Ces fonctions permettent de prendre en charge toute la gestion du framebuffer avec Deferred IO 
 propre au contrôleur d'écran E-Ink.
 Ce framebuffer gère les particularités des écrans E-Ink : 
 	\begin{itemize}
@@ -221,6 +226,8 @@ Le driver dispose aussi d'une gestion des ioctl pour le framebuffer.
 Les ioctl permettent dans les système UNIX d'ajouter des fonctionnalités qui ne seraient pas accessibles autrement (dans notre cas les fonctionnalités propres aux écrans E-Ink).
 
 Le driver implémente les ioctl grâce à la fonction mxc\_epdc\_fb\_ioclt, cette fonction permet l'accès à toutes les fonctionnalités du framebuffer depuis l'espace utilisateur.
+
+\newpage
 
 \section{Caractéristiques de la liseuse Sony PRS-T1}
 
