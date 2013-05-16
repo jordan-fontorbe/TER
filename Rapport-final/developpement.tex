@@ -128,27 +128,32 @@ Avant d'expliquer les différentes procédures de cross-compilation pour les dif
   --without-ssl desactive le support de l'openssl
   --without-x desactive l'utilisation x window system
   
+  
+  
+  
 # Parametre DirectFB 
 
-  LIBPNG_CFLAGS=-I[PATH-REP-LIBPNG] indique la position
-                                    des librairies libpng
+  LIBPNG_CFLAGS=-I[PATH-REP-LIBPNG]
+              indique la position
+              des librairies libpng
   
   LIBPNG_LDFLAGS=-L[PATH-REP-HEARDERS-LIBPNG] 
-  					indique la position des hearders utilise 
-  					par la libpng
+              indique la position des hearders 
+              utilise par la libpng
   
-  FREETYPE_CFLAGS=-I[PATH-REP-FREETYPE] indique la position des
-                                        librairies de freetype
+  FREETYPE_CFLAGS=-I[PATH-REP-FREETYPE]
+              indique la position des
+              librairies de freetype
  
   FREETYPE_LIBS="-L[PATH-REP-HEARDERS-FREETYPE] 
-                    indique la position des headers
-                    utilise par freetype
+              indique la position des headers
+              utilise par freetype
  
   LIBS="-l[lib] exemple (-lz pour libz)" librairie passee en lien
   
   --prefix=[PATH-aux-Choix]/usr/local
-            installe l'architecture
-            independant a l'emplacement specifie
+              installe l'architecture
+              independant a l'emplacement specifie
   --disable-imlib2 desactive la gestion des images de type imlib2
   --enable-freetype active le support des fonts freetype 
   --enable-fbdev construit avec le support linux fbdev
@@ -385,7 +390,8 @@ Ensuite on a lancé la commande "make" pour la compilation. Pour finir il est fo
 \subsubsection{Installation sur la liseuse}
 
 
-L'installation de DirectFB sur la liseuse consiste simplement à copier les fichiers générés par la commande "make install" sur l'image système de celle-ci. Pour cela, on a monté l'image sur la machine hôte. On a copié tout le contenu de (PATH-aux-Choix]/usr/local)/usr/local à l'emplacement /usr/local dans l'image montée. Ensuite il était nécessaire de copier le répertoire des librairies (PATH-REP-LIBS) et des includes (PATH-REP-INCLUDE) générés pour les différentes compilations sur l'image. On les a copiés dans à l'emplacement /usr/local sur la liseuse. 
+L'installation de DirectFB sur la liseuse consiste simplement à copier les fichiers générés par la commande "make install" sur l'image système de celle-ci. Pour cela, on a monté l'image sur la machine hôte. \\
+On a copié tout le contenu de (PATH-aux-Choix]/usr/local)/usr/local à l'emplacement /usr/local dans l'image montée. Ensuite il était nécessaire de copier le répertoire des librairies (PATH-REP-LIBS) et des includes (PATH-REP-INCLUDE) générés pour les différentes compilations sur l'image. On les a copiés dans à l'emplacement /usr/local sur la liseuse. 
 
 \newpage
 
@@ -454,6 +460,8 @@ Pour cela on a suivi cette configuration :
 Les fichiers de la machine virtuelle sont montés dans le système de l'hôte dans : 
 /scratchbox/users/$<$user$>$/home/$<$user$>$.
 
+\newpage
+
 \subsubsection{Cross-compilation de DirectFB}
 
 \paragraph{Dépendance de DirectFB}
@@ -494,7 +502,7 @@ Maintenant la librairie DirectFB étant installée sur la machine virtuelle, on 
 
 Pour compiler un exemple utilisant DirectFB, on a créé le lien vers la librairie DirectFB et indiquer l'emplacement des headers de la librairie : 
 \begin{lstlisting}
-	gcc -o test test.c -ldirectfb -I/usr/local/include/directfb/
+   gcc -o test test.c -ldirectfb -I/usr/local/include/directfb/
 \end{lstlisting}
 
 %
@@ -603,15 +611,15 @@ La structure DFBSurfaceDescription dispose d'un champs caps décrivant les capac
 
 La création de la surface d'affichage se fait via : 
 	\begin{lstlisting}
-	IDirectFB->CreateSurface( IdirectFB , DFBSurfaceDescription, 
+   IDirectFB->CreateSurface(IdirectFB, DFBSurfaceDescription, 
 			IDirectFBSurface)
 	\end{lstlisting}
 
 Il faut ensuite définir la résolution et la couleur de l'affichage via les appels à :
 	\begin{lstlisting}
-	IDirectFBSurface->GetSize( IDirectFBSurface, int width, 
+   IDirectFBSurface->GetSize(IDirectFBSurface, int width, 
 			int height)
-	IDirectFBSurface->SetColor(IdirectFBSurface,uint8,uint8,unint8)
+   IDirectFBSurface->SetColor(IdirectFBSurface,uint8,uint8,unint8)
 	\end{lstlisting}
 
 Une fois tous les réglages effectués on peut appeler les primitives graphiques : 
