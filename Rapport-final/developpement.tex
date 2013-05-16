@@ -36,8 +36,9 @@ cd [PATH_to_terkit]/sony/linux-2.6.35.3/
 make menuconfig
 \end{lstlisting}
 
-Suite à la commande "make", une fenêtre s'ouvre dans le terminal qui permet de sélectionner certaines fonctionnalités pour le kernel. On a édité l'option suivante pour obtenir le module g_ether : \\
-Device drivers $>$ usb support $>$ usb gadget support $>$ Ethernet gadget -$>$ $<$M$>$ with RNDIS support
+Suite à la commande "make", une fenêtre s'ouvre dans le terminal qui permet de sélectionner certaines fonctionnalités pour le kernel.Pour l'option à éditer, il faut se rendre dans le menu suivant: \\
+Device drivers $>$ usb support $>$ usb gadget support \\
+L'option à modifier dans la page est Ethernet gadget en l'activant ($<$M$>$) et laisser l'option RNDIS support en valeur par default ([*]).\\
 
 Au cour de la phase suivante, on a obtenu une erreur lors de la compilation du kernel donc pour éviter l'erreur, on a modifié la ligne 135 du fichier fs/nfs/nfsroot.c :
 
@@ -101,9 +102,12 @@ Avant d'expliquer les différentes procédures de cross-compilation pour les dif
 
 # Parametres generaux
   
-  --build=BUILD   indique l'architecture sur lequel la compilation a lieu
-  --host=HOST     indique l'architecture du systeme ou sera lance le programme   
-  --target=TARGET 
+  --build=BUILD   indique l'architecture sur lequel \
+   la compilation a lieu
+  --host=HOST     indique l'architecture du systeme ou \
+   sera lance le programme   
+  --target=TARGET indique l'architecture pour laquelle \
+   le code est generee
   --shared (--enable-shared) construit shared librairies
   --static (--enable-static) construit static librairies
  
@@ -194,7 +198,7 @@ Dans un premier temps on s'est rendu dans le répertoire dropbear ou l'on a conf
 
 \begin{lstlisting}
 ./configure --host=arm-none-linux-gnueabi \
-LDFLAGS="-L/home/arkh/Documents/TER/DFB/lib"
+LDFLAGS="-L[PATH-REP-LIBS]"
 \end{lstlisting} 
 
 Suite à cette configuration on a obtenu un Makefile utilisable et paramétré selon nos besoins.
@@ -217,7 +221,7 @@ ln -s dropbearmulti dbclient
 
 \subsubsection{Sur la liseuse via telnet}
 
-Pour le bon fonctionnement de dropbear, il est nécessaire qu'un mot de passe root soit présent sur le système. Pour en ajouter un, on a exécuté la commande "gpasswd" directement sur la liseuse après s'être connecté dessus via telnet.
+Pour le bon fonctionnement de dropbear, il est nécessaire qu'un mot de passe root soit présent sur le système. Pour en ajouter un, on a exécuté la commande "passwd" directement sur la liseuse après s'être connecté dessus via telnet.
 De plus, il était nécessaire de générer les clefs RSA et DSS via les commandes suivantes :
 
 \begin{lstlisting}
@@ -245,8 +249,8 @@ DirectFB est une librairie nécessitant plusieurs dépendances pour sa compilati
 \item Jpegsrc version 8c
 \item Libpng version 1.5.14
 \item Freetype version 2.4.11
-\item Libconio version 1.0.0
-\item SDL version 1.2.15
+\item Libconio version 1.0.0 (dépendance de LibVNCServer)
+\item SDL version 1.2.15 (dépendance de LibVNCServer)
 \item LibVNCServer 0.9.7
 \end{itemize}
 
@@ -266,19 +270,8 @@ Les cross-compilations suivantes ont été réalisées de deux manières selon l
 
 \subsubsection{Configuration}
 La compilation a été réalisé avec le compilateur arm-none-linux-gnueabi-gcc en version 4.7.2.
-Pour la réalisation de la compilation, on a configuré les variables d'environnements de la manière suivante : 
+Pour la réalisation de la compilation, on a configuré les variables d'environnements de la même manière que pour la cross-compilation de  Dropbear.
 
-\begin{lstlisting}
-export PATH=$PATH:/[PATH-cross-compilateur]/bin
-export CC=arm-none-linux-gnueabi-gcc
-export CXX=arm-none-linux-gnueabi-g++
-export CPP=arm-none-linux-gnueabi-cpp
-export AR=arm-none-linux-gnueabi-ar
-export RANLIB=arm-none-linux-gnueabi-ranlib
-export LD=arm-none-linux-gnueabi-ld
-export STRIP=arm-none-linux-gnueabi-strip
-export CCFLAGS="-march=armv7-a -mtune=cortex-a8 -mfpu=vfp"
-\end{lstlisting}
 
 \subsubsection{Compilation libjpeg}
 Génération du Makefile pour la compilation libjpeg :
@@ -329,8 +322,8 @@ Pour finir on a déplacé tous les fichiers *.h vers un répertoire regroupant d
 Génération du Makefile pour la compilation libSDL :
 
 \begin{lstlisting}
-./configure CPPFLAGS=-I/home/arkh/Documents/TER/DFB/include \ 
-LDFLAGS=-L/home/arkh/Documents/TER/DFB/lib \
+./configure CPPFLAGS=-I[PATH-REP-INCLUDE] \ 
+LDFLAGS=-L[PATH-REP-LIBS] \
 --host=arm-none-linux-gnueabi --build=i386-linux \ 
 --target=arm-none-linux-gnueabi \
 --enable-shared --enable-static \
@@ -346,8 +339,8 @@ Pour finir déplacer tous les fichiers *.h vers un répertoire regroupant des fi
 Génération du Makefile pour la compilation libVNCServer :
 
 \begin{lstlisting}
-./configure CPPFLAGS=-I/home/arkh/Documents/TER/DFB/include \
-LDFLAGS=-L/home/arkh/Documents/TER/DFB/lib \  
+./configure CPPFLAGS=-I[PATH-REP-INCLUDE] \
+LDFLAGS=-L[PATH-REP-LIBS] \  
 	--host=arm-none-linux-gnueabi \
 	--build=i386-linux \
 	--target=arm-none-linux-gnueabi \ 
@@ -366,34 +359,39 @@ Copier le répertoire ./rfb et son contenu vers le répertoire contenant DirectF
 Génération du Makefile pour la compilation de DirectFB :
 
 \begin{lstlisting}
-LIBPNG_CFLAGS=-I/home/arkh/Documents/TER/DFB/include \
-LIBPNG_LDFLAGS="-L/home/arkh/Documents/TER/DFB/lib -lpng15 -lz" \
-FREETYPE_CFLAGS=-I/home/arkh/Documents/TER/DFB/include \
-FREETYPE_LIBS="-L/home/arkh/Documents/TER/DFB/lib -lfreetype" \
-GL_LIBS="-L/usr/lib/" \
-LIBS="-lgcc_s -lgcc -ldl -lstdc++ -lz -lm -L/usr/include/GLES -L/usr/include/GL" \
-./configure CC=arm-none-linux-gnueabi-gcc CPPFLAGS=-I/home/arkh/Documents/TER/DFB/include \
-LDFLAGS=-L/home/arkh/Documents/TER/DFB/lib \
+LIBPNG_CFLAGS=-I[PATH-REP-INCLUDE] \
+LIBPNG_LDFLAGS="-L[PATH-REP-LIBS] -lpng15 -lz" \
+FREETYPE_CFLAGS=-I[PATH-REP-INCLUDE] \
+FREETYPE_LIBS="-L[PATH-REP-LIBS] -lfreetype" \
+LIBS="-lgcc_s -lgcc -ldl -lstdc++ -lz -lm "\
+./configure CPPFLAGS=-I[PATH-REP-INCLUDE] \
+   LDFLAGS=-L[PATH-REP-LIBS] \
    --disable-imlib2 \
    --prefix=[PATH-aux-Choix]/usr/local \
-   --build=i686-linux --host=arm-linux \
+   --build=i686-linux --host=arm-none-linux-gnueabi \
    --disable-static --enable-shared \
    --enable-freetype --enable-fbdev --disable-x11 \
    --disable-mesa --disable-x11vdpau \
-   --with-gfxdrivers=none --with-inputdrivers=none --enable-vnc
+   --with-gfxdrivers=none --with-inputdrivers=none \
+   --enable-vnc
 \end{lstlisting}
 
 Ensuite on a lancé la commande "make" pour la compilation. Pour finir il est fortement conseiller de faire un "make install" en ayant préciser un prefix dans la commande de configuration. Cela nous a facilité la copie des éléments de DirectFB sur la liseuse. 
+
+\subsubsection{Installation sur la liseuse}
+
+
+L'installation de DirectFB sur la liseuse consiste simplement à copier les fichiers générer par la commande "make install" sur l'image système de celle-ci. Pour cela, on a monté l'image sur la machine hôte. On a copié tout le contenu de (PATH-aux-Choix]/usr/local)/usr/local à l'emplacement /usr/local dans l'image montée. Ensuite il était nécessaire de copier le répertoire des librairies (PATH-REP-LIBS) et des includes (PATH-REP-INCLUDE) générées pour les différentes compilations sur l'image. On les a copiés dans à l'emplacement /usr/local sur la liseuse. 
 
 \newpage
 
 \subsection{Compilation sur Ubuntu avec Scratchbox}
 
-Scratchbox est un outils permettant de faciliter la cross-compilation et l'installation. Scratchbox utilise pour cela une machine virtuelle sous QEMU.
+Scratchbox est un outil permettant de faciliter la cross-compilation et l'installation. cet outil utilise pour cela une machine virtuelle sous QEMU.
 
 \subsubsection{Installation}
 
-L'installation de Scratchbox est simple sous une distribution Debian : 
+L'installation de Scratchbox est simple sous une distribution Debian : \\
 Pour procéder à l'installation il nous a fallu suivre les directives suivantes :
 \begin{itemize}
 	\item ajout du repository :
@@ -409,7 +407,7 @@ deb http://scratchbox.org/debian apophis main
 				\item scratchbox-devkit-cputransp
 				\item scratchbox-toolchain-arm-gcc3.4-uclibc0.9.28
 			\end{itemize}
-	\item il faut autoriser les comptes utilisateurs à ce connecter sur des machines virtuelles : 
+	\item autoriser les comptes utilisateurs à ce connecter sur des machines virtuelles : 
 	\begin{lstlisting}
 sudo /scratchbox/sbin/sbox_adduser <your_username>
 	\end{lstlisting}	
@@ -417,7 +415,7 @@ sudo /scratchbox/sbin/sbox_adduser <your_username>
 
 \subsubsection{Configuration}
 
-Une fois Scratchbox installé, on a dut créer la machine virtuelle pour effectuer la cross-compilation.
+Une fois Scratchbox installé, on a dû créer la machine virtuelle pour effectuer la cross-compilation.
 
 Pour cela on s'est connecté à la console de scratchbox : 
 \begin{lstlisting}
@@ -427,9 +425,10 @@ Ensuite on a accédé au menu de gestion des machines virtuelles :
 \begin{lstlisting}
 	sb-menu
 \end{lstlisting}
-on a dut maintenant créer une machine virtuelle ayant la même architecture que la liseuse. 
+on a dû maintenant créer une machine virtuelle ayant la même architecture que la liseuse. 
 Pour cela on a suivi cette configuration : 
 \begin{itemize}
+\renewcommand{\labelitemi}{$\bullet$}
 	\item compiler : arm-linux-cs2009q1-203sb1
 	\item architecture : arm
 	\item sub-architecture : arm
@@ -445,7 +444,7 @@ Pour cela on a suivi cette configuration :
 			\item Debug links
 			\item fakeroot
 		\end{itemize}
-	\item on a sélectionné la machine virtuelle créée
+	\item sélectionner la machine virtuelle créée
 \end{itemize}
 
 Les fichiers de la machine virtuelle sont montée dans le système de l’hôte dans : 
@@ -456,22 +455,22 @@ Les fichiers de la machine virtuelle sont montée dans le système de l’hôte 
 \paragraph{Dépendance de DirectFB}
 DirectFB possède plusieurs librairies dont il est dépendant: 
 	\begin{itemize}
-		\item freetype (ici : 2.4.11)
-		\item libjpeg (ici : 6b)
-		\item zlib (ici : 1.2.5)
-		\item libpng (ici : 1.5.14)
+		\item freetype (version 2.4.11)
+		\item libjpeg (version 6b)
+		\item zlib (version 1.2.5)
+		\item libpng (version 1.5.14)
 	\end{itemize}
 
-\paragraph{Compilation des dépendances :}
+\paragraph{Compilation des dépendances \\}
 
 La compilation des dépendances sous scratchbox est grandement simplifiée. En effet, on a simplement exécuté les classiques commandes suivantes : 
 	\begin{lstlisting}
 ./configure && make && make install
 	\end{lstlisting}
 
-\paragraph{Compilation de DirectFB :}
+\paragraph{Compilation de DirectFB \\}
 
-La compilation de DirectFB a besoin de quelques configurations supplémentaires dans le cas de la liseuse.il est en effet inutile de compiler les drivers graphiques et les drivers d'entrées/sorties car la liseuse ne dispose pas de carte graphique, et les entrées/sorties standard ne sont pas présente.
+La compilation de DirectFB a besoin de quelques configurations supplémentaires dans le cas de la liseuse.il est en effet inutile de compiler les drivers graphiques et les drivers d'entrées/sorties car la liseuse ne dispose pas de carte graphique, et les entrées/sorties standard ne sont pas présentent.
 Pour cela on a modifié l'appel du script de configuration : 
 \begin{lstlisting}
 ./configure --disable-x11 --with-gfxdrivers=none 
@@ -480,18 +479,22 @@ Pour cela on a modifié l'appel du script de configuration :
 ~\\
 La configuration étant faite on a exécuté les commandes "make" et "make install".
 
+\subsubsection{Installation sur la liseuse}
+
+L'installation de la librairie sur la liseuse se fait simplement en copiant le dossier d'installation de DirectFB 
+(/usr/local/lib sur la machine virtuelle) directement dans le dossier /usr/local/lib de l'image.
+
 \subsubsection{Compilation d'un exemple de test DirectFB}
 
-Maintenant la librairie DirectFB étant installé sur la machine virtuelle, on peut compiler un exemple de test directement dans la machine virtuelle.
+Maintenant la librairie DirectFB étant installée sur la machine virtuelle, on peut compiler un exemple de test directement dans la machine virtuelle.
 
 Pour compiler un exemple utilisant DirectFB, on a créé le lien vers la librairie DirectFB et d'indiquer l'emplacement des headers de la librairies : 
 \begin{lstlisting}
 	gcc -o test test.c -ldirectfb -I/usr/local/include/directfb/
 \end{lstlisting}
 
-\subsection{Installation sur la liseuse}
-
-L'installation de DirectFB sur la liseuse consiste simplement à copier les fichiers générer par la commande "make install" sur l'image système de celle-ci. Pour cela, on a monter l'image sur la machine hôte. On a copié tout le contenu de (PATH-aux-Choix]/usr/local)/usr/local à l'emplacement /usr/local dans l'image montée. Ensuite il était nécessaire de copier le répertoire des librairies (PATH-REP-LIBS) et des includes (PATH-REP-INCLUDE) générées pour les différentes compilations sur l'image. On les a copiés dans à l'emplacement /usr/local sur la liseuse. 
+%
+%L'installation de DirectFB sur la liseuse consiste simplement à copier les fichiers générer par la commande "make install" sur l'image système de celle-ci. Pour cela, on a monté l'image sur la machine hôte. On a copié tout le contenu de (PATH-aux-Choix]/usr/local)/usr/local à l'emplacement /usr/local dans l'image montée. Ensuite il était nécessaire de copier le répertoire des librairies (PATH-REP-LIBS) et des includes (PATH-REP-INCLUDE) générées pour les différentes compilations sur l'image. On les a copiés dans à l'emplacement /usr/local sur la liseuse. 
 
 \newpage
 
@@ -506,18 +509,18 @@ L'installation de DirectFB sur la liseuse consiste simplement à copier les fich
 %‣ idrectfb => structures  principale
 %‣ idirectfbsurface
 
-\subsection{La mise a jour du framebuffer via ioctl}
+\subsection{La mise à jour du framebuffer via ioctl}
 
 Le premier test effectué a été d'utiliser le driver pour modifier directement l'affichage.
-Étant donné que les modifications du framebuffer se font directement dans le code, ce dernier est juste défini a un niveau de gris précis. La mise a jour effective du framebuffer se fait via le driver directement.
+Étant donné que les modifications du framebuffer se font directement dans le code, ce dernier est juste défini à un niveau de gris précis. La mise à jour effective du framebuffer se fait via le driver directement.
 
 \subsubsection{Les commandes ioctl}
 
-Le driver epdc fournit des commandes ioctl pour la mise a jour du buffer, ces commandes permettent de récupérer toutes les variables du driver (par exemple la température de l'écran), mais aussi de lancer une mise à jour de l'écran et c'est ce qui nous intéresse ici.
+Le driver epdc fournit des commandes ioctl pour la mise à jour du buffer, ces commandes permettent de récupérer toutes les variables du driver (par exemple la température relevé par la sonde interne), mais aussi de lancer une mise à jour de l'écran, c'est ce qui nous intéresse ici.
 
-La fonction ioctl générique prenant cette commande sous la forme d'un entier, l'intégralité des commandes utilisées ici sont disponibles dans le fichier fbutils.h. %todo : a mettre en annex ?
+La fonction ioctl générique prenant un identifiant de commande sous la forme d'un entier, l'intégralité des identifiants utilisées par le programme sont définis dans le fichier fbutils.h. %todo : a mettre en annex ?
 
-
+~\\
 La commande utilisé ici est celle de mise à jour de l'écran : 
 \begin{lstlisting}
 	MXC_SEND_UPDATE
@@ -540,7 +543,7 @@ Voici les options importantes à retenir :
 		cette option est inutilisé ici
 		
 	\item update_mode \\
-		définit le mode de mise à jour peut être soit :
+		défini le mode de mise à jour peut être soit :
 		\begin{itemize}
 			\item UPDATE_MODE_PARTIAL (ne met à jour que la région concernée)
 			\item UPDATE_MODE_FULL (met à jour l'écran entier)
@@ -550,7 +553,7 @@ Voici les options importantes à retenir :
 	\item update_marker\\
 		permet d'identifier une demande de mise à jour pour la synchronisation
 	\item waveform_mode \\
-		permet de définir le mode de waveforme utilisé, définit dans la structure
+		permet de définir le mode de waveforme utilisé, défini dans la structure
 		mxcfb_waveform_modes , ici on utilise uniquement le mode par défaut à cause du risque 
 		d'écraser les waveformes
 	\item temp\\
@@ -558,7 +561,7 @@ Voici les options importantes à retenir :
 	
 \end{itemize}
 
-\subsubsection{L'envoie des information sur le framebuffer}
+\subsubsection{L'envoie des informations sur le framebuffer}
 
 Comme on utilise pas le champs alt_buffer_data il faut mettre à jour directement le framebuffer, via le fichier special /dev/fb0, pour cela il suffit juste de créer dans le programme un espace mémoire de la bonne taille pour le mapper sur l'emplacement de ce fichier.
 
@@ -579,7 +582,7 @@ Toute la librairie DirectFB repose sur la structure IDirectFB. Cette dernière p
 	\item IDirectFBSurface qui représente la surface d'affichage
 \end{itemize}
 
-\subsubsection{Paramètre de l'affichage}
+\subsubsection{Paramètres d'affichage}
 
 %a voir si on laisse
 Sur la liseuse l'affichage dispose d'une résolution de 800*600 pixels et le format des pixels 
@@ -588,10 +591,11 @@ réglé par default est le RGB16, ces paramètres sont détectés automatiquemen
 La structure DFBSurfaceDescription dispose d'un champs caps décrivant les capacités de la surface d'affichage, ici les paramètres sont : 
 	\begin{itemize}
 		\item DCAPS_FLIPPING
-			indique que l'affichage a besoin d'un appel à Flip pour être mise à jour.
+			indique que l'affichage a besoin d'un appel à Flip pour être mis à jour.
 		\item DCAPS_PRIMARY
-			indique que la surface est la surface d'affichage principale
+			indique que la surface est la surface d'affichage principale\\
 	\end{itemize}
+%~\\
 
 La création de la surface d'affichage se fait via : 
 	\begin{lstlisting}
@@ -620,7 +624,8 @@ Une fois tous les réglages effectués on peut appeler les primitives graphiques
 
 Pour mettre à jour l'affichage il faut faire un appel à : 
 	\begin{lstlisting}
-	IDirectFBSurface->Flip( IDirectFBSurface, DFBRegion, DFBSurfaceFlipFlags)
+	IDirectFBSurface->Flip( IDirectFBSurface, DFBRegion,
+		DFBSurfaceFlipFlags)
 	\end{lstlisting}
 
 %	\begin{itemize}
@@ -632,9 +637,9 @@ Pour mettre à jour l'affichage il faut faire un appel à :
 
 
 
-\subsubsection{Utilisation des ioctls avec directfb}
+\subsubsection{Utilisation des ioctl avec directfb}
 
-Au stade actuel on a le framebuffer mise à jour par DirectFB. Cependant le driver n'actualise l'affichage que sur demande.
+Au stade actuel on a le framebuffer mis à jour par DirectFB. Cependant le driver n'actualise l'affichage que sur demande.
 Il faut donc ajouter un appel à l'ioctl SEND_UPDATE vu précédemment.
 
 Cependant un autre problème se pose. Le programme n'étant pas synchronisé avec le driver, il envoie ces commandes d'affichage plus vite que le driver ne peut les gérer.
