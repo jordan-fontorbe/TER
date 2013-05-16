@@ -4,13 +4,9 @@
 \section{Gestion des événements}
 La gestion des événements, c'est à dire, être capable de détecter et de déclencher un traitement particulier lorsque l'utilisateur interagit avec la liseuse n'est pour l'instant pas implémenté.
 \paragraph*{~}
-<<<<<<< HEAD
 Il semblerait que le driver utilisé pour l'écran de la liseuse ne prenne pas en compte les évènement de type \emph{touch}. D'après les recherches que nous avons pu faire, le driver TsLib est habituellement implémenté avec DirectFB.
 \paragraph*{~}
 La version actuelle de DirectFB ne prend pas en charge les entrées / sorties. En effet, il faut fournir à DirectFB, lors de la compilation d'une part le driver graphique à utiliser et d'autre part le driver d'entrées / sortie.\\Dans notre cas, il n'est pas nécessaire de fournir un driver graphique car la liseuse ne dispose pas d'accélération matérielle.\\Nous n'avons pas compiler de driver d'entrées / sorties avec DirectFB.\\Nous nous sommes concentrés sur l'utilisation de DirectFB plus que sur les entrées / sorties.
-=======
-Il semblerait que le driver utilisé pour l'écran de la liseuse ne prenne pas en compte les événements de type \emph{touch}. D'après les recherches que nous avons pu faire, le driver TsLib serait meilleur pour la gestion de ces événements.
->>>>>>> ec6a67d508a116a5ade9062379466517ba479434
 \paragraph*{~}
 Malheureusement, malgré des pistes pour la résolution de ce problème, nous n'avons pas eu assez de temps pour faire des recherches approfondies qui permettraient la mise en place d'une solution.
 
