@@ -58,7 +58,7 @@ Pour finir on a copié le fichier g_ether.ko dans le système de fichier de la l
  
 \subsection{Installation du modules}
 
-Initialement la liseuse possède un module g_serial qui après quelque test, rentrer en conflit avec le module g_ether installer. On a désactivé le module g_serial puis on  a lancé le module g_ether. Pour réaliser cela au démarrage de la liseuse, on a édité le fichier "/etc/rc.d/rc.local" en ajoutant les lignes suivantes à la fin : 
+Initialement la liseuse possède un module g_serial qui après quelque test, rentrer en conflit avec le module g_ether installé. On a désactivé le module g_serial puis on  a lancé le module g_ether. Pour réaliser cela au démarrage de la liseuse, on a édité le fichier "/etc/rc.d/rc.local" en ajoutant les lignes suivantes à la fin : 
 
 \begin{lstlisting}
 echo "modprobe -r g_serial" > /initrd/mnt/sd/test/log
@@ -83,7 +83,7 @@ Les options host_addr et dev_addr permettent à la liseuse d'affecter son adress
 
 \section{Information de configuration}
 
-Avant d'expliquer les différentes procédures de cross-compilation pour les différents besoins du projet, voici une liste d'informations sur les paramètres de fichiers "configure" ou de variables d'environnements rencontrés :
+Avant d'expliquer les différentes procédures de cross-compilation pour les différents besoins du projet, voici une liste d'informations sur les paramètres des fichiers "configure" ou de variables d'environnements rencontrés :
 
 \begin{lstlisting}
 # Variables d'environnements ajoutees
@@ -93,17 +93,17 @@ Avant d'expliquer les différentes procédures de cross-compilation pour les dif
  CC => cross-compilateur employe (gcc)
  CXX => compilateur g++
  CPP => compilateur cpp
- AR => compilateur ar
- RANLIB => compilateur ranlib
- LD => compilateur ld
- STRIP => compilateur strip
+ AR => archivage et indexation
+ RANLIB => indexation
+ LD => linker
+ STRIP => supprime la table des symboles
  CCFLAGS => precise l'architecture de sortie au compilateur
 
 # Parametres generaux
   
-  --build=BUILD   configure for building on BUILD [guessed]
-  --host=HOST     cross-compile to build programs to run on HOST [BUILD]
-  --target=TARGET configure for building compilers for TARGET [HOST]
+  --build=BUILD   indique l'architecture sur lequel la compilation a lieu
+  --host=HOST     indique l'architecture du systeme ou sera lance le programme   
+  --target=TARGET 
   --shared (--enable-shared) construit shared librairies
   --static (--enable-static) construit static librairies
  
@@ -204,7 +204,7 @@ Ensuite on a lancé la compilation via la commande suivante :
 make strip
 \end{lstlisting}
 
-La commande strip permet un gain de place de l'exécutable en supprimant de celui-ci la table des symboles et les informations de débogage. Un exécutable nommé dropbearmulti est généré.
+La commande strip permet un gain de place de l'exécutable en supprimant de celui-ci la table des symboles et peu supprimer les informations de débogage. Un exécutable nommé dropbearmulti est généré.
 
 Ensuite on copie l'exécutable dans le répertoire /bin de l'image de la liseuse. Dans ce répertoire, on a créé des liens symboliques vers les différents programmes de dropbear via les commandes suivantes :
 

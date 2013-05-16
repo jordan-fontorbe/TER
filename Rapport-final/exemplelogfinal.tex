@@ -34,10 +34,22 @@ Le réseau établi entre la liseuse et le pc est défini statiquement, de plus l
 \end{figure}
 \clearpage
 %dropbear
-\subsection{L'ajout de ssh}
+\subsection{L'ajout de dropbear}
 Pour des raisons pratiques nous avons ajouté à la liseuse la gestion du protocole ssh, afin de pouvoir lancer facilement des commandes sur la liseuse, mais aussi de faciliter la copie de fichiers.
 %a voir ci c'est util
-Le ssh fonctionne comme une connexion ssh classique.
+L'utilisation de dropbear est pratiquement identique à celle du ssh que l'on peut trouver sur un système Linux. De légères différences subsistes si une connection en ssh de la liseuse au pc hôte car les commandes ne sont pas nommé comme sur un système classique. Pour démarrer le serveur dropbear (ssh) la commande est la suivante : 
+
+\begin{lstlisting}
+dropbear start
+\end{lstlisting}
+
+Normalement dropbear est démarré au lancement de la Liseuse en mode Recovery. De plus si une connection ssh veut être initialisé de la liseuse, il faut lancer la commande suivante :
+
+\begin{lstlisting}
+dhclient [nom-hote]@[IP-hote]
+\end{lstlisting}
+
+
 
 \section{Programme d'affichage}
 

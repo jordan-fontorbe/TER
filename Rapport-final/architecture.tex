@@ -3,7 +3,7 @@
 \section{L'image du mode recovery}
 
 \subsection{L'image de base}
-Le mode Recovery se base sur le kernel Linux 2.6.35.3 qui est contenu dans une ROM interne à la liseuse (il est donc inaccessible). Le système de fichier est compris dans un fichier image contenu lui sur la carte SD, ce fichier peut être modifié depuis l'extérieur.
+Le mode Recovery se base sur le kernel Linux 2.6.35.3 qui est contenu dans une ROM interne à la liseuse (il est donc inaccessible). Le système de fichier est présent dans un fichier de type image contenu lui sur la carte SD. Ce fichier peut être modifié depuis un pc en montant l'image.
 
 L'image fournie par défaut pour le mode Recovery, contient : 
 \begin{itemize}
@@ -34,16 +34,12 @@ L'image finale ajoute les fonctionnalités suivante à l'image :
 		\item la librairie DirectFB
 	\end{itemize}
 
-Plusieurs fonctionnalités devenues inutiles ont été désactivées :
-\begin{itemize}
-	\item Le serveur DHCP : \\
+On a désactivé le serveur DHCP de la liseuse : \\
 		il est peu utile d'avoir un support DHCP alors que le PC hôte et la liseuse 
 		ont un réseau pour eux seuls.
 		%peut etre rajouté le fait qu'il sont en plus défini statiquement ??
-	\item Le démon telnet : \\
-		la gestion du protocole telnet est devenu inutile et peu pratique (la copie de fichier
-		 n'étant pas géré par exemple), depuis l'ajout du support du protocole SSH.
-\end{itemize}
+
+\\
 
 L'émulation d'un lien Ethernet sur le port USB de la liseuse se fait via le module g_ether.
 %a verifier si c'est pas déjà dis avant
