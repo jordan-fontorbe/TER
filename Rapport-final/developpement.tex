@@ -496,15 +496,6 @@ La configuration étant faite, on a exécuté les commandes "make" et "make inst
 L'installation de la librairie sur la liseuse se fait simplement en copiant le dossier d'installation de DirectFB 
 (/usr/local/lib sur la machine virtuelle) directement dans le dossier /usr/local/lib de l'image.
 
-\subsubsection{Compilation d'un exemple de test DirectFB}
-
-Maintenant la librairie DirectFB étant installée sur la machine virtuelle, on peut compiler un exemple de test directement dans la machine virtuelle.
-
-Pour compiler un exemple utilisant DirectFB, on a créé le lien vers la librairie DirectFB et indiquer l'emplacement des headers de la librairie : 
-\begin{lstlisting}
-   gcc -o test test.c -ldirectfb -I/usr/local/include/directfb/
-\end{lstlisting}
-
 %
 %L'installation de DirectFB sur la liseuse consiste simplement à copier les fichiers générer par la commande "make install" sur l'image système de celle-ci. Pour cela, on a monté l'image sur la machine hôte. On a copié tout le contenu de (PATH-aux-Choix]/usr/local)/usr/local à l'emplacement /usr/local dans l'image montée. Ensuite il était nécessaire de copier le répertoire des librairies (PATH-REP-LIBS) et des includes (PATH-REP-INCLUDE) générées pour les différentes compilations sur l'image. On les a copiés dans à l'emplacement /usr/local sur la liseuse. 
 
