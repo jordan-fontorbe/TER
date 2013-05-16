@@ -10,13 +10,13 @@ L'image fournie par défaut pour le mode Recovery, contient :
 	\item un exécutable Busybox \\
 		qui permet l'accès aux commandes usuelles Linux dans les systèmes embarqués
 	\item un serveur DHCP
-	\item un démon telnet
+	\item un deamon telnet
 	%peut etre a mettre dans la partie du rapport intermediaire
 	\item un accès au port USB en mode série (via le module g_serial)
 \end{itemize}
 
 
-Le système de fichiers du mode Recovery est en lecture seule, seuls les dossiers suivant sont accessibles en lecture / écriture : 
+Le système de fichiers du mode Recovery est en lecture seule, seuls les dossiers suivants sont accessibles en lecture / écriture : 
 \begin{itemize}
 	\item /etc
 	\item /initrd/mnt/sd
@@ -27,7 +27,7 @@ Pour modifier le système de fichiers racine il faut passer par un PC hôte.
 
 \subsection{L'image finale}
 
-L'image finale ajoute les fonctionnalités suivante à l'image : 
+L'image finale ajoute les fonctionnalités suivantes à l'image : 
 	\begin{itemize}
 		\item un accès au port USB par connexion Ethernet
 		\item le support du protocole SSH
@@ -53,12 +53,12 @@ Le support du protocole SSH se fait via l'exécutable Dropbear situé dans :
 	/bin
 	\end{lstlisting}
 
-Les fichiers concernant la librairie DirectFB se situe dans le dossier /usr/local/lib.
-Pour pouvoir lancer une exécutable utilisant DirectFB il faut vérifier que ce dossier soit bien inclus dans la variable d'environnement LD_LIBRARY_PATH.
+Les fichiers concernant la librairie DirectFB se situent dans le répertoire /usr/local/lib.
+Pour pouvoir lancer un exécutable utilisant DirectFB il faut vérifier que ce dossier soit bien inclus dans la variable d'environnement LD_LIBRARY_PATH.
 \section{La mise en place de l'affichage}
 %architecture pour affichage via directfb
 
-L'affichage de la liseuse se fait grâce aux modules suivant : 
+L'affichage de la liseuse se fait grâce aux modules suivants : 
 \begin{itemize}
 	\item le driver mxc_epdc
 	\item DirectFB
