@@ -58,7 +58,7 @@ Pour finir on a copié le fichier g_ether.ko dans le système de fichiers de la 
  
 \subsection{Installation du modules}
 
-Initialement la liseuse possède un module g_serial, qui après quelques tests, rentrait en conflit avec le module g_ether installé. On a désactivé le module g_serial puis on  a lancé le module g_ether. Pour réaliser cela au démarrage de la liseuse, on a édité le fichier "/etc/rc.d/rc.local" en ajoutant les lignes suivantes à la fin : 
+Initialement la liseuse possède un module g_serial, qui après quelques tests, rentrait en conflit avec le module g_ether installé. On a désactivé le module g_serial puis on a lancé le module g_ether. Pour réaliser cela au démarrage de la liseuse, on a édité le fichier "/etc/rc.d/rc.local" en ajoutant les lignes suivantes à la fin : 
 
 \begin{lstlisting}
 echo "modprobe -r g_serial" > /initrd/mnt/sd/test/log
@@ -86,11 +86,11 @@ Les options host_addr et dev_addr permettent à la liseuse d'affecter son adress
 Avant d'expliquer les différentes procédures de cross-compilation pour les différents besoins du projet, voici une liste d'informations sur les paramètres des fichiers "configure" ou de variables d'environnement rencontrées :
 
 \begin{lstlisting}
-# Variables d'environnements ajoutees
- PATH => chemin vers un repertoire qui contiennent des
+# Variables d'environnement ajoutees
+ PATH => chemin vers un repertoire qui contient des
  executables que vous souhaitez pouvoir lancer sans
  indiquer leur repertoire.
- CC => cross-compilateur employe (gcc)
+ CC => cross-compilateur gcc
  CXX => compilateur g++
  CPP => compilateur cpp
  AR => archivage et indexation
@@ -107,15 +107,15 @@ Avant d'expliquer les différentes procédures de cross-compilation pour les dif
                   sera lance le programme   
   --target=TARGET indique l'architecture pour laquelle
                   le code est genere
-  --shared (--enable-shared) construit shared librairies
-  --static (--enable-static) construit static librairies
+  --shared (--enable-shared) construit des shared librairies
+  --static (--enable-static) construit des static librairies
  
   LDFLAGS=-I[PATH-LIBS] indique la position de librairies
-                        n'etant pas dans une position
+                        n'etant pas à une position
                         standard (/usr/lib)
   
   CPPFLAGS=-L[PATH-INCLUDE] indique la position de hearders
-                            n'etant pas dans une position
+                            n'etant pas à une position
                             standard (/usr/include)
   
 # Parametre libSDL
@@ -173,7 +173,7 @@ Avant d'expliquer les différentes procédures de cross-compilation pour les dif
 \subsection{Configuration système}
 
 Les actions suivantes ont été réalisées sur Archlinux x64 (kernel 3.8).
-Pour l'ajout de Dropbear, on a utilisé la version 2013-58 de celui-ci. La compilation de celui-ci a été réalisé avec le compilateur arm-none-linux-gnueabi-gcc en version 4.7.2. Ce compilateur est conçu pour la cross-compilation en architecture ARM compatible avec la liseuse. 
+Pour l'ajout de Dropbear, on a utilisé la version 2013-58 de celui-ci. La compilation a été réalisée avec le compilateur arm-none-linux-gnueabi-gcc en version 4.7.2. Ce compilateur est conçu pour la cross-compilation en architecture ARM qui est compatible avec la liseuse. 
 Pour la réalisation de la compilation, on a configuré les variables d'environnement de la manière suivante : 
 
 \begin{lstlisting}
@@ -189,8 +189,8 @@ export CCFLAGS="-march=armv7-a -mtune=cortex-a8 -mfpu=vfp"
 \end{lstlisting}
 
 \subsection{Dépendance : zlib}
-Pour la compilation de Dropbear, la library zlib était nécessaire.
-Pour l'obtenir on a téléchargé zlib (Dans notre cas la version 1.2.5) puis on  l'a décompressée. Ensuite on s'est rendu dans le répertoire créé (zlib[version]). On a effectué la configuration de la compilation via la commande suivante :
+Pour la compilation de Dropbear, la librairie libz était nécessaire.
+Pour l'obtenir on a téléchargé zlib (Dans notre cas la version 1.2.5) puis on l'a décompressée. Ensuite on s'est rendu dans le répertoire créé (zlib[version]). On a effectué la configuration de la compilation via la commande suivante :
 
 \begin{lstlisting}
 ./configure --shared
