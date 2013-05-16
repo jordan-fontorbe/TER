@@ -6,7 +6,7 @@ L'avancement actuel du projet, permet :
 	\item de modifier l'affichage de l'écran E-Ink
 \end{itemize}
 
-La mise en place de la connexion Ethernet se fait grâce aux modifications effectuées sur le système de fichiers monté par la liseuse.
+La mise en place de la connexion Ethernet se fait grâce aux modifications effectuées sur le système de fichiers monté sur la liseuse.
 
 % 1 : l'image de la liseuse
 %ethernet
@@ -37,13 +37,13 @@ Le réseau établi entre la liseuse et le PC est défini statiquement, de plus l
 \subsection{L'ajout de dropbear}
 Pour des raisons pratiques nous avons ajouté à la liseuse la gestion du protocole SSH, afin de pouvoir lancer facilement des commandes sur la liseuse, mais aussi de faciliter la copie de fichiers.
 %a voir ci c'est util
-L'utilisation de dropbear est pratiquement identique à celle du SSH que l'on peut trouver sur un système Linux. De légères différences subsistes si une connexion en SSH de la liseuse au PC hôte car les commandes ne sont pas nommées comme sur un système classique. Pour démarrer le serveur Dropbear (SSH) la commande est la suivante : 
+L'utilisation de dropbear est pratiquement identique à celle du SSH que l'on peut trouver sur un système Linux. De légères différences subsistes si une connexion en SSH de la liseuse au PC hôte car les commandes ne sont pas nommées comme sur un système Linux classique. Pour démarrer le serveur dropbear (SSH) la commande est la suivante : 
 
 \begin{lstlisting}
 dropbear start
 \end{lstlisting}
 
-Normalement dropbear est démarré au lancement de la Liseuse en mode Recovery. De plus si une connection ssh veut être initialisé de la liseuse, il faut lancer la commande suivante :
+Normalement dropbear est démarré au lancement de la liseuse en mode Recovery. De plus si une connection ssh veut être initialisé de la liseuse, il faut lancer la commande suivante :
 
 \begin{lstlisting}
 dhclient [nom-hote]@[IP-hote]
@@ -58,7 +58,7 @@ La modification de l'écran E-Ink peut se faire de deux manières, soit en envoy
 \subsection{Affichage via ioctl}
 
 Le programme de test d'affichage via ioctl permet d'envoyer un buffer d'affichage directement dans le framebuffer du driver EPDC.
-Ici ce buffer est constitué de pixels aléatoire : 
+Ici ce buffer est constitué de pixels aléatoires : 
 %capture d'écran get_temp
 	
 	\begin{figure}[h!]
@@ -70,7 +70,7 @@ Ici ce buffer est constitué de pixels aléatoire :
 \subsection{Affichage via DirectFB}
 
 Le programme d'affichage via Librairie graphique génère le framebuffer en utilisant les primitives de DirectFB.
-Le programme de test dessine ici 10 lignes avec points d'arrivé aléatoire.
+Le programme de test dessine ici 10 lignes avec points d'arrivé aléatoires.
 
 	\begin{figure}[h!]
 		\begin{center}
