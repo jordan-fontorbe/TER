@@ -2,7 +2,7 @@
 
 L'avancement actuel du projet, permet : 
 \begin{itemize}
-	\item d'établir une connexion Ethernet entre le pc hôte et la liseuse
+	\item d'établir une connexion Ethernet entre le PC hôte et la liseuse
 	\item de modifier l'affichage de l'écran E-Ink
 \end{itemize}
 
@@ -16,7 +16,7 @@ La mise en place de la connexion Ethernet se fait grâce aux modifications effec
 \subsection{La connexion Ethernet}
 La liseuse ne disposant que d'un port USB il faut passer par un module chargeable pour émuler une connexion Ethernet sur ce port.
 Ce module est le gadget Ethernet d'Android.
-Le réseau établi entre la liseuse et le pc est défini statiquement, de plus les adresses MAC des cartes émulées sont fixées par le module.
+Le réseau établi entre la liseuse et le PC est défini statiquement, de plus les adresses MAC des cartes émulées sont fixées par le module.
 
 %capture d'ecran ifconfig
 \begin{figure}[]
@@ -35,9 +35,9 @@ Le réseau établi entre la liseuse et le pc est défini statiquement, de plus l
 \clearpage
 %dropbear
 \subsection{L'ajout de dropbear}
-Pour des raisons pratiques nous avons ajouté à la liseuse la gestion du protocole ssh, afin de pouvoir lancer facilement des commandes sur la liseuse, mais aussi de faciliter la copie de fichiers.
+Pour des raisons pratiques nous avons ajouté à la liseuse la gestion du protocole SSH, afin de pouvoir lancer facilement des commandes sur la liseuse, mais aussi de faciliter la copie de fichiers.
 %a voir ci c'est util
-L'utilisation de dropbear est pratiquement identique à celle du ssh que l'on peut trouver sur un système Linux. De légères différences subsistes si une connection en ssh de la liseuse au pc hôte car les commandes ne sont pas nommé comme sur un système classique. Pour démarrer le serveur dropbear (ssh) la commande est la suivante : 
+L'utilisation de dropbear est pratiquement identique à celle du SSH que l'on peut trouver sur un système Linux. De légères différences subsistes si une connexion en SSH de la liseuse au PC hôte car les commandes ne sont pas nommées comme sur un système classique. Pour démarrer le serveur Dropbear (SSH) la commande est la suivante : 
 
 \begin{lstlisting}
 dropbear start
