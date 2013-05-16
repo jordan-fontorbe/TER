@@ -1,1 +1,17 @@
-\chapter{Résultat de tests validations}
+\chapter{Résultat de tests de validations}
+
+
+\subsubsection{Compilation d'un exemple de test DirectFB}
+
+
+La librairie DirectFB étant installée sur la machine virtuelle, on peut compiler un programme de test directement depuis la machine virtuelle.
+
+Pour compiler un exemple utilisant DirectFB, il faut indiquer l'emplacement des headers de la librairie DirectFB : 
+\begin{lstlisting}
+	gcc -o prog source.c -ldirectfb -I/usr/local/include/directfb/
+\end{lstlisting}
+
+Afin de pouvoir exécuter ce programme sur la liseuse il faut le copier sur la liseuse (via une copie directe sur la carte SD , ou via scp).
+Une fois ce programme copié il faut avant de l'exécuter vérifier que la variable LD_LIBRARY_PATH contient bien l'emplacement de la librairie DirectFB.
+
+Une simple exécution du programme sous une connexion ssh permet de voir la modification de l'affichage.
