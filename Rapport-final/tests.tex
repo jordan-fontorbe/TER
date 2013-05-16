@@ -1,4 +1,4 @@
-\chapter{Résultats de tests}
+\chapter{Résultats de tests préparatoires}
 
 Étant donné que la PRS-T1 dispose d'un environnement initialement fermé, il nous a paru judicieux de contourner cette limitation dans un premier temps.
 
@@ -8,7 +8,7 @@ La première chose à faire pour débloquer la liseuse a été de tester la mét
 
 Pré-requis : 
 \begin{itemize}
-	\item avoir une carte SD avec un système de fichier de récupération 
+	\item avoir une carte SD avec un système de fichiers de récupération 
 	\item avoir un terminal virtuel gérant une connexion USB en série
 \end{itemize}
 
@@ -41,10 +41,10 @@ Pour Linux :
 	\item se logger en tant que root (aucun mot de passe requis)
 \end{itemize}
 
-\section{Construction du système de fichier de Recovery}
+\section{Construction du système de fichiers de Recovery}
 \subsection{Compilation du noyau}
 
-La compilation du noyau (via les sources de SONY fournit) est la première étape vers la création d'un système de fichier pour le mode Recovery.
+La compilation du noyau (via les sources de SONY fournit) est la première étape vers la création d'un système de fichiers pour le mode Recovery.
 
 La compilation du noyau nécessite un environnement de cross-compilation , le compilateur fourni par SONY ne fonctionnant pas nous avons utilisé celui fourni avec le NDK d'Android (arm-eabi-gcc-4.4.3).
 
@@ -62,7 +62,7 @@ Avant de lancer la compilation du noyau il faut définir les différents drivers
 
 \subsection{Création du fichier}
 
-La liseuse nécessite un fichier update.img qui est en fait une image d'un système de fichier Ext4.
+La liseuse nécessite un fichier update.img qui est en fait une image d'un système de fichiers Ext4.
 
 Pour créer le fichier il suffit de : 
 	\begin{itemize}
@@ -70,7 +70,7 @@ Pour créer le fichier il suffit de :
 			\begin{verbatim}
 				dd if=/dev/zero of=update.img bs=1024 count=0 seek=$[1024*1024]
 			\end{verbatim}
-		\item construire le système de fichier \\
+		\item construire le système de fichiers \\
 			\begin{verbatim}
 				mkfs -t ext4 update.img
 			\end{verbatim}
@@ -78,7 +78,7 @@ Pour créer le fichier il suffit de :
 
 \subsection{Ce qu'il reste à faire}
 
-Cependant la création du système de fichier n'est pas encore terminée, il faut :
+Cependant la création du système de fichiers n'est pas encore terminée, il faut :
 	\begin{itemize}
 		\item modifier l'arborescence nécessaire au noyau Linux
 	\end{itemize}
