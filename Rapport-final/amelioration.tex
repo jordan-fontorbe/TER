@@ -2,11 +2,11 @@
 
 
 \section{Gestion des événements}
-La gestion des événements, c'est à dire, être capable de détecter et de déclencher un traitement particulier lorsque l'utilisateur interagit avec la liseuse n'est pour l'instant pas implémenté.
+La gestion des événements, c'est à dire être capable de détecter et de déclencher un traitement particulier lorsque l'utilisateur interagit avec la liseuse, n'est pour l'instant pas implémentée.
 \paragraph*{~}
-Il semblerait que le driver utilisé pour l'écran de la liseuse ne prenne pas en compte les évènement de type \emph{touch}. D'après les recherches que nous avons pu faire, le driver TsLib est habituellement implémenté avec DirectFB.
+Il semblerait que le driver utilisé pour l'écran de la liseuse ne prenne pas en compte les évènements de type \emph{touch}. D'après les recherches que nous avons pu faire, le driver TsLib est habituellement implémenté avec DirectFB.
 \paragraph*{~}
-La version actuelle de DirectFB ne prend pas en charge les entrées / sorties. En effet, il faut fournir à DirectFB, lors de la compilation d'une part le driver graphique à utiliser et d'autre part le driver d'entrées / sortie.\\Dans notre cas, il n'est pas nécessaire de fournir un driver graphique car la liseuse ne dispose pas d'accélération matérielle.\\Nous n'avons pas compiler de driver d'entrées / sorties avec DirectFB.\\Nous nous sommes concentrés sur l'utilisation de DirectFB plus que sur les entrées / sorties.
+La version actuelle de DirectFB ne prend pas en charge les entrées / sorties. En effet, il faut fournir à DirectFB, lors de la compilation, d'une part le driver graphique à utiliser et d'autre part le driver d'entrées / sortie.\\Dans notre cas, il n'est pas nécessaire de fournir un driver graphique car la liseuse ne dispose pas d'accélération matérielle.\\Nous n'avons pas compiler de driver d'entrées / sorties avec DirectFB.\\Nous nous sommes concentrés sur l'utilisation de DirectFB plus que sur les entrées / sorties.
 \paragraph*{~}
 Malheureusement, malgré des pistes pour la résolution de ce problème, nous n'avons pas eu assez de temps pour faire des recherches approfondies qui permettraient la mise en place d'une solution.
 
@@ -17,11 +17,11 @@ Un des objectifs pour poursuivre le projet serait de développer un client et un
 
 \subsection{Description de VNC}
 
-VNC est un système de visualisation et de contrôle d'un environ de bureau d'un périphérique distant (dans notre cas la liseuse). Ce système fonctionne via une communication client / serveur. Un serveur VNC doit être installé sur le périphérique à contrôler pour qu'un client s'y connecte. Le client VNC envoi au serveur différentes directives de mise à jour d'écran ou encore d'actions du clavier ou de la souris. Lorsque le serveur reçoit une directive, il met à jour son environnement graphique et le renvoi au client. Ces communications se font à travers un réseau en utilisant le protocole RFB.
+VNC est un système de visualisation et de contrôle d'un environ de bureau d'un périphérique distant (dans notre cas la liseuse). Ce système fonctionne via une communication client / serveur. Un serveur VNC doit être installé sur le périphérique à contrôler pour qu'un client s'y connecte. Le client VNC envoie au serveur différentes directives de mise à jour d'écran ou encore d'actions du clavier ou de la souris. Lorsque le serveur reçoit une directive, il met à jour son environnement graphique et le renvoi au client. Ces communications se font à travers un réseau en utilisant le protocole RFB.
 
 \subsection{Le Protocole RFB}
 
-RFB est un protocole simple pour l'accès à distance aux interfaces graphiques des utilisateurs. C'est ce protocole qui est utilisé par VNC. Il y a d'un côté un visionneur, appelé client, et de l'autre côté un serveur qui va modifier le framebuffer afin de modifier l'affichage.
+RFB est un protocole simple pour l'accès à distance aux interfaces graphiques des utilisateurs. C'est ce protocole qui est utilisé par VNC. Il y a d'un côté un visionneur, appelé client, et de l'autre côté un serveur qui va modifier le framebuffer afin de modifier l'affichage sur la liseuse.
 
 Le protocole RFB peut se décomposer en trois phases. Une première où le client et le serveur vont s'accorder sur la version du protocole à utiliser. Ensuite le client et le serveur vont s'envoyer des messages d'initialisation pour enfin pouvoir communiquer. A partir de ce moment, le client peut envoyer des demandes au serveur qui va lui retourner le résultat de cette requête.
 
@@ -35,7 +35,7 @@ Le protocole RFB peut se décomposer en trois phases. Une première où le clien
 
 \subsection{VNC Côté serveur}
 
-La serveur devra être installé sur la liseuse pour que celle-ci puisse partager son écran. Pour une utilisation optimal, il sera nécessaire de modifier le protocole RFB utilisé par le serveur VNC pour y inclure les événements de la liseuse (événement lors de l'appuie sur une zone de l'écran). Ce serveur va envoyer des directives à DirectFB qui fera ensuite la transition vers le matériel graphique pour modifier l'écran.
+Le serveur devra être installé sur la liseuse pour que celle-ci puisse partager son écran. Pour une utilisation optimale, il sera nécessaire de modifier le protocole RFB utilisé par le serveur VNC pour y inclure les événements de la liseuse (événement lors de l'appuie sur une zone de l'écran ou sur l'un des boutons sur la façade). Ce serveur va envoyer des directives à DirectFB qui fera ensuite la transition vers le matériel graphique pour modifier l'écran.
 
 \subsection{VNC Côté client}
 
