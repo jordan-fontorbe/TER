@@ -8,7 +8,7 @@ Plusieurs méthodes existent pour débloquer la liseuse :
 \subsubsection{Mise à jour du firmware}
 
 La méthode la plus répandue pour débloquer la liseuse consiste à faire une mise à jour du firmware.
-La liseuse n'acceptant que les mises à jour signées par SONY. Les clefs privées de cette signature étant connues des hackers (elles sont stockées dans la liseuse pour la vérification).
+La liseuse n'acceptant que les mises à jour signées par SONY, il faut utiliser les clefs privées employées par SONY pour les mises à jour. Ces clefs sont connues des hackers (elles sont stockées dans la liseuse pour la vérification).
 
 Plusieurs firmwares modifiés existent déjà pour mettre à jour la liseuse, ces derniers débloquent complètement la liseuse tout en gardant les logiciels SONY pré-installés.
 
@@ -44,7 +44,7 @@ Les caractéristiques de cette méthode sont  :
 		\item Risque minime pour la liseuse
 		\item Permet des modifications importantes (car on fait nous même le système à partir des sources du noyau fournit par SONY)%un peu long non ?
 	\end{itemize}
-	\item Inconvénient : 
+	\item Inconvénients : 
 		\begin{itemize}
 			\item Nécessite un pc hôte pour la mise en place du système (nécessite de compiler le noyau)
 			\item On repart de zéro donc on n'a pas accès aux applications SONY (pour la lecture d'Ebook notamment)
@@ -54,7 +54,7 @@ Les caractéristiques de cette méthode sont  :
 \section{Risque}
 \subsection{Les Waveforms}
 	Le driver permet de redéfinir les fonctions de waveform du contrôleur.
-Cependant le bon fonctionnement des écrans E-Ink dépend fortement de ces fonctions. Les modifier peut donc entraîner dans le meilleur des cas une différence entre la représentation virtuelle de l'affichage et ce que va réellement afficher l'écran. Dans le pire cas, cela peu endommager de manière définitive l'écran de la liseuse.
+Cependant le bon fonctionnement des écrans E-Ink dépend fortement de ces fonctions. Les modifier peut donc entraîner dans le meilleur des cas une différence entre la représentation virtuelle de l'affichage et ce que va réellement afficher l'écran. Dans le pire cas, cela peut endommager de manière définitive l'écran de la liseuse.
 
 \section{Tests}
 
