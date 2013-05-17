@@ -18,14 +18,14 @@ Les commandes suivantes ont été testées sur deux systèmes d'exploitation Lin
 Pour la cross-compilation, on a utilisé, dans cette section, le compilateur GCC 4.4.3 fourni avec l'android NDK. Pour la bonne utilisation de celui-ci et non le GCC présent sur notre système, on configure la variable PATH avec le chemin d'accès au GCC du NDK et on indique d'autres éléments et d'autres variables d'environnement pour obtenir la bonne compilation :
 
 \begin{lstlisting}
-# Attention le PATH suivant peut etre different sur certain systeme
+# Attention le PATH suivant peut etre different sur certains systemes
 export PATH=[PATH_to_ndk]/linux-x86/toolchain/arm-eabi-4.4.3/bin 
 export CROSS_COMPILE=arm-eabi-
 export SUBARCH=arm
 export ARCH=arm
 \end{lstlisting}
 
-Pour la configuration du kernel(2.6.35.3) pouvant être utilisé sur la liseuse, on a employé le contenu de l'archive config.gz que l'on a décompressé dans le répertoire de ce kernel puis on a effectué la commande "make menuconfig". Voici la procédure employée :
+Pour la configuration du kernel (2.6.35.3) pouvant être utilisée sur la liseuse, on a employé le contenu de l'archive config.gz que l'on a décompressée dans le répertoire de ce kernel puis on a effectué la commande "make menuconfig". Voici la procédure employée :
 
 \begin{lstlisting}
 zcat [PATH_to_terkit]/nopid/livedata/config.gz \
@@ -77,7 +77,7 @@ En utilisant la sortie standard vers un fichier de log, on a pu observer la pré
 Les options host_addr et dev_addr permettent à la liseuse d'affecter son adresse MAC mais aussi celle de la machine hôte sur laquelle elle est connectée (host), cela permet de ne pas avoir à refaire la configuration réseau à chaque branchement en USB.	\\
 	%connection depuis le pc
 	Pour se connecter depuis le pc hôte on a pensé à vérifier que le module usbnet était bien activé (normalement automatique sur les systèmes récents).	
-	Une interface réseau devrait apparaître et il faut la configurer sur le sous-réseau 192.168.2.0/24 (la liseuse est configurée sur l'adresse 192.168.2.1/24)
+	Une interface réseau devrait apparaître que l'on doit configurer sur le sous-réseau 192.168.2.0/24 (la liseuse est configurée sur l'adresse 192.168.2.1/24)
 
 \newpage
 
@@ -114,7 +114,7 @@ Avant d'expliquer les différentes procédures de cross-compilation pour les dif
                         n'etant pas a une position
                         standard (/usr/lib)
   
-  CPPFLAGS=-L[PATH-INCLUDE] indique la position de hearders
+  CPPFLAGS=-L[PATH-INCLUDE] indique la position d'hearders
                             n'etant pas a une position
                             standard (/usr/include)
   
@@ -139,7 +139,7 @@ Avant d'expliquer les différentes procédures de cross-compilation pour les dif
   
   LIBPNG_LDFLAGS=-L[PATH-REP-HEARDERS-LIBPNG] 
               indique la position des hearders 
-              utilise par la libpng
+              utilises par la libpng
   
   FREETYPE_CFLAGS=-I[PATH-REP-FREETYPE]
               indique la position des
@@ -147,7 +147,7 @@ Avant d'expliquer les différentes procédures de cross-compilation pour les dif
  
   FREETYPE_LIBS="-L[PATH-REP-HEARDERS-FREETYPE] 
               indique la position des headers
-              utilise par freetype
+              utilises par freetype
  
   LIBS="-l[lib] exemple (-lz pour libz)" librairie passee en lien
   
@@ -161,7 +161,7 @@ Avant d'expliquer les différentes procédures de cross-compilation pour les dif
   --disable-mesa desactive le support de mesa
   --disable-x11vdpau desactive le support x11/VDPAU
   --with-gfxdrivers=none construit aucun gfxdrivers
-  --with-inputdrivers=none construit aucun inputdriver
+  --with-inputdrivers=none construit aucun inputdrivers
   --enable-vnc construit avec le support de VNC
   
 \end{lstlisting}
@@ -190,7 +190,7 @@ export CCFLAGS="-march=armv7-a -mtune=cortex-a8 -mfpu=vfp"
 
 \subsection{Dépendance : zlib}
 Pour la compilation de Dropbear, la librairie libz était nécessaire.
-Pour l'obtenir on a téléchargé zlib (Dans notre cas la version 1.2.5) puis on l'a décompressée. Ensuite on s'est rendu dans le répertoire créé (zlib[version]). On a effectué la configuration de la compilation via la commande suivante :
+Pour l'obtenir, on a téléchargé zlib (Dans notre cas la version 1.2.5) puis on l'a décompressée. Ensuite on s'est rendu dans le répertoire créé (zlib[version]). On a effectué la configuration de la compilation via la commande suivante :
 
 \begin{lstlisting}
 ./configure --shared
@@ -198,6 +198,8 @@ Pour l'obtenir on a téléchargé zlib (Dans notre cas la version 1.2.5) puis on
 
 Ensuite on a exécuté la commande make pour lancer la compilation.
 Pour finir on a déplacé les fichiers libz.so* vers un répertoire regroupant toutes les librairies créées pour la liseuse ([PATH-REP-LIBS]). 
+
+\newpage
 
 \subsection{Compilation et installation}
 
@@ -210,7 +212,7 @@ Dans un premier temps on s'est rendu dans le répertoire Dropbear où l'on a con
 LDFLAGS="-L[PATH-REP-LIBS]"
 \end{lstlisting} 
 
-Suite à cette configuration on a obtenu un Makefile utilisable et paramétré selon nos besoins.
+Suite à cette configuration, on a obtenu un Makefile utilisable et paramétré selon nos besoins.
 Ensuite on a lancé la compilation via la commande suivante :
 
 \begin{lstlisting}
@@ -251,7 +253,7 @@ Dropbear start
 
 \subsection{Dépendances nécessaires pour DirectFB}
 
-DirectFB est une librairie nécessitant plusieurs dépendances pour sa compilation. Voici la liste des dépendances nécessaires (contient aussi certaines librairies pouvant nous être nécessaire avec certaines fonctionnalités de DirectFB comme VNC) :
+DirectFB est une librairie nécessitant plusieurs dépendances pour sa compilation. Voici la liste des dépendances nécessaires (contient aussi certaines librairies pouvant nous être nécessaires avec certaines fonctionnalités de DirectFB comme VNC) :
 
 \begin{itemize}
 \item Zlib version 1.2.5
@@ -263,7 +265,7 @@ DirectFB est une librairie nécessitant plusieurs dépendances pour sa compilati
 \item LibVNCServer 0.9.7
 \end{itemize}
 
-Il était nécessaire de compiler toutes les librairies présents dans la liste en suivant l'ordre de celle-ci pour éviter des problèmes de dépendances entre ces librairies.
+Il était nécessaire de compiler toutes les librairies présentes dans la liste en suivant l'ordre de celle-ci pour éviter des problèmes de dépendances entre ces librairies.
 
 \subsection{Configuration système utilisée}
 Les cross-compilations suivantes ont été réalisées de deux manières selon le système d'exploitation employé : 
@@ -464,7 +466,8 @@ Les fichiers de la machine virtuelle sont montés dans le système de l'hôte da
 
 \subsubsection{Cross-compilation de DirectFB}
 
-\paragraph{Dépendance de DirectFB}
+\paragraph{Dépendance de DirectFB \\}
+
 DirectFB possède plusieurs librairies dont il est dépendant: 
 	\begin{itemize}
 		\item freetype (version 2.4.11)
@@ -519,7 +522,7 @@ Le premier test effectué a été d'utiliser le driver pour modifier directement
 
 \subsubsection{Les commandes ioctl}
 
-Le driver EPDC fournit des commandes ioctl pour la mise à jour du framebuffer. Ces commandes permettent de récupérer toutes les variables du driver (par exemple la température relevé par la sonde interne), mais aussi de lancer une mise à jour de l'écran, c'est ce qui nous intéresse ici.
+Le driver EPDC fournit des commandes ioctl pour la mise à jour du framebuffer. Ces commandes permettent de récupérer toutes les variables du driver (par exemple la température relevée par la sonde interne), mais aussi de lancer une mise à jour de l'écran, c'est ce qui nous intéresse ici.
 
 La fonction ioctl générique prenant un identifiant de commande sous la forme d'un entier, l'intégralité des identifiants utilisés par le programme sont définis dans le fichier fbutils.h. %todo : a mettre en annex ?
 
@@ -589,7 +592,7 @@ Le programmes de test utilisent principalement les structures :
 
 %a voir si on laisse
 Sur la liseuse l'affichage dispose d'une résolution de 800*600 pixels et le format des pixels 
-réglé par default est le RGB16, ces paramètres sont détectés automatiquement par DirectFB.
+réglés par default est le RGB16. Ces paramètres sont détectés automatiquement par DirectFB.
 
 La structure DFBSurfaceDescription dispose d'un champs caps décrivant les capacités de la surface d'affichage, ici les paramètres sont : 
 	\begin{itemize}
