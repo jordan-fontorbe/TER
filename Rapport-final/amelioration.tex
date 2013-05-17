@@ -13,11 +13,12 @@ Malheureusement, malgré des pistes pour la résolution de ce problème, nous n'
 
 \section{Client / serveur VNC}
 
-Un des objectifs pour poursuivre le projet serait de développer un client et un serveur VNC. Le but étant de pouvoir contrôler directement la liseuse depuis un ordinateur.
+Un des objectifs pour poursuivre le projet serait de développer un client et un serveur VNC. 
+Le but est de construire un système comprenant un PC et la liseuse, reliés en USB. Les traitements sont effectués sur le PC tandis que la liseuse ne se charge que de l'affichage et de la capture des évènements. Les traitements relatifs à la réception d'un évènement prennent place sur le PC.
 
 \subsection{Description de VNC}
 
-VNC est un système de visualisation et de contrôle d'un environ de bureau d'un périphérique distant (dans notre cas la liseuse). Ce système fonctionne via une communication client / serveur. Un serveur VNC doit être installé sur le périphérique à contrôler pour qu'un client s'y connecte. Le client VNC envoi au serveur différentes directives de mise à jour d'écran ou encore d'actions du clavier ou de la souris. Lorsque le serveur reçoit une directive, il met à jour son environnement graphique et le renvoi au client. Ces communications se font à travers un réseau en utilisant le protocole RFB.
+VNC est un système de visualisation et de contrôle d'un environnement de bureau d'un périphérique distant (dans notre cas la liseuse). Ce système fonctionne via une communication client / serveur. Un serveur VNC doit être installé sur le périphérique à contrôler pour qu'un client s'y connecte. Le client VNC envoi au serveur différentes directives de mise à jour d'écran ou encore d'actions du clavier ou de la souris. Lorsque le serveur reçoit une directive, il met à jour son environnement graphique et le renvoi au client. Ces communications se font à travers un réseau en utilisant le protocole RFB.
 
 \subsection{Le Protocole RFB}
 
