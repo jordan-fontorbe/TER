@@ -17,7 +17,7 @@ Un des objectifs pour poursuivre le projet serait de développer un client et un
 
 \subsection{Description de VNC}
 
-VNC est un système de visualisation et de contrôle d'un environ de bureau d'un périphérique distant (dans notre cas la liseuse). Ce système fonctionne via une communication client / serveur. Un serveur VNC doit être installé sur le périphérique à contrôler pour qu'un client s'y connecte. Le client VNC envoie au serveur différentes directives de mise à jour d'écran ou encore d'actions du clavier ou de la souris. Lorsque le serveur reçoit une directive, il met à jour son environnement graphique et le renvoi au client. Ces communications se font à travers un réseau en utilisant le protocole RFB.
+VNC est un système de visualisation et de contrôle d'un environnement de bureau d'un périphérique distant (dans notre cas la liseuse). Ce système fonctionne via une communication client / serveur. Un serveur VNC doit être installé sur le périphérique à contrôler pour qu'un client s'y connecte. Le client VNC envoie au serveur différentes directives de mise à jour d'écran ou encore d'actions du clavier ou de la souris. Lorsque le serveur reçoit une directive, il met à jour son environnement graphique et le renvoi au client. Ces communications se font à travers un réseau en utilisant le protocole RFB.
 
 \subsection{Le Protocole RFB}
 
@@ -55,7 +55,7 @@ Un autre point que l'on peut ajouter à ce projet est d'intégrer VNC à QEMU, c
 
 \section{Simulateur d'écran}
 
-La dernière étape pour rendre le projet complet est de développer un simulateur d'écran de la liseuse. Pour cela il faut faire en sorte de gérer un affichage cohérent avec les temps de réponse de la liseuse Sony PRS-T1. C'est-à-dire que l'écran doit mettre un certain temps à se rafraîchir et pouvoir modifier seulement certaines zones de l'écran. De plus il faudrait y intégrer la gestion des événements. Par exemple lors d'un clique de la souris, l'évènement est interprété comme l'évènement appuyer sur une zone de l'écran de la liseuse.
+La dernière étape pour rendre le projet complet est de développer un simulateur d'écran de la liseuse. Pour cela il faut faire en sorte de gérer un affichage cohérent avec les temps de réponse de la liseuse Sony PRS-T1. C'est-à-dire que l'écran doit mettre un certain temps à se rafraîchir et pouvoir modifier seulement certaines zones de l'écran. De plus il faudrait y intégrer la gestion des événements. Par exemple lors d'un clique de la souris, l'évènement est interprété comme l'évènement "appuyer sur une zone de l'écran de la liseuse".
 
 Pour simuler au mieux un écran E-Ink, il faut penser à reproduire la rémanence des anciens affichages. De plus, il faut aussi reproduire la gestion des lookup tables. Cela afin de pouvoir gérer la mise à jour de plusieurs zones de l'écran en simultanée.
 
