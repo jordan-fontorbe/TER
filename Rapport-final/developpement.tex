@@ -365,6 +365,8 @@ Ensuite on a lancé la commande make pour la compilation.
 Puis on a déplacé les fichiers libVNCServeur.so* vers un répertoire regroupant toutes les librairies générées (PATH-REP-LIBS)
 Copier le répertoire ./rfb et son contenu vers le répertoire contenant DirectFB à cross-compiler.
 
+\newpage
+
 \subsubsection{Cross-compilation DirectFB}
 
 Génération du Makefile pour la compilation de DirectFB :
@@ -615,6 +617,8 @@ Il faut ensuite définir la résolution et la couleur de l'affichage via les app
 			int height)
    IDirectFBSurface->SetColor(IdirectFBSurface,uint8,uint8,unint8)
 	\end{lstlisting}
+	
+\newpage	
 
 Une fois tous les réglages effectués on peut appeler les primitives graphiques : 
 \begin{itemize}

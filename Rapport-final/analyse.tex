@@ -11,9 +11,11 @@ Les processeurs iMX de Freescale sont des processeurs mobiles basés sur l'archi
 
 Les solutions proposées par Freescale sur cette gamme de processeurs sont aussi bien sur la partie hardware (avec la conception de leur SoC) que software (optimisations spécifiques pour ces processeurs).
 
+\newpage
+
 \subsection{Le processeur iMX508}
 
-Le iMX508 est le processeur que l'on va retrouver sur la liseuse SONY PRS-T1. Il est le résultat de la collaboration entre Freescale et E-Ink et est le premier conçu spécialement pour les liseuses. 
+Le iMX508 est le processeur présent sur la liseuse SONY PRS-T1. Il est le résultat de la collaboration entre Freescale et E-Ink et est le premier conçu spécialement pour les liseuses. 
 
 L'atout principal du iMX508 est son architecture ARM Cortex A8 disposant d'un contrôleur d'écran de liseuse intégré (Electrophoretic Display Controller abrégé EPDC). Cette intégration lui permet d'être environ 50\% moins coûteux que les autres processeurs utilisant cette même architecture mais avec un EPDC indépendant. Il est aussi plus performant car l'accès au contrôleur est direct.
 
@@ -55,8 +57,6 @@ Il y a trois problèmes majeurs pour les écrans électrophorétiques :
 
 Pour résoudre ces problèmes on peut utiliser les Deferred IO.
 
-\newpage
-
 \subsection{Deferred IO}
 
 Le principe des Deferred IO est le suivant :
@@ -70,7 +70,7 @@ Le principe des Deferred IO est le suivant :
 
 Si on reprends les trois problèmes posés plus haut, le premier (mapper une mémoire non mappable) est résolu puisque lorsque l'on ne peut pas accéder à la mémoire du framebuffer, les écritures vont être mises de côté puis exécutées quand cela sera possible. 
 Il n'y a pas de perte de latence puisque écrire dans le framebuffer est aussi rapide que d'écrire dans la mémoire, le second problème est donc résolu.
-Enfin le troisième problème l'est lui aussi puisque l'adresse mémoire qui à généré un défaut de page est connu.
+Enfin le troisième problème l'est lui aussi puisque l'adresse mémoire qui a généré un défaut de page est connu.
 \subsection{Caractéristiques principales de l'EPDC}
 
 \begin{itemize}
@@ -123,6 +123,8 @@ Ce mode de transfert de données est utilisé lorsque le processeur ou la mémoi
 %utilité ?
 Sur la plate-forme iMX50, le DMA est géré pour le bus AHB (Advanced Microcontroller Bus Architecture High-performance Bus). Ce dernier étant synchrone, le module de gestion AHB-to-APBH bridge implémente donc un contrôleur DMA afin de pouvoir gérer un mode d'échange asynchrone sur ce bus.
 
+\newpage
+
 \subsubsection{Les lookup tables (LuT)}
 
 Les lookup tables permettent au contrôleur de gérer plusieurs zones de mise à jour de l'écran en même temps, permettant ainsi de diminuer la latence dû à la mise à jour de l'écran via les waveforms.
@@ -157,7 +159,7 @@ Le driver s'organise de la manière suivante :
 	
 \subsubsection{Fonctions de bas niveau}
 
-Les fonctions de bas niveau s'occupent de toutes l'interaction avec le matériel (contrôleur EPD, pixel pipeline, LuT).
+Les fonctions de bas niveau s'occupent de toute l'interaction avec le matériel (contrôleur EPD, pixel pipeline, LuT).
 Ces fonctions disposent d'accès direct au registre du matériel via les appels à \_\_raw\_writel et \_\_raw\_readl, ce sont les seules fonctions à disposer d'un accès direct au matériel.
 
 
@@ -177,6 +179,7 @@ Ces fonctions peuvent être organisées en sous-catégories :
 			\item epdc\_set\_temp
 			\item epdc\_set\_border\_gpio
 		\end{itemize}
+		~\\
 	\item fonctions de gestion des LuT : 
 		\begin{itemize}
 			\item epdc\_lut\_complete\_intr
