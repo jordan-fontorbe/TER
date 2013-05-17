@@ -5,7 +5,7 @@ La PRS-T1 étant fermée, il nous est impossible dans sa configuration de base d
 de l'affichage depuis une machine hôte.
 Plusieurs méthodes existent pour débloquer la liseuse : 
 
-\subsubsection{Mise à jour du firmware}
+\subsection{Mise à jour du firmware}
 
 La méthode la plus répandue pour débloquer la liseuse consiste à faire une mise à jour du firmware.
 La liseuse n'acceptant que les mises à jour signées par SONY, il faut utiliser les clefs privées employées par SONY pour les mises à jour. Ces clefs sont connues des hackers (elles sont stockées dans la liseuse pour la vérification).
@@ -25,7 +25,7 @@ Cependant le fait de modifier le firmware interne de la liseuse comporte certain
 
 Étant donné que la PRS-T1 est un prêt de M. Ollinger cette méthode de hack comporte trop de risques.
 
-\subsubsection{Utilisation du mode Recovery}
+\subsection{Utilisation du mode Recovery}
 
 Une autre méthode de hack consiste à utiliser le mode Recovery de la liseuse.
 Ce mode permet normalement de récupérer la liseuse suite à un problème.
@@ -56,11 +56,11 @@ Cependant le bon fonctionnement des écrans E-Ink dépend fortement de ces fonct
 
 La spécificité des liseuses venant de leur écran il faut faire attention à respecter au maximum le comportement de ce dernier pour faire un environnement de développement dédié aux liseuses.
 
-\subsubsection{Taux de rafraîchissement}
+\subsection{Taux de rafraîchissement}
 
 Les écrans E-Ink ayant un taux de rafraîchissement assez bas il devient nécessaire de veiller à ne pas le réduire d'avantage.
 Pour cela il va falloir mettre en place un test comparatif entre le rafraîchissement de la liseuse seule et le rafraîchissement avec un ordinateur hôte via VNC.
 
-\subsubsection{Update bloquante}
+\subsection{Update bloquante}
 
 L'ordinateur hôte ne doit pas se comporter de la même manière qu'avec un écran classique. En effet il serait très facile pour l'hôte de surcharger complètement l'écran en faisant des mises à jour de l'affichage comme il le ferait avec un écran classique. %a véifier un peu tordu
