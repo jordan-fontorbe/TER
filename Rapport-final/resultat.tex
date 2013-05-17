@@ -11,7 +11,7 @@ Pour compiler un exemple utilisant DirectFB, il faut indiquer l'emplacement des 
    gcc -o prog source.c -ldirectfb -I/usr/local/include/directfb/
 \end{lstlisting}
 
-Afin de pouvoir exécuter ce programme sur la liseuse il faut le copier sur la liseuse (via une copie directe sur la carte SD , ou via scp).
+Afin de pouvoir exécuter ce programme sur la liseuse, il faut le copier sur celle-ci (via une copie directe sur la carte SD, ou via scp).
 Une fois ce programme copié il faut avant de l'exécuter vérifier que la variable LD_LIBRARY_PATH contient bien l'emplacement de la librairie DirectFB.
 
 Une simple exécution du programme sous une connexion SSH permet de voir la modification de l'affichage.
@@ -21,20 +21,20 @@ Une simple exécution du programme sous une connexion SSH permet de voir la modi
 %peut etre a reformulé
 Une des problématiques évoquée plus tôt dans le cas d'un affichage avec écrans E-Ink a été le faible taux de rafraîchissement de l'écran.
 
-Afin de forcer le programme de test à ce synchroniser avec ce taux de rafraîchissement un appel à l'ioctl MXCFB_WAIT_FOR_UPDATE_COMPLETE est effectué avant chaque affichage. 
+Afin de forcer le programme de test à se synchroniser avec ce taux de rafraîchissement, un appel à l'ioctl MXCFB_WAIT_FOR_UPDATE_COMPLETE est effectué avant chaque affichage. 
 
 On sait qu'un écran E-Ink de 7 pouces met environ 700 ms à actualiser son affichage. Ce temps prend en compte le fait que l'affichage doit repartir d'une configuration saine (sans image fantôme).
 
-Pour mesurer le taux de rafraîchissement au sein de l'application une mesure de temps est faites via la fonction C gettimeofday, une simple différence entre le temps mesuré avant et après l'affichage nous donne le temps nécessaire au rafraîchissement.
+Pour mesurer le taux de rafraîchissement au sein de l'application une mesure de temps est faite via la fonction C gettimeofday. Une simple différence entre le temps mesuré avant et après l'affichage nous donne le temps nécessaire au rafraîchissement.
 
-Le premier programme de test affichant des lignes nous retourne un temps de 250 ms. Ce résultat semble faible, les document parlant d'un temps de 700 ms. Cependant le nombre de pixels à modifier est faible (une ligne fait un pixel de large), de plus les ligne sont soit noirs ou blanches, le programme ne gère pas les niveaux de gris.
+Le premier programme de test affichant des lignes nous retourne un temps de 250 ms. Ce résultat semble faible, les documents parlant d'un temps de 700 ms. Cependant le nombre de pixels à modifier est faible (une ligne fait un pixel de large). De plus les lignes sont soit noires ou blanches, le programme ne gérant pas les niveaux de gris.
 
 Afin de déterminer si le temps obtenu précédemment est dû uniquement 
-a la particularité du programme de test, un autre programme a été créé.
+à la particularité du programme de test, un autre programme a été créé.
 
-Afin de maximiser les changements à effectuer le programmes créé 20 carrés 
+Afin de maximiser les changements à effectuer le programme crée 20 carrés 
 de couleur et de taille aléatoire dans le framebuffer avant de faire la mise à jour de l'écran via ioctl.
 
-Le temps rapporté ici est de 600 ms, dans ce cas on se rapproche beaucoup plus des 700 ms annoncé.
+Le temps rapporté ici est de 600 ms, dans ce cas on se rapproche beaucoup plus des 700 ms annoncées.
 
-On voit bien grâce a ces deux tests que l'appel a l'ioctl MXCFB_WAIT_FOR_UPDATE_COMPLETE  respecte la mise à jour effective de l'affichage. 
+On voit bien grâce à ces deux tests que l'appel a l'ioctl MXCFB_WAIT_FOR_UPDATE_COMPLETE respecte la mise à jour effective de l'affichage.
