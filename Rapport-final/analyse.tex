@@ -11,6 +11,8 @@ Les processeurs iMX de Freescale sont des processeurs mobiles basés sur l'archi
 
 Les solutions proposées par Freescale sur cette gamme de processeurs sont aussi bien sur la partie hardware (avec la conception de leur SoC) que software (optimisations spécifiques pour ces processeurs).
 
+\newpage
+
 \subsection{Le processeur iMX508}
 
 Le iMX508 est le processeur que l'on va retrouver sur la liseuse SONY PRS-T1. Il est le résultat de la collaboration entre Freescale et E-Ink et est le premier conçu spécialement pour les liseuses. 
@@ -54,8 +56,6 @@ Il y a trois problèmes majeurs pour les écrans électrophorétiques :
 \end{itemize}
 
 Pour résoudre ces problèmes on peut utiliser les Deferred IO.
-
-\newpage
 
 \subsection{Deferred IO}
 
@@ -123,6 +123,8 @@ Ce mode de transfert de données est utilisé lorsque le processeur ou la mémoi
 %utilité ?
 Sur la plate-forme iMX50, le DMA est géré pour le bus AHB (Advanced Microcontroller Bus Architecture High-performance Bus). Ce dernier étant synchrone, le module de gestion AHB-to-APBH bridge implémente donc un contrôleur DMA afin de pouvoir gérer un mode d'échange asynchrone sur ce bus.
 
+\newpage
+
 \subsubsection{Les lookup tables (LuT)}
 
 Les lookup tables permettent au contrôleur de gérer plusieurs zones de mise à jour de l'écran en même temps, permettant ainsi de diminuer la latence dû à la mise à jour de l'écran via les waveforms.
@@ -177,6 +179,7 @@ Ces fonctions peuvent être organisées en sous-catégories :
 			\item epdc\_set\_temp
 			\item epdc\_set\_border\_gpio
 		\end{itemize}
+		~\\
 	\item fonctions de gestion des LuT : 
 		\begin{itemize}
 			\item epdc\_lut\_complete\_intr
