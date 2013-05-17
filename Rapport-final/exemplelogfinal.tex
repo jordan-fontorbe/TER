@@ -50,10 +50,12 @@ dhclient [nom-hote]@[IP-hote]
 \end{lstlisting}
 
 
+\newpage
 
 \section{Programme d'affichage}
 
 La modification de l'écran E-Ink peut se faire de deux manières, soit en envoyant les commandes directement au driver (en utilisant les ioctl), soit en passant par une librairie graphique (ici DirectFB).
+
 
 \subsection{Affichage via ioctl}
 
@@ -67,6 +69,9 @@ Ici ce buffer est constitué de pixels aléatoires :
 			 \caption{Modification de l'affichage en utilisant les ioctl}
 		\end{center}
 	\end{figure}
+
+\newpage
+
 \subsection{Affichage via DirectFB}
 
 Le programme d'affichage via Librairie graphique génère le framebuffer en utilisant les primitives de DirectFB.
