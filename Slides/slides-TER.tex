@@ -1,0 +1,62 @@
+\documentclass{beamer}
+
+%%%%% Definition du theme de la présentation
+%% Theme 1 'Warsaw'
+%\usepackage{beamerthemeWarsaw}
+
+%% Theme 2 'PaloAlto'
+\usetheme{PaloAlto}
+\useoutertheme{sidebar}
+\useinnertheme[shadow=true]{rounded}
+\usecolortheme{orchid}
+\usecolortheme{whale}
+\setbeamercolor*{frametitle}{parent=palette primary}
+\setbeamerfont{block title}{size={}}
+
+
+\usepackage[frenchb]{babel}
+\usepackage[utf8x]{inputenc}
+\usepackage{graphicx}
+
+\author{Fontorbe Jordan, Guillaume Arthur, Monediere Tristan, Rubagotti Joris}
+\title{Android au pays des liseuses}
+\subtitle{Proposé et encadré par : Ollinger Nicolas}
+\institute{Université d'Orléans}
+\date{23 Mai 2013}
+\logo{\includegraphics[height=1cm]{univorleans}}
+
+% Suppression de la barre de navigation
+\beamertemplatenavigationsymbolsempty
+
+%% Macro permettant d'afficher le plan de chaque section au début de celle-ci
+\AtBeginSection[]{
+   \begin{frame}
+%   \begin{center}{\Large Plan }\end{center}
+\begin{small}
+   \tableofcontents[currentsection,hideothersubsections]
+\end{small}
+   \end{frame} 
+}
+
+\begin{document}
+
+\maketitle
+\tableofcontents
+
+%%% Plan :
+%Intro
+%Description générale du logiciel
+%Architecture
+%point technique
+%exemple de fonctionnement
+%la suite
+
+\include{intro}
+\include{desc}
+\include{archi}
+\include{pointTech}
+\include{exFonc}
+\include{suite}
+
+
+\end{document}
