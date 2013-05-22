@@ -9,9 +9,9 @@
 %				- MXCFB_WAIT_FOR_UPDATE_COMPLETE
 %				- différentes ioctls
 
-\subsection{Le Driver et les ioctls}
-\begin{frame}[fragile]{Les ioctls}
-	\begin{block}{les commandes ioctls}
+\subsection{Le driver et les ioctl}
+\begin{frame}[fragile]{Les ioctl}
+	\begin{block}{Les commandes ioctl}
 		\begin{itemize}
 			\item MXCFB\_SEND\_UPDATE 
 				\begin{itemize}
@@ -30,16 +30,16 @@
 	\end{block}
 \end{frame}
 
-\begin{frame}{Les ioctls}
-	\begin{block} { Les commandes ioctls}
+\begin{frame}{Les ioctl}
+	\begin{block} {Les commandes ioctl}
 		\begin{itemize}
 				\item MXCFB\_WAIT\_FOR\_UPDATE\_COMPLETE
 			\begin{itemize}
-				\item synchronisation de la mise à jour défini par l'update marker
+				\item synchronisation de la mise à jour définie par l'update marker
 			\end{itemize}
 			\item MXCFB\_SET\_AUTO\_UPDATE\_MODE
 			\begin{itemize}
-				\item active les defered\_io
+				\item active les deferred\_io
 				\item dépend de l'option CONFIG\_FB\_MXC\_EINK\_AUTO\_UPDATE\_MODE
 			\end{itemize}
 		\end{itemize}
@@ -51,17 +51,17 @@
 		% 	- n'interagit pas avec le matériel directement 
 		% 	- interaction avec le framebuffer
 
-\begin{frame}{DirectFB }
-	\begin{block} { les primitives }
+\begin{frame}{DirectFB}
+	\begin{block} { Les primitives }
 		\begin{itemize}
-			\item traçage d'éléments géométriques (rectangle, triangle)
-			\item chargement d'image
+			\item Traçage d'éléments géométriques (rectangle, triangle)
+			\item Chargement d'image
 		\end{itemize}
 	\end{block}
-	\begin{block} { interaction avec le framebuffer }
+	\begin{block} { Interaction avec le framebuffer }
 		 \begin{itemize}
-		 	\item sauvegarde des modifications% dans un buffer local 
-		 	\item appel a Flip() 
+		 	\item Sauvegarde des modifications% dans un buffer local 
+		 	\item Appel a \emph{Flip()} 
 		 \end{itemize}
 	\end{block}
 \end{frame}
