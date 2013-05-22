@@ -1,1 +1,67 @@
 \section{Point technique}
+
+%	- DirectFB et ioctl
+%		- ioctl
+%			- les différentes commandes ioctls
+%				- SEND_UPDATE
+%					- struture mxcfb_update_data 
+%					- diffrents champs
+%				- MXCFB_WAIT_FOR_UPDATE_COMPLETE
+%				- différentes ioctls
+
+\subsection{Le Driver et les ioctls}
+\begin{frame}[fragile]{Les ioctls}
+	\begin{block}{les commandes ioctls}
+		\begin{itemize}
+			\item MXCFB\_SEND\_UPDATE 
+				\begin{itemize}
+					\item la structure mxcfb\_update\_data 
+							\begin{itemize}
+								\item update\_region
+								\item waveform\_mode
+								\item update\_mode
+								\item update\_marker
+								\item temp
+								\item flags
+								\item alt\_buffer\_data
+							\end{itemize}
+				\end{itemize}
+		\end{itemize}
+	\end{block}
+\end{frame}
+
+\begin{frame}{Les ioctls}
+	\begin{block} { Les commandes ioctls}
+		\begin{itemize}
+				\item MXCFB\_WAIT\_FOR\_UPDATE\_COMPLETE
+			\begin{itemize}
+				\item synchronisation de la mise à jour défini par l'update marker
+			\end{itemize}
+			\item MXCFB\_SET\_AUTO\_UPDATE\_MODE
+			\begin{itemize}
+				\item active les defered\_io
+				\item dépend de l'option CONFIG\_FB\_MXC\_EINK\_AUTO\_UPDATE\_MODE
+			\end{itemize}
+		\end{itemize}
+	\end{block}
+\end{frame}
+
+		% - directfb
+		% 	- implémentation des primitive graphique
+		% 	- n'interagit pas avec le matériel directement 
+		% 	- interaction avec le framebuffer
+
+\begin{frame}{DirectFB }
+	\begin{block} { les primitives }
+		\begin{itemize}
+			\item traçage d'éléments géométriques (rectangle, triangle)
+			\item chargement d'image
+		\end{itemize}
+	\end{block}
+	\begin{block} { interaction avec le framebuffer }
+		 \begin{itemize}
+		 	\item sauvegarde des modifications% dans un buffer local 
+		 	\item appel a Flip() 
+		 \end{itemize}
+	\end{block}
+\end{frame}
