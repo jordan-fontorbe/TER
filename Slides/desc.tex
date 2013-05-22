@@ -1,37 +1,49 @@
 \section[Description]{Description générale du logiciel}
+\subsection{Cahier des charges}
 
 \begin{frame}
+ \frametitle{Cahier des charges}
+%	\begin{block}{Description du logiciel attendu}
+%
+%		\begin{itemize}	
+%			\item Ajout le module Ethernet
+%			\item Création d'un client et d'un serveur VNC
+%			\item Ajouter VNC à l'émulateur QEMU
+%			\item Ecriture d'un simulateur d'écran E-Ink
+%		\end{itemize}
+%
+%	\end{block}
 
-	\begin{block}{Description du logiciel attendu}
+%\end{frame}
 
-		\begin{itemize}	
-			\item Ajouter le module Ethernet
-			\item Création d'un client et d'un serveur VNC
-			\item Ajouter VNC à l'émulateur QEMU
-			\item Ecriture d'un simulateur d'écran E-Ink
-		\end{itemize}
+\begin{block}{Documentation}
+Lecture de la documentation\\
+Compréhension des différentes couches matérielles et logicielles\\
+Production d'un document de synthèse (\textbf{Mémoire intermédiaire})\\
+\end{block}
 
-	\end{block}
+\begin{block}{Client RFB+}
+Ajout du gadget USB au noyau de la liseuse\\
+Connexion via SSH\\
+Ajout du support E-ink à DirectFB\\
+\end{block}
 
 \end{frame}
 
-%\begin{frame}
-%\begin{enumerate}
-%\item
-%{
-%\begin{itemize}
-%\item{Lecture de la documentation}
-%\item{Compréhension des différentes couches matérielles et logicielles}
-%\item{Production d'un document de synthèse (\textbf{Mémoire intermédiaire})}
-%\end{itemize}
-%}
-%\item
-%{
-%\begin{itemize}
-%\item{Ajout du gadget USB au noyau}
-%\item{Connexion via SSH}
-%\item{Ajout du support E-ink à DirectFB}
-%\end{itemize}
-%}
-%\end{enumerate}
-%\end{frame}
+\begin{frame}
+\frametitle{Cahier des charges (suite)}
+\begin{block}{VNC}
+Création d'un client et d'un serveur VNC\\
+Ajout de VNC à l'émulateur QEMU\\
+\end{block}
+
+\begin{block}{QEMU}
+Utilisation de VNC avec QEMU\\
+Écriture d'applications pour la liseuse\\
+\end{block}
+
+\begin{block}{Simulation d'écran}
+Écriture d'un simulateur d'écran E-Ink\\
+\end{block}
+
+\end{frame}
