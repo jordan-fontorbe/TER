@@ -1,32 +1,32 @@
-\section[Intruduction]{Introduction au domaine}
+\section[Introduction]{Introduction au domaine}
 
 
 \subsection[E-Ink]{Technologie E-Ink}
 \begin{frame}{Technologie E-Ink}
 	\begin{block}{Intérêts}
 		\begin{itemize}
-			\item Consommation faible en énergie
+			\item Faible consommation en énergie
 			\item Idéal pour la lecture
 		\end{itemize}
 	\end{block}
 		\begin{block}{Inconvénient}
 		\begin{itemize}
-			\item Temps de mise à jour de l'affichage long (environ 1s)
+			\item Long temps de mise à jour de l'affichage (environ 1s)
 		\end{itemize}
 	\end{block}
 \end{frame}
 
 \begin{frame}{Écrans électrophorétiques}
 \begin{center}
-	\includegraphics[scale=0.65]{Electrophoretic.png}
+	\includegraphics[width=0.8\linewidth]{Electrophoretic.png}
 \end{center}	
 \end{frame}
 
 
 \subsection[Sony PRS-T1]{Liseuse Sony PRS-T1}
 
-\begin{frame}{Caractéristiques principales} %% Liseuse en générale
-	\begin{block}{Caractéristiques Sony PRS-T1}
+\begin{frame}{Sony PRS-T1} %% Liseuse en générale
+	\begin{block}{Caractéristiques principales}
 		\begin{itemize}
 			\item Processeur iMX508
 			\item Écran E-Ink 6 pouces
@@ -53,16 +53,18 @@
 \begin{frame}{Architecture du processeur iMX508} %% Schéma
 	\begin{figure}
 		\begin{center}
-			\includegraphics[scale=0.65]{iMX508.png}
+			\includegraphics[scale=0.5]{iMX508.png}
 		\end{center}
 	\end{figure}
 \end{frame}
 
 \begin{frame}{Modules}
+	\vspace{-25px}
 	\begin{block}{EPDC (Electrophoretic Display Controller)}
 		\begin{itemize}
 			\item{Dirige les signaux (waveform)}
 			\item{Mise à jour partielle ou totale}
+			\item{Gestion de mises à jour concurrentes}
 		\end{itemize}
 	\end{block}
 	\begin{block}{ePXP (enhanced Pixel Pipeline)}
