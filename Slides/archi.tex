@@ -1,4 +1,5 @@
 \section{Architecture}
+\subsection{Le système de fichiers}
 \begin{frame}
 \frametitle{Image de base}
 
@@ -22,12 +23,16 @@
 
 \end{frame}
 
-\begin{frame}
-\frametitle{Driver mxc-epdc et les ioctl}
+\subsection{Driver, ioctl et DirectFB}
 
+\begin{frame}
+\frametitle{Driver et ioctl}
+
+Les fonctions ioctl du driver permettent :
 \begin{itemize}
-\item Gestion waveform (défaut : auto)
-\item Fonction ioctl
+\item Mettre à jour l'affichage de l'écran
+\item Récupérer des informations du driver (température, waveform ...)
+\item Modifier des paramètres du driver (température, waveform ...)
 \end{itemize}
 
 \end{frame}
@@ -36,6 +41,7 @@
 \frametitle{DirectFB}
 
 \begin{itemize}
+\item Fonction ioctl
 \item Ensemble d'API graphiques
 \item Interaction direct avec le framebuffer 
 \item Aucune modification du kernel
